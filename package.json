@@ -20,10 +20,12 @@
     "vite-plugin-checker": "^0.3.4"
   },
   "dependencies": {
+    "@mdi/js": "^5.9.55",
     "@vanilla-extract/css": "^1.2.3",
     "buffer": "^6.0.3",
     "idb": "^6.1.2",
     "music-metadata": "^7.11.3",
-    "preact": "^10.5.14"
+    "preact": "^10.5.14",
+    "preact-router": "^3.2.1"
   }
 }
