@@ -2,6 +2,7 @@ import { render } from 'preact';
 import { onMessage, postMessage } from './utils/worker';
 import { Store, useStore } from './store';
 import { DirectoryRelationType } from './worker/file/getDirectoryRelation';
+import './main.css';
 
 const addDirectoryToLibrary = async (directories: { name: string; id: number }[]) => {
   const directoryHandle = await showDirectoryPicker();

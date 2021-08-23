@@ -13,11 +13,13 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.1.0",
     "@types/wicg-file-system-access": "^2020.9.2",
+    "@vanilla-extract/vite-plugin": "^1.2.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5",
     "vite": "^2.5.0"
   },
   "dependencies": {
+    "@vanilla-extract/css": "^1.2.3",
     "buffer": "^6.0.3",
     "idb": "^6.1.2",
     "music-metadata": "^7.11.3",
