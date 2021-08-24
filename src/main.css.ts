@@ -10,6 +10,10 @@ globalStyle('a', {
 });
 
 globalStyle('button', {
+  padding: 0,
+  border: 0,
+  font: 'inherit',
+  backgroundColor: 'transparent',
   cursor: 'pointer',
 });
 
@@ -20,8 +24,8 @@ globalStyle('body', {
   fontFamily: 'Arial, Helvetica, sans-serif',
   lineHeight: 1.5,
   display: 'grid',
-  gridAutoFlow: 'column',
   gridTemplateColumns: 'auto 1fr',
+  gridTemplateRows: '1fr auto',
 });
 
 globalStyle('ul:where([class])', {

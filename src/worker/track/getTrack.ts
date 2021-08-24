@@ -6,7 +6,7 @@ import { parseBuffer } from 'music-metadata';
 import { Track } from '../database';
 import { FileHandle } from './FileHandle';
 
-export const getTrack = async (fileHandle: FileHandle): Promise<Track> => {
+export const getTrack = async (fileHandle: FileHandle): Promise<Track | null> => {
   try {
     const file = await fileHandle.fileHandle.getFile();
     const { format, common } = await parseBuffer(new Uint8Array(await file.arrayBuffer()));
@@ -26,6 +26,6 @@ export const getTrack = async (fileHandle: FileHandle): Promise<Track> => {
       albumTitle: common.album,
     };
   } catch {
-    return fileHandle;
+    return null;
   }
 };

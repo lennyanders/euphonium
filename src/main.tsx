@@ -2,6 +2,7 @@ import { render } from 'preact';
 import { Router } from 'preact-router';
 import { Store, useStore } from './store';
 import { Navigation } from './components/Navigation';
+import { Player } from './components/Player';
 import { Tracks } from './pages/Tracks';
 import { Settings } from './pages/Settings';
 import { main } from './main.css';
@@ -20,6 +21,7 @@ const App = () => {
           <div default>404</div>
         </Router>
       </main>
+      <Player />
     </Store.Provider>
   );
 };

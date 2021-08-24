@@ -70,7 +70,10 @@ const updateFiles = async () => {
 
   console.time('get tracks');
   const tracks: Track[] = [];
-  for (const fileHandle of newFiles) tracks.push(await getTrack(fileHandle));
+  for (const fileHandle of newFiles) {
+    const track = await getTrack(fileHandle);
+    if (track) tracks.push(track);
+  }
   console.timeEnd('get tracks');
 
   console.time('update database');
