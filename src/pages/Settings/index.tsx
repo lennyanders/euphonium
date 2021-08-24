@@ -1,6 +1,6 @@
 import { useContext } from 'preact/hooks';
 import { Store } from '../../store';
-import { LibraryEntry } from '../../components/Settings/LibraryEntry';
+import { LibraryEntry } from '../../components/LibraryEntry';
 import { onMessage, postMessage } from '../../utils/worker';
 import { DirectoryRelationType } from '../../worker/track/getDirectoryRelation';
 import { list } from './index.css';

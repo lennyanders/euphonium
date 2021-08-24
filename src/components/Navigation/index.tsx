@@ -21,7 +21,7 @@ export const Navigation = () => (
   <nav class={nav}>
     <Entry href='/artists' path={mdiAccountMusic} text='Artists' />
     <Entry href='/albums' path={mdiAlbum} text='Albums' />
-    <Entry href='/songs' path={mdiMusicNote} text='Songs' />
+    <Entry href='/tracks' path={mdiMusicNote} text='Tracks' />
     <Entry href='/playlists' path={mdiPlaylistMusic} text='Playlists' />
     <Entry href='/folders' path={mdiFolderMusic} text='Folders' />
     <Entry href='/settings' path={mdiCog} text='Settings' />
