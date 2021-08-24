@@ -6,8 +6,9 @@ export const trackClass = style({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-});
-
-export const artistClass = style({
-  color: '#aaa',
+  selectors: {
+    '& + &': {
+      marginTop: '0.5rem',
+    },
+  },
 });

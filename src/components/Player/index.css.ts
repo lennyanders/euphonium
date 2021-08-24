@@ -3,10 +3,9 @@ import { style } from '@vanilla-extract/css';
 export const playerClass = style({
   gridColumnStart: 1,
   gridColumnEnd: 3,
-  height: '6rem',
   padding: '0.5rem',
   display: 'grid',
-  gridTemplateRows: 'auto 1fr',
+  gap: '0.5rem',
   backgroundColor: '#111',
 });
 
@@ -23,23 +22,6 @@ export const playerBottomClass = style({
   display: 'grid',
   gridTemplateColumns: '1fr auto 1fr',
   alignItems: 'center',
-});
-
-export const infoClass = style({ lineHeight: '1.5rem' });
-
-export const coverClass = style({
-  float: 'left',
-  height: '3rem',
-  width: '3rem',
-  marginRight: '0.5rem',
-  borderRadius: '0.5rem',
-  backgroundImage: `url('/src/images/album.svg')`,
-  backgroundSize: 'contain',
-});
-
-export const artistClass = style({
-  display: 'block',
-  color: '#aaa',
 });
 
 export const controlsClass = style({

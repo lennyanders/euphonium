@@ -48,10 +48,11 @@ export const progressHandleClass = style({
     backgroundColor: 'currentColor',
     transition: 'transform 0.2s ease',
   },
-});
-
-globalStyle(`${progressClass}:hover ${progressHandleClass}::after`, {
-  transform: 'scale(1.5)',
+  selectors: {
+    [`${progressClass}:hover &::after`]: {
+      transform: 'scale(1.5)',
+    },
+  },
 });
 
 export const progressInputClass = style({

@@ -1,6 +1,7 @@
 import { useContext } from 'preact/hooks';
+import { BasicTrackInfo } from '../../components/BasicTrackInfo';
 import { Store } from '../../store';
-import { trackClass, artistClass } from './index.css';
+import { trackClass } from './index.css';
 
 export const Tracks = ({}: { path: string }) => {
   const { tracks } = useContext(Store)!;
@@ -12,8 +13,7 @@ export const Tracks = ({}: { path: string }) => {
         {tracks.map((track) => {
           return (
             <li key={track.id} class={trackClass}>
-              <span>{track.title || track.fileName}</span>
-              <small class={artistClass}>{track.artist || 'Unknown artist'}</small>
+              <BasicTrackInfo track={track} />
             </li>
           );
         })}

@@ -19,14 +19,12 @@ import {
   playerClass,
   progressClass,
   playerBottomClass,
-  infoClass,
-  coverClass,
-  artistClass,
   otherOptionsClass,
   controlsClass,
   volumeClass,
   mutedClass,
 } from './index.css';
+import { BasicTrackInfo } from '../BasicTrackInfo';
 
 const EVENT_OPTS = { passive: true, capture: true };
 const audio = new Audio();
@@ -119,11 +117,7 @@ export const Player = () => {
         <span>{getFormattedTime(track.duration)}</span>
       </div>
       <div class={playerBottomClass}>
-        <div class={infoClass}>
-          <div class={coverClass}></div>
-          <span>{track.title || track.fileName}</span>
-          <small class={artistClass}>{track.artist || 'Unknown artist'}</small>
-        </div>
+        <BasicTrackInfo track={track} />
         <div class={controlsClass}>
           <Button path={mdiShuffle} />
           <Button path={mdiSkipPrevious} />

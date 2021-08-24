@@ -20,7 +20,7 @@ globalStyle('button', {
 globalStyle('body', {
   margin: 0,
   height: '100vh',
-  backgroundColor: '#222',
+  backgroundColor: '#1a1a1a',
   fontFamily: 'Arial, Helvetica, sans-serif',
   lineHeight: 1.5,
   display: 'grid',
