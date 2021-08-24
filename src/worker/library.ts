@@ -1,13 +1,17 @@
 import { postMessage } from './utils';
-import { DirectoryRelationType, getDirectoryRelation, Relation } from './file/getDirectoryRelation';
 import { getDatabase } from './database';
-import { getFileHandlesFromRootDirectories } from './file/getAllFileHandlesFromDirectory';
-import { diffFiles } from './file/diffFiles';
-import { reparentDirectoryFiles } from './file/reparentDirectoryFiles';
+import {
+  getFileHandlesFromRootDirectories,
+  diffFiles,
+  updateTrackPaths,
+  getDirectoryRelation,
+  Relation,
+  DirectoryRelationType,
+} from './track';
 
 export const getDirectories = async () => {
   const database = await getDatabase();
-  const directoryHandles = await database.getAll('libraryDirectoryHandle');
+  const directoryHandles = await database.getAll('libraryDirectory');
   return directoryHandles.map(({ handle, id }) => ({ name: handle.name, id: id! }));
 };
 
@@ -17,7 +21,7 @@ const sendDirectories = async () => {
 
 export const removeDirectory = async (id: number) => {
   const database = await getDatabase();
-  await database.delete('libraryDirectoryHandle', id);
+  await database.delete('libraryDirectory', id);
   await updateFiles();
   await sendDirectories();
 };
@@ -26,7 +30,7 @@ export const tryAddDirectory = async (handle: FileSystemDirectoryHandle) => {
   const relation = await getDirectoryRelation(handle);
   if (relation.type === DirectoryRelationType.DirectoryIsNew) {
     const database = await getDatabase();
-    await database.add('libraryDirectoryHandle', { handle });
+    await database.add('libraryDirectory', { handle });
     await updateFiles();
     await sendDirectories();
   }
@@ -37,12 +41,12 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
   if (relation.type !== DirectoryRelationType.DirectoryIsParentOfImportetDirectories) return;
 
   const database = await getDatabase();
-  const id = await database.add('libraryDirectoryHandle', { handle });
+  const id = await database.add('libraryDirectory', { handle });
 
   console.time('reparent directories');
   for (const { id: oldId, pathDifference } of relation.parentOfDirectories) {
-    await reparentDirectoryFiles(id, oldId, pathDifference);
-    await database.delete('libraryDirectoryHandle', oldId);
+    await updateTrackPaths(id, oldId, pathDifference);
+    await database.delete('libraryDirectory', oldId);
   }
   console.timeEnd('reparent directories');
   await updateFiles();
@@ -55,14 +59,14 @@ const updateFiles = async () => {
   console.timeEnd('get files from directories');
 
   console.time('get difference to existing files');
-  const { newFiles, removedFilesIds } = await diffFiles(fileHandles);
+  const { newFiles, removedTrackIds } = await diffFiles(fileHandles);
   console.timeEnd('get difference to existing files');
 
   console.time('update database');
   const database = await getDatabase();
-  const tx = database.transaction('fileHandle', 'readwrite');
+  const tx = database.transaction('track', 'readwrite');
   await Promise.all([
-    ...removedFilesIds.map((id) => tx.store.delete(id)),
+    ...removedTrackIds.map((id) => tx.store.delete(id)),
     ...newFiles.map(async (f) => {
       await tx.store.add(f);
     }),
@@ -70,5 +74,5 @@ const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  console.log({ newFiles, removedFilesIds });
+  console.log({ newFiles, removedTrackIds });
 };

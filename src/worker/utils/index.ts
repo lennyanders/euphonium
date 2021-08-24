@@ -1,5 +1,5 @@
 import { WME, MWME } from '../../utils/worker';
-import { Relation } from '../file/getDirectoryRelation';
+import { Relation } from '../track/getDirectoryRelation';
 import { ports } from '../shared';
 
 export type WWME =

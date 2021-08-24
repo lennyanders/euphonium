@@ -2,7 +2,7 @@ import { useContext } from 'preact/hooks';
 import { Store } from '../../store';
 import { LibraryEntry } from '../../components/Settings/LibraryEntry';
 import { onMessage, postMessage } from '../../utils/worker';
-import { DirectoryRelationType } from '../../worker/file/getDirectoryRelation';
+import { DirectoryRelationType } from '../../worker/track/getDirectoryRelation';
 import { list } from './index.css';
 
 const addDirectoryToLibrary = async (directories: { name: string; id: number }[]) => {

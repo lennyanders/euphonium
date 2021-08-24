@@ -1,5 +1,5 @@
 import { workerPort } from '../workerPort';
-import { Relation } from '../worker/file/getDirectoryRelation';
+import { Relation } from '../worker/track/getDirectoryRelation';
 import type { WWME } from '../worker/utils';
 import { State } from '../store';
 

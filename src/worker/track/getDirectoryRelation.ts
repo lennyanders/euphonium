@@ -21,7 +21,7 @@ export const getDirectoryRelation = async (
 ): Promise<Relation> => {
   const database = await getDatabase();
   const parentOfDirectories: { id: number; pathDifference: string[] }[] = [];
-  for (const { id, handle } of await database.getAll('libraryDirectoryHandle')) {
+  for (const { id, handle } of await database.getAll('libraryDirectory')) {
     if (directoryHandle.name === handle.name && (await directoryHandle.isSameEntry(handle))) {
       return { type: DirectoryRelationType.DirectoryIsAlreadyImportet, id: id! };
     }

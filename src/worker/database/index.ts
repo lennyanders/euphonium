@@ -1,22 +1,33 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
 
-export interface EuphoniumFileHandle {
+export interface Track {
   id?: number;
-  path: string;
-  rootDirectory: number;
-  directoryHandle: FileSystemDirectoryHandle;
+  filePath: string;
+  fileName: string;
+  fileModified?: number;
   fileHandle: FileSystemFileHandle;
+  directoryHandle: FileSystemDirectoryHandle;
+  libraryDirectory: number;
+  number?: number;
+  count?: number;
+  diskNumber?: number;
+  diskCount?: number;
+  year?: number;
+  artist?: string;
+  title?: string;
+  albumArtist?: string;
+  albumTitle?: string;
 }
 
 export interface AppDataDb extends DBSchema {
-  libraryDirectoryHandle: {
+  libraryDirectory: {
     key: number;
     value: { id?: number; handle: FileSystemDirectoryHandle };
   };
-  fileHandle: {
+  track: {
     key: number;
-    value: EuphoniumFileHandle;
-    indexes: { rootDirectory: number };
+    value: Track;
+    indexes: { libraryDirectory: number };
   };
 }
 
@@ -26,13 +37,10 @@ export const getDatabase = async () => {
 
   database = await openDB<AppDataDb>('AppData', 1, {
     upgrade(db) {
-      db.createObjectStore('libraryDirectoryHandle', { keyPath: 'id', autoIncrement: true });
+      db.createObjectStore('libraryDirectory', { keyPath: 'id', autoIncrement: true });
 
-      const fileHandleStore = db.createObjectStore('fileHandle', {
-        keyPath: 'id',
-        autoIncrement: true,
-      });
-      fileHandleStore.createIndex('rootDirectory', 'rootDirectory');
+      const trackStore = db.createObjectStore('track', { keyPath: 'id', autoIncrement: true });
+      trackStore.createIndex('libraryDirectory', 'libraryDirectory');
     },
   });
 
