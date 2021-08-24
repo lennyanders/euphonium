@@ -39,6 +39,7 @@ export const Player = () => {
   const {
     tracks: [track],
   } = useContext(Store)!;
+  if (!track) return <></>;
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
