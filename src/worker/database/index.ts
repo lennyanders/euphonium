@@ -8,6 +8,7 @@ export interface Track {
   fileHandle: FileSystemFileHandle;
   directoryHandle: FileSystemDirectoryHandle;
   libraryDirectory: number;
+  duration?: number;
   number?: number;
   count?: number;
   diskNumber?: number;
