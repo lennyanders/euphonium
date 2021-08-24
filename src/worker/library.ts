@@ -10,6 +10,11 @@ import {
   getTrack,
 } from './track';
 
+export const getTracks = async () => {
+  const database = await getDatabase();
+  return await database.getAll('track');
+};
+
 export const getDirectories = async () => {
   const database = await getDatabase();
   const directoryHandles = await database.getAll('libraryDirectory');
@@ -78,5 +83,5 @@ const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  console.log({ newFiles, removedTrackIds });
+  if (tracks.length) postMessage({ message: 'updateState', state: { tracks: await getTracks() } });
 };

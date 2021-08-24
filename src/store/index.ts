@@ -1,9 +1,11 @@
 import { createContext } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { onMessage, postMessage } from '../utils/worker';
+import { Track } from '../worker/database';
 
 export interface State {
   libraryDirectories: { id: number; name: string }[];
+  tracks: Track[];
 }
 
 export const Store = createContext<State | null>(null);
