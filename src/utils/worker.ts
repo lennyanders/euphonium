@@ -1,4 +1,4 @@
-import { workerPort } from '../workerPort';
+import { worker } from '../shared';
 import { Relation } from '../worker/track/getDirectoryRelation';
 import type { WWME } from '../worker/utils';
 import { State } from '../store';
@@ -10,11 +10,9 @@ export type MWME =
   | WME<'updateState', { state: Partial<State> }>
   | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
 
-export const postMessage = (message: WWME['data']) => {
-  workerPort.postMessage(message);
-};
+export const postMessage = (message: WWME['data']) => worker.postMessage(message);
 
 export const onMessage = (cb: (message: MWME) => void) => {
-  workerPort.addEventListener('message', cb);
-  return () => workerPort.removeEventListener('message', cb);
+  worker.addEventListener('message', cb);
+  return () => worker.removeEventListener('message', cb);
 };
