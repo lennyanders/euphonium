@@ -70,9 +70,11 @@ const updateFiles = async () => {
 
   console.time('get tracks');
   const tracks: Track[] = [];
+  let count = 0;
   for (const fileHandle of newFiles) {
     const track = await getTrack(fileHandle);
     if (track) tracks.push(track);
+    console.log(`added track ${++count} of ${newFiles.length}`);
   }
   console.timeEnd('get tracks');
 

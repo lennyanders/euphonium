@@ -9,7 +9,11 @@ import { FileHandle } from './FileHandle';
 export const getTrack = async (fileHandle: FileHandle): Promise<Track | null> => {
   try {
     const file = await fileHandle.fileHandle.getFile();
-    const { format, common } = await parseBuffer(new Uint8Array(await file.arrayBuffer()));
+    const { format, common } = await parseBuffer(
+      new Uint8Array(await file.arrayBuffer()),
+      { mimeType: file.type, size: file.size },
+      { duration: true },
+    );
 
     return {
       ...fileHandle,
@@ -25,7 +29,8 @@ export const getTrack = async (fileHandle: FileHandle): Promise<Track | null> =>
       albumArtist: common.albumartist,
       albumTitle: common.album,
     };
-  } catch {
+  } catch (error) {
+    console.error(error);
     return null;
   }
 };
