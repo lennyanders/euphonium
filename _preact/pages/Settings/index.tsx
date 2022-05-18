@@ -50,7 +50,7 @@ export const Settings = ({}: { path: string }) => {
       {libraryDirectories.length ? (
         <ul class={list}>
           {libraryDirectories.map(({ id, name }) => (
-            <LibraryEntry key={id} id={id} name={name} />
+            <LibraryEntry id={id} name={name} />
           ))}
         </ul>
       ) : (

@@ -9,7 +9,7 @@ export const Progress = ({
   return (
     <div class={className} style={{ '--progress': `${(props.value / props.max) * 100}%` }}>
       <div class={progressHandleClass}></div>
-      <input class={progressInputClass} type='range' min='0' {...props} />
+      {/* <input class={progressInputClass} type={() => 'range'} min='0' {...props} /> */}
     </div>
   );
 };

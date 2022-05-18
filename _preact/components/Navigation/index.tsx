@@ -11,10 +11,10 @@ import { Icon } from '../icon';
 import { nav, link } from './index.css';
 
 const Entry = ({ href, path, text }: { href: string; path: string; text: string }) => (
-  <Link href={href} class={link}>
-    <Icon path={path} />
-    {text}
-  </Link>
+  // <Link href={href} class={link}>
+  <Icon path={path} />
+  // {text}
+  // </Link>
 );
 
 export const Navigation = () => (

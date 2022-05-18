@@ -4,11 +4,13 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "types": ["vite/client", "@types/wicg-file-system-access"],
-    "jsxImportSource": "preact",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "jsx": "preserve",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "jsxImportSource": "voby",
+    "types": ["vite/client", "@types/wicg-file-system-access"],
+    "noEmit": true,
+    "resolveJsonModule": true
   },
   "include": ["src"]
 }

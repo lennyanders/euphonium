@@ -1,5 +1,3 @@
-import type { JSX, ClassAttributes } from 'preact';
-
 const pad = (number: number) => number.toString().padStart(2, '0');
 
 export const getFormattedTime = (duration: number) => {
@@ -12,5 +10,5 @@ export const getFormattedTime = (duration: number) => {
 
 export type Props<T extends EventTarget, U> = JSX.DOMAttributes<T> &
   JSX.HTMLAttributes<T> &
-  ClassAttributes<T> &
+  JSX.ClassAttributes<T> &
   U;

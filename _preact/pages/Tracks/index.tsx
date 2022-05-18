@@ -1,6 +1,6 @@
 import { useContext } from 'preact/hooks';
 import { BasicTrackInfo } from '../../components/BasicTrackInfo';
-import { Store } from '../../store';
+import { Store } from '../../../src/store';
 import { trackClass } from './index.css';
 
 export const Tracks = ({}: { path: string }) => {
@@ -12,7 +12,7 @@ export const Tracks = ({}: { path: string }) => {
       <ul class=''>
         {tracks.map((track) => {
           return (
-            <li key={track.id} class={trackClass}>
+            <li class={trackClass}>
               <BasicTrackInfo track={track} />
             </li>
           );

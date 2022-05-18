@@ -1,7 +1,7 @@
 import { mdiAlbum, mdiClockTimeFour, mdiMusicNote } from '@mdi/js';
 import { useContext, useMemo } from 'preact/hooks';
 import { Icon } from '../../components/icon';
-import { Store } from '../../store';
+import { Store } from '../../../src/store';
 import { getFormattedTime } from '../../utils';
 import { badgeClass, artistClass, artistNameClass, artistListClass } from './index.css';
 
@@ -39,7 +39,7 @@ export const Artists = ({}: { path: string }) => {
       <h1>Artists</h1>
       <ul class={artistListClass}>
         {artists.map((artist) => (
-          <li key={artist.name} class={artistClass}>
+          <li class={artistClass}>
             <h2 class={artistNameClass}>{artist.name}</h2>
             <span class={badgeClass}>
               <Icon path={mdiMusicNote} />

@@ -30,7 +30,7 @@ const EVENT_OPTS = { passive: true, capture: true };
 const audio = new Audio();
 
 const Button = ({ path, ...props }: Props<HTMLButtonElement, { path: string; class?: string }>) => (
-  <button {...props}>
+  <button>
     <Icon path={path} />
   </button>
 );
