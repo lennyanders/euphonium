@@ -1,6 +1,6 @@
 /* @refresh reload */
-import 'uno.css';
 import './base.css';
+import 'uno.css';
 
 import { render } from 'voby';
 import { App } from './App';

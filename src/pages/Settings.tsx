@@ -1,9 +1,7 @@
-import { useContext } from 'preact/hooks';
-import { Store } from '../../store';
-import { LibraryEntry } from '../../components/LibraryEntry';
-import { onMessage, postMessage } from '../../utils/worker';
-import { DirectoryRelationType } from '../../worker/track/getDirectoryRelation';
-import { list } from './index.css';
+import { For, If } from 'voby';
+import { store } from '../store';
+import { onMessage, postMessage } from '../utils/worker';
+import { DirectoryRelationType } from '../worker/track';
 
 const addDirectoryToLibrary = async (directories: { name: string; id: number }[]) => {
   const directoryHandle = await showDirectoryPicker();
@@ -38,24 +36,33 @@ const addDirectoryToLibrary = async (directories: { name: string; id: number }[]
   });
 };
 
-export const Settings = ({}: { path: string }) => {
-  const { libraryDirectories } = useContext(Store)!;
+export const Settings = () => {
+  const { libraryDirectories } = store();
+
   return (
-    <>
+    <div class='grid gap-4'>
       <h1>Settings</h1>
       <h2>Library</h2>
       <button onClick={() => addDirectoryToLibrary(libraryDirectories)}>
         Add directory to library
       </button>
-      {libraryDirectories.length ? (
-        <ul class={list}>
-          {libraryDirectories.map(({ id, name }) => (
-            <LibraryEntry id={id} name={name} />
-          ))}
+      <If
+        when={libraryDirectories.length}
+        fallback={<p>Add directories and start listening to music!</p>}
+      >
+        <ul class='grid gap-2'>
+          <For values={libraryDirectories}>
+            {({ name, id }) => (
+              <li class='flex gap-1'>
+                {name}
+                <button onClick={() => postMessage({ message: 'removeLibraryDirectory', id })}>
+                  ×
+                </button>
+              </li>
+            )}
+          </For>
         </ul>
-      ) : (
-        <p>Add directories and start listening to music!</p>
-      )}
-    </>
+      </If>
+    </div>
   );
 };

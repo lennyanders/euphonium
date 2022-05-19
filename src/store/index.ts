@@ -1,5 +1,4 @@
-import { createContext } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { $ } from 'voby';
 import { onMessage, postMessage } from '../utils/worker';
 import { Track } from '../worker/database';
 
@@ -8,18 +7,10 @@ export interface State {
   tracks: Track[];
 }
 
-export const Store = createContext<State | null>(null);
+export const store = $<State>({ libraryDirectories: [], tracks: [] });
 
-export const useStore = () => {
-  const [store, setStore] = useState<State | null>(null);
-  useEffect(() => {
-    postMessage({ message: 'getStore' });
-    return onMessage(({ data }) => {
-      if (data.message === 'setStore') return setStore(data.state);
-      if (data.message === 'updateState') {
-        setStore((state) => (state ? { ...state, ...data.state } : null));
-      }
-    });
-  }, []);
-  return store;
-};
+postMessage({ message: 'getStore' });
+onMessage(({ data }) => {
+  if (data.message === 'setStore') return store(data.state);
+  if (data.message === 'updateState') store((state) => ({ ...state, ...data.state }));
+});
