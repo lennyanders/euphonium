@@ -4,16 +4,6 @@
   box-sizing: border-box;
 }
 
-html {
-  height: 100%;
-}
-
-body {
-  min-height: 100%;
-  margin: 0;
-  font-family: sans-serif;
-}
-
 h1,
 h2,
 h3,
@@ -37,6 +27,7 @@ button {
 }
 
 ul:where([class]) {
+  list-style: none;
   padding: 0;
   margin: 0;
 }
