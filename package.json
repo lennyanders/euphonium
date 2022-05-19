@@ -10,10 +10,8 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@preact/preset-vite": "^2.2.0",
-    "@types/node": "^17.0.34",
+    "@types/node": "^17.0.35",
     "@types/wicg-file-system-access": "^2020.9.5",
-    "@vanilla-extract/vite-plugin": "^3.1.6",
     "prettier": "^2.6.2",
     "typescript": "^4.6.4",
     "unocss": "^0.33.5",
@@ -22,13 +20,9 @@
     "voby-vite": "^1.0.0"
   },
   "dependencies": {
-    "@mdi/js": "^6.7.96",
-    "@vanilla-extract/css": "^1.7.0",
     "buffer": "^6.0.3",
     "idb": "^7.0.1",
     "music-metadata": "^7.12.3",
-    "preact": "^10.7.2",
-    "preact-router": "^4.0.1",
     "voby": "^0.20.2"
   }
 }
