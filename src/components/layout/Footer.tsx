@@ -1,4 +1,5 @@
 import { $ } from 'voby';
+import { RouterLink } from '../../router';
 
 export const Footer = () => {
   const menuOpen = $(true);
@@ -7,8 +8,8 @@ export const Footer = () => {
     <div class='absolute left-4 right-4 bottom-4 bg-[#111]'>
       {/* player */}
       <nav class='flex justify-between p-4 bg-inherit relative z-1'>
-        <a href='/'>home</a>
-        <a href='/search'>search</a>
+        <RouterLink href='/'>home</RouterLink>
+        <RouterLink href='/search'>search</RouterLink>
         <button onClick={() => menuOpen((v) => !v)}>menu</button>
       </nav>
       <div
@@ -18,7 +19,7 @@ export const Footer = () => {
           }`
         }
       >
-        <a href='/settings'>Settings</a>
+        <RouterLink href='/settings'>Settings</RouterLink>
       </div>
     </div>
   );
