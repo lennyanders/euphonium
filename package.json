@@ -23,6 +23,7 @@
     "buffer": "^6.0.3",
     "idb": "^7.0.1",
     "music-metadata": "^7.12.3",
+    "regexparam": "^2.0.0",
     "voby": "^0.20.2"
   }
 }

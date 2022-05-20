@@ -1,5 +1,16 @@
-import { $, useComputed } from 'voby';
+import { parse } from 'regexparam';
+import { $, useComputed, useSample } from 'voby';
 
+const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
+  const matches = result.pattern.exec(path);
+  if (!matches) return {};
+  const res: Record<string, string | null> = {};
+  let i = 0;
+  while (i < result.keys.length) res[result.keys[i]] = matches[++i] ? decodeURI(matches[i]) : null;
+  return res;
+};
+
+export const params = $<Record<string, string | null>>({});
 const path = $(location.pathname);
 let updateUrl = false;
 
@@ -10,27 +21,32 @@ export const Router = ({
 }: {
   routes: { path: string; component: JSX.Child; title?: string }[];
 }) => {
+  const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
   return useComputed(() => {
     const p = path();
-    const comp = routes.find((route) => route.path === p || route.path === '*')?.component;
+    const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
       const url = new URL(location.href);
       url.pathname = p;
       history.pushState(null, '', url);
       updateUrl = false;
     }
-    return comp;
+    if (!route) return;
+
+    params(exec(p, route.regex));
+    return route.component;
   });
 };
 
 export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  const el = $<HTMLAnchorElement>();
   props.onClick = (event: MouseEvent) => {
-    const target = event.target as HTMLAnchorElement;
-    if (target.origin !== location.origin) return;
+    const anchor = useSample(el);
+    if (!anchor || anchor.origin !== location.origin) return;
 
     event.preventDefault();
     updateUrl = true;
-    path(target.pathname);
+    path(anchor.pathname);
   };
-  return <a {...props}></a>;
+  return <a ref={el} {...props}></a>;
 };
