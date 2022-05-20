@@ -7,7 +7,7 @@ const MiniPlayer = () => () => {
   if (!track) return;
   const isPlaying = playing();
   return (
-    <div class='p-y-2 p-x-4 flex gap-2 items-center'>
+    <div class='p-y-2 p-x-4 flex gap-2 items-center bg-inherit relative z-1'>
       <button onClick={() => (isPlaying ? pause() : play())}>{isPlaying ? 'Pause' : 'Play'}</button>
       <div>
         <span class='truncate'>{track.title}</span>
