@@ -1,7 +1,7 @@
-import { For, If } from 'voby';
+import { If } from 'voby';
+import { TracksList } from '../components/TracksList';
 import { RouterLink } from '../router';
 import { library } from '../stores/library';
-import { play } from '../stores/player';
 
 export const Tracks = () => {
   const { tracks } = library();
@@ -21,20 +21,7 @@ export const Tracks = () => {
           </p>
         }
       >
-        <ul class='m-t-4 grid gap-2'>
-          <For values={tracks}>
-            {(track) => (
-              <li class='flex' onClick={() => play(track)}>
-                <div>
-                  {track.title || track.fileName}
-                  <If when={track.artist}>
-                    <small class='block'>{track.artist}</small>
-                  </If>
-                </div>
-              </li>
-            )}
-          </For>
-        </ul>
+        <TracksList tracks={tracks} />
       </If>
     </>
   );

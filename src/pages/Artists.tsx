@@ -45,7 +45,7 @@ export const Artists = () => {
           </p>
         }
       >
-        <ul class='m-t-4 grid gap-4'>
+        <ul class='grid gap-4'>
           <For values={artists}>
             {(artist) => (
               <li>

@@ -1,14 +1,12 @@
-import { For, If, useComputed } from 'voby';
+import { If, useComputed } from 'voby';
+import { Album, AlbumsList, RawAlbums } from '../components/AlbumsList';
 import { RouterLink } from '../router';
 import { library } from '../stores/library';
 import { getFormattedTime } from '../utils';
 
 export const Albums = () => {
   const albums = useComputed(() => {
-    const albumsObject: Record<
-      string,
-      { albumTitle: string; albumArtist: string; year?: number; tracks: number; duration: number }
-    > = {};
+    const albumsObject: RawAlbums = {};
     for (const { duration, albumTitle, albumArtist, year } of library().tracks) {
       if (!albumTitle) continue;
 
@@ -27,7 +25,7 @@ export const Albums = () => {
         };
       }
     }
-    return Object.values(albumsObject).map((album) => ({
+    return Object.values(albumsObject).map<Album>((album) => ({
       ...album,
       duration: getFormattedTime(album.duration),
     }));
@@ -48,19 +46,7 @@ export const Albums = () => {
           </p>
         }
       >
-        <ul class='m-t-4 grid gap-4'>
-          <For values={albums}>
-            {(album) => (
-              <li class='flex flex-wrap gap-2 bg-[#1c1c1c] p-2 rd-2'>
-                <span class='flex-basis-100%'>{album.albumTitle}</span>
-                <small class='flex-basis-100%'>{album.albumArtist}</small>
-                <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{album.year}</span>
-                <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{album.tracks}</span>
-                <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{album.duration}</span>
-              </li>
-            )}
-          </For>
-        </ul>
+        <AlbumsList albums={albums} />
       </If>
     </>
   );

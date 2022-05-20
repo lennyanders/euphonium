@@ -49,7 +49,7 @@ export const Settings = () => {
   const { libraryDirectories } = library();
 
   return (
-    <div class='grid gap-4'>
+    <>
       <h1>Settings</h1>
       <h2>Library</h2>
       <div class='flex justify-between'>
@@ -79,6 +79,6 @@ export const Settings = () => {
         You need to give permission again for each folder after reloading/revisiting the player so
         it's good to use as few folders as possible
       </small>
-    </div>
+    </>
   );
 };
