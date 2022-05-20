@@ -3,6 +3,7 @@ import { Relation } from '../track/getDirectoryRelation';
 
 export type WWME =
   | WME<'getStore'>
+  | WME<'reloadLibrary'>
   | WME<'removeLibraryDirectory', { id: number }>
   | WME<'tryAddDirectoryToLibrary', { directoryHandle: FileSystemDirectoryHandle }>
   | WME<

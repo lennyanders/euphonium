@@ -36,6 +36,15 @@ const addDirectoryToLibrary = async (directories: { name: string; id: number }[]
   });
 };
 
+onMessage(async ({ data }) => {
+  if (data.message !== 'requestPermission') return;
+
+  try {
+    await data.directoryHandle.requestPermission();
+    postMessage({ message: 'reloadLibrary' });
+  } catch (_) {}
+});
+
 export const Settings = () => {
   const { libraryDirectories } = store();
 
@@ -43,9 +52,12 @@ export const Settings = () => {
     <div class='grid gap-4'>
       <h1>Settings</h1>
       <h2>Library</h2>
-      <button onClick={() => addDirectoryToLibrary(libraryDirectories)}>
-        Add directory to library
-      </button>
+      <div class='flex justify-between'>
+        <button onClick={() => addDirectoryToLibrary(libraryDirectories)}>
+          Add directory to library
+        </button>
+        <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
+      </div>
       <If
         when={libraryDirectories.length}
         fallback={<p>Add directories and start listening to music!</p>}

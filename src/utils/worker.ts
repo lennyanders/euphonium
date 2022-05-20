@@ -7,6 +7,7 @@ export type WME<T extends string, U extends object = {}> = MessageEvent<U & { me
 
 export type MWME =
   | WME<'setStore', { state: State }>
+  | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
   | WME<'updateState', { state: Partial<State> }>
   | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
 

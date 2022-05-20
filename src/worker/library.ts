@@ -59,7 +59,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
   await updateFiles();
 };
 
-const updateFiles = async () => {
+export const updateFiles = async () => {
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
   console.timeEnd('get files from directories');
