@@ -1,14 +1,14 @@
 import { worker } from '../shared';
 import { Relation } from '../worker/track/getDirectoryRelation';
 import type { WWME } from '../worker/utils';
-import type { State } from '../store';
+import type { Library } from '../store/library';
 
 export type WME<T extends string, U extends object = {}> = MessageEvent<U & { message: T }>;
 
 export type MWME =
-  | WME<'setStore', { state: State }>
+  | WME<'setStore', { state: Library }>
   | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
-  | WME<'updateState', { state: Partial<State> }>
+  | WME<'updateState', { state: Partial<Library> }>
   | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
 
 export const postMessage = (message: WWME['data']) => worker.postMessage(message);

@@ -1,5 +1,5 @@
 import { For, If } from 'voby';
-import { store } from '../store';
+import { library } from '../store/library';
 import { onMessage, postMessage } from '../utils/worker';
 import { DirectoryRelationType } from '../worker/track';
 
@@ -46,7 +46,7 @@ onMessage(async ({ data }) => {
 });
 
 export const Settings = () => {
-  const { libraryDirectories } = store();
+  const { libraryDirectories } = library();
 
   return (
     <div class='grid gap-4'>

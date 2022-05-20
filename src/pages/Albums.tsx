@@ -1,6 +1,6 @@
 import { For, If, useComputed } from 'voby';
 import { RouterLink } from '../router';
-import { store } from '../store';
+import { library } from '../store/library';
 import { getFormattedTime } from '../utils';
 
 export const Albums = () => {
@@ -9,7 +9,7 @@ export const Albums = () => {
       string,
       { albumTitle: string; albumArtist: string; year?: number; tracks: number; duration: number }
     > = {};
-    for (const { duration, albumTitle, albumArtist, year } of store().tracks) {
+    for (const { duration, albumTitle, albumArtist, year } of library().tracks) {
       if (!albumTitle) continue;
 
       const key = `${albumArtist}${albumTitle}${year}`;

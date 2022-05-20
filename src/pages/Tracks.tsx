@@ -1,9 +1,20 @@
 import { For, If } from 'voby';
 import { RouterLink } from '../router';
-import { store } from '../store';
+import { library } from '../store/library';
+import { Track } from '../worker/database';
 
 export const Tracks = () => {
-  const { tracks } = store();
+  const { tracks } = library();
+
+  const onClick = async (track: Track) => {
+    try {
+      const file = await track.fileHandle.getFile();
+      console.log(file);
+    } catch (_) {
+      await track.fileHandle.requestPermission();
+      onClick(track);
+    }
+  };
 
   return (
     <>
@@ -23,7 +34,7 @@ export const Tracks = () => {
         <ul class='m-t-4 grid gap-2'>
           <For values={tracks}>
             {(track) => (
-              <li class='flex'>
+              <li class='flex' onClick={() => onClick(track)}>
                 <div>
                   {track.title || track.fileName}
                   <If when={track.artist}>

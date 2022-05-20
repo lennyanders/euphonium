@@ -1,9 +1,9 @@
-import { State } from '../store';
+import { Library } from '../store/library';
 import { getDirectories, getTracks } from './library';
 import { postMessage } from './utils';
 
 export const getStore = async () => {
-  const state: State = {
+  const state: Library = {
     libraryDirectories: await getDirectories(),
     tracks: await getTracks(),
   };

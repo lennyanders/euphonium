@@ -1,13 +1,13 @@
 import { For, If, useComputed } from 'voby';
 import { RouterLink } from '../router';
-import { store } from '../store';
+import { library } from '../store/library';
 import { getFormattedTime } from '../utils';
 
 export const Artists = () => {
   const artists = useComputed(() => {
     const artistsObject: Record<string, { tracks: number; duration: number; albums: Set<string> }> =
       {};
-    for (const { artist, duration, albumTitle, albumArtist } of store().tracks) {
+    for (const { artist, duration, albumTitle, albumArtist } of library().tracks) {
       const key = artist || 'unknown artist';
       const artistObject = artistsObject[key];
       if (artistObject) {
