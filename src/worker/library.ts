@@ -18,7 +18,11 @@ export const getTracks = async () => {
 export const getDirectories = async () => {
   const database = await getDatabase();
   const directoryHandles = await database.getAll('libraryDirectory');
-  return directoryHandles.map(({ handle, id }) => ({ name: handle.name, id: id! }));
+  return directoryHandles.map(({ handle, id }) => ({
+    name: handle.name,
+    id: id!,
+    directoryHandle: handle,
+  }));
 };
 
 const sendDirectories = async () => {

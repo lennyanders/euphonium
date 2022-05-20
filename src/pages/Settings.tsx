@@ -75,6 +75,10 @@ export const Settings = () => {
           </For>
         </ul>
       </If>
+      <small class='w-80% op-50'>
+        You need to give permission again for each folder after reloading/revisiting the player so
+        it's good to use as few folders as possible
+      </small>
     </div>
   );
 };
