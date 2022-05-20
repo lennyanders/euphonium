@@ -6,7 +6,7 @@ export const Tracks = () => {
   const { tracks } = store();
 
   return (
-    <div>
+    <>
       <h1>Tracks ({tracks.length})</h1>
       <If
         when={tracks.length}
@@ -35,6 +35,6 @@ export const Tracks = () => {
           </For>
         </ul>
       </If>
-    </div>
+    </>
   );
 };

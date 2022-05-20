@@ -8,7 +8,7 @@ export const Footer = () => {
 
   return (
     <div
-      class='fixed left-4 right-4 bottom-4 bg-[#111]'
+      class='fixed left-2 right-2 bottom-4 bg-[#111]'
       onTouchStart={(e) => e.stopImmediatePropagation()}
     >
       {/* player */}

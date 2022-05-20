@@ -1,4 +1,5 @@
 import { Footer } from './components/layout/Footer';
+import { Albums } from './pages/Albums';
 import { Artists } from './pages/Artists';
 import { Home } from './pages/Home';
 import { Settings } from './pages/Settings';
@@ -12,6 +13,7 @@ export const App = () => {
         routes={[
           { path: '/', component: Home },
           { path: '/tracks', component: Tracks },
+          { path: '/albums', component: Albums },
           { path: '/artists', component: Artists },
           { path: '/settings', component: Settings },
           { path: '*', component: '404' },
