@@ -1,6 +1,6 @@
 import { For, If } from 'voby';
 import { RouterLink } from '../router';
-import { library } from '../store/library';
+import { library } from '../stores/library';
 import { Track } from '../worker/database';
 
 export const Tracks = () => {
@@ -9,7 +9,9 @@ export const Tracks = () => {
   const onClick = async (track: Track) => {
     try {
       const file = await track.fileHandle.getFile();
+      console.log(track);
       console.log(file);
+      new Audio(URL.createObjectURL(file)).play();
     } catch (_) {
       await track.fileHandle.requestPermission();
       onClick(track);

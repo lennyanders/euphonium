@@ -1,6 +1,6 @@
 import { For, If, useComputed } from 'voby';
 import { RouterLink } from '../router';
-import { library } from '../store/library';
+import { library } from '../stores/library';
 import { getFormattedTime } from '../utils';
 
 export const Albums = () => {

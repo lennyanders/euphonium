@@ -1,4 +1,4 @@
-import { Library } from '../store/library';
+import { Library } from '../stores/library';
 import { getDirectories, getTracks } from './library';
 import { postMessage } from './utils';
 

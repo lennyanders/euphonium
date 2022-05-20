@@ -1,5 +1,5 @@
 import { For, If } from 'voby';
-import { library } from '../store/library';
+import { library } from '../stores/library';
 import { onMessage, postMessage } from '../utils/worker';
 import { DirectoryRelationType } from '../worker/track';
 
