@@ -12,8 +12,15 @@ export const getTrack = async (fileHandle: FileHandle): Promise<Track | null> =>
     const { format, common } = await parseBuffer(
       new Uint8Array(await file.arrayBuffer()),
       { mimeType: file.type, size: file.size },
-      { duration: true },
+      { duration: true, skipCovers: false },
     );
+
+    let cover: Blob | undefined;
+    if (common.picture?.length) {
+      const [image] = common.picture;
+      const imageData = new Uint8ClampedArray(image.data);
+      cover = new Blob([imageData], { type: image.type });
+    }
 
     return {
       ...fileHandle,
@@ -28,6 +35,7 @@ export const getTrack = async (fileHandle: FileHandle): Promise<Track | null> =>
       title: common.title,
       albumArtist: common.albumartist,
       albumTitle: common.album,
+      cover,
     };
   } catch (error) {
     console.error(error);

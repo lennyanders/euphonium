@@ -1,6 +1,7 @@
 import { defineConfig } from 'unocss';
-import presetMini from '@unocss/preset-mini';
+import presetUno from '@unocss/preset-uno';
+import presetIcons from '@unocss/preset-icons';
 
 export default defineConfig({
-  presets: [presetMini()],
+  presets: [presetUno(), presetIcons()],
 });

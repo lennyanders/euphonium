@@ -93,6 +93,6 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  if (tracks.length) postMessage({ message: 'updateState', state: { tracks: await getTracks() } });
+  postMessage({ message: 'updateState', state: { tracks: await getTracks() } });
   console.timeEnd('update');
 };

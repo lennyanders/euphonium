@@ -14,18 +14,21 @@ export const TracksList = ({
       <For values={tracks}>
         {(track) => (
           <>
-            <If when={track.displayDiskNumber}>
-              <li>Disk: {track.diskNumber}</li>
-            </If>
+            {track.displayDiskNumber && <li>Disk: {track.diskNumber}</li>}
             <li class='flex gap-2 items-center' onClick={() => play(track)}>
-              <If when={displayNumber}>
-                <span class='w-2ch text-center'>{track.number}</span>
-              </If>
+              {displayNumber && <span class='w-2ch text-center'>{track.number}</span>}
+              {track.cover ? (
+                <img
+                  decoding='async'
+                  class='w-12 h-12 rounded-2 object-cover object-center'
+                  src={URL.createObjectURL(track.cover)}
+                />
+              ) : (
+                <div class='w-12 h-12 i-mdi-disk'></div>
+              )}
               <div>
                 {track.title || track.fileName}
-                <If when={track.artist}>
-                  <small class='block'>{track.artist}</small>
-                </If>
+                {track.artist && <small class='block'>{track.artist}</small>}
               </div>
             </li>
           </>
