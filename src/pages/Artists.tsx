@@ -45,18 +45,20 @@ export const Artists = () => {
           </p>
         }
       >
-        <ul class='grid gap-4'>
+        <ul class='grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4'>
           <For values={artists}>
             {(artist) => (
               <li>
                 <RouterLink
                   href={`/artist/${artist.name}`}
-                  class='flex flex-wrap gap-2 bg-[#1c1c1c] p-2 rd-2'
+                  class='flex flex-col gap-2 bg-[#1c1c1c] p-2 rd-2 h-100%'
                 >
-                  <span class='flex-basis-100%'>{artist.name}</span>
-                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.tracks}</span>
-                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.albums}</span>
-                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.duration}</span>
+                  {artist.name}
+                  <div class='flex flex-wrap gap-2 m-t-a'>
+                    <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.tracks}</span>
+                    <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.albums}</span>
+                    <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.duration}</span>
+                  </div>
                 </RouterLink>
               </li>
             )}
