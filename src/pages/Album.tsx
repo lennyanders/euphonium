@@ -10,8 +10,11 @@ export const Album = () => {
 
   const albumData = useComputed(() => {
     const tracks = library()
-      .tracks.filter((t) =>
-        t.albumArtist === artist && t.albumTitle === albumTitle && year ? t.year == +year : !t.year,
+      .tracks.filter(
+        (t) =>
+          t.albumArtist === artist &&
+          t.albumTitle === albumTitle &&
+          (year ? t.year == +year : !t.year),
       )
       .sort((a, b) => (a.number || 0) - (b.number || 0))
       .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
