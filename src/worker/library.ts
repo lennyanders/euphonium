@@ -64,6 +64,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
 };
 
 export const updateFiles = async () => {
+  console.time('update');
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
   console.timeEnd('get files from directories');
@@ -93,4 +94,5 @@ export const updateFiles = async () => {
   console.timeEnd('update database');
 
   if (tracks.length) postMessage({ message: 'updateState', state: { tracks: await getTracks() } });
+  console.timeEnd('update');
 };

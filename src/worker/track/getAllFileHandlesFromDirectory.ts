@@ -51,6 +51,6 @@ const getAllFileHandlesFromDirectory = async ({
     return fileSystemHandles;
   } catch (_) {
     postMessage({ message: 'requestPermission', directoryHandle });
-    return [];
+    throw Error();
   }
 };

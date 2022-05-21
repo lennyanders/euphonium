@@ -17,11 +17,13 @@ export type Props<T extends EventTarget, U> = JSX.DOMAttributes<T> &
 
 let first = true;
 export const requestFileAccess = async () => {
+  let success = true;
   if (first) {
     const { libraryDirectories } = library();
     for (const directory of libraryDirectories) {
-      await directory.directoryHandle.requestPermission();
+      success = (await directory.directoryHandle.requestPermission()) === 'granted';
     }
     first = false;
   }
+  return success;
 };

@@ -39,8 +39,12 @@ const addDirectoryToLibrary = async (directories: { name: string; id: number }[]
 
 onMessage(async ({ data }) => {
   if (data.message === 'requestPermission') {
-    await requestFileAccess();
-    postMessage({ message: 'reloadLibrary' });
+    if (await requestFileAccess()) postMessage({ message: 'reloadLibrary' });
+    else {
+      alert(
+        "You need to give permission or you can't use this app. Reload/Reopen and try again if it was a mistake",
+      );
+    }
   }
 });
 
