@@ -1,4 +1,5 @@
 import { $, useEffect, useSample } from 'voby';
+import { requestFileAccess } from '../utils';
 import { Track } from '../worker/database';
 import { library } from './library';
 
@@ -13,15 +14,8 @@ useEffect(() => {
   currentTrack(tracks[0]);
 });
 
-let first = true;
 export const play = async (track?: Track) => {
-  if (first) {
-    const { libraryDirectories } = library();
-    for (const directory of libraryDirectories) {
-      await directory.directoryHandle.requestPermission();
-    }
-    first = false;
-  }
+  await requestFileAccess();
   if (!audioEl.src && !track) track = useSample(currentTrack);
   if (track) {
     try {

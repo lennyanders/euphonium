@@ -1,5 +1,6 @@
 import { For, If } from 'voby';
 import { library } from '../stores/library';
+import { requestFileAccess } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';
 import { DirectoryRelationType } from '../worker/track';
 
@@ -37,12 +38,10 @@ const addDirectoryToLibrary = async (directories: { name: string; id: number }[]
 };
 
 onMessage(async ({ data }) => {
-  if (data.message !== 'requestPermission') return;
-
-  try {
-    await data.directoryHandle.requestPermission();
+  if (data.message === 'requestPermission') {
+    await requestFileAccess();
     postMessage({ message: 'reloadLibrary' });
-  } catch (_) {}
+  }
 });
 
 export const Settings = () => {

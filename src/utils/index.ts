@@ -1,3 +1,5 @@
+import { library } from '../stores/library';
+
 const pad = (number: number) => number.toString().padStart(2, '0');
 
 export const getFormattedTime = (duration: number) => {
@@ -12,3 +14,14 @@ export type Props<T extends EventTarget, U> = JSX.DOMAttributes<T> &
   JSX.HTMLAttributes<T> &
   JSX.ClassAttributes<T> &
   U;
+
+let first = true;
+export const requestFileAccess = async () => {
+  if (first) {
+    const { libraryDirectories } = library();
+    for (const directory of libraryDirectories) {
+      await directory.directoryHandle.requestPermission();
+    }
+    first = false;
+  }
+};
