@@ -18,6 +18,9 @@ export interface Track {
   title?: string;
   albumArtist?: string;
   albumTitle?: string;
+
+  /** only for album view in frontend */
+  displayDiskNumber?: boolean;
 }
 
 export interface AppDataDb extends DBSchema {

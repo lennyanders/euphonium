@@ -13,10 +13,19 @@ export const Album = () => {
       .tracks.filter((t) =>
         t.albumArtist === artist && t.albumTitle === albumTitle && year ? t.year == +year : !t.year,
       )
-      .sort((a, b) => `${a.diskNumber}${a.number}`.localeCompare(`${b.diskNumber}${b.number}`));
+      .sort((a, b) => (a.number || 0) - (b.number || 0))
+      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
 
     let duration = 0;
-    for (const track of tracks) duration += track.duration;
+    let prevDiskNumber = 0;
+    for (const track of tracks) {
+      duration += track.duration;
+
+      if (track.diskNumber && track.diskNumber !== prevDiskNumber) {
+        track.displayDiskNumber = true;
+        prevDiskNumber = track.diskNumber;
+      }
+    }
 
     return {
       tracks,
@@ -53,7 +62,7 @@ export const Album = () => {
           <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{disks}</span>
           <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{duration}</span>
         </div>
-        <TracksList tracks={tracks} />
+        <TracksList tracks={tracks} displayNumber />
       </If>
     </>
   );
