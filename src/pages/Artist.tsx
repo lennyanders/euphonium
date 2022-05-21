@@ -57,7 +57,7 @@ export const Artist = () => {
       <h1>{artist}</h1>
       <If when={!albums.length && !singles.length}>
         <p>
-          You don't have any music for this artist add directories in the{' '}
+          You don't have any music for this artist, add directories in the{' '}
           <RouterLink href='/settings' class='underline'>
             settings
           </RouterLink>{' '}
