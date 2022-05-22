@@ -13,15 +13,17 @@ import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/coverters';
 
-export const getTracks = async () => {
+export const getFETracks = async () => {
   const database = await getDatabase();
-  return await database.getAll('track');
+  const covers = await database.getAll('cover');
+  const tracks = await database.getAll('track');
+  return tracks.map((track) => beToFETrack(track, covers));
 };
 
-export const getDirectories = async () => {
+export const getFEDirectories = async () => {
   const database = await getDatabase();
   const directoryHandles = await database.getAll('libraryDirectory');
-  return directoryHandles.map(({ handle, id }) => ({
+  return directoryHandles.map<FELibraryDirectory>(({ handle, id }) => ({
     name: handle.name,
     id: id!,
     directoryHandle: handle,
@@ -29,7 +31,7 @@ export const getDirectories = async () => {
 };
 
 const sendDirectories = async () => {
-  postMessage({ message: 'updateState', state: { libraryDirectories: await getDirectories() } });
+  postMessage({ message: 'updateState', state: { libraryDirectories: await getFEDirectories() } });
 };
 
 export const removeDirectory = async (id: number) => {
@@ -106,6 +108,6 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  postMessage({ message: 'updateState', state: { tracks: (await getTracks()).map(beToFETrack) } });
+  postMessage({ message: 'updateState', state: { tracks: await getFETracks() } });
   console.timeEnd('update');
 };

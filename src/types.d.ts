@@ -28,6 +28,12 @@ interface DbCover extends FileHandle {
   image: Blob;
 }
 
+interface FELibraryDirectory {
+  id: number;
+  name: string;
+  directoryHandle: FileSystemDirectoryHandle;
+}
+
 type FETrack = Omit<
   DbTrack,
   | 'cover'
@@ -43,3 +49,18 @@ type FETrack = Omit<
   /** only for album view in frontend */
   displayDiskNumber?: boolean;
 };
+
+interface FEAlbum {
+  title: string;
+  artist: string;
+  year: string;
+  tracks: number[];
+  diskCount: number;
+  durationFormatted: string;
+}
+
+interface Library {
+  libraryDirectories: FELibraryDirectory[];
+  tracks: FETrack[];
+  albums: FEAlbum[];
+}

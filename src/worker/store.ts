@@ -1,12 +1,11 @@
-import { Library } from '../stores/library';
-import { beToFETrack } from './files/coverters';
-import { getDirectories, getTracks } from './library';
+import { getFEDirectories, getFETracks } from './library';
 import { postMessage } from './utils';
 
 export const getStore = async () => {
   const state: Library = {
-    libraryDirectories: await getDirectories(),
-    tracks: (await getTracks()).map(beToFETrack),
+    libraryDirectories: await getFEDirectories(),
+    tracks: await getFETracks(),
+    albums: [],
   };
 
   postMessage({ message: 'setStore', state });

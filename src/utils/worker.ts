@@ -1,7 +1,6 @@
 import { worker } from '../shared';
 import { Relation } from '../worker/files/getDirectoryRelation';
 import type { WWME } from '../worker/utils';
-import type { Library } from '../stores/library';
 
 export type WME<T extends string, U extends object = {}> = MessageEvent<U & { message: T }>;
 
