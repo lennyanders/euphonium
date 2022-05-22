@@ -9,7 +9,7 @@ import {
 } from './files';
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
-import { beToFETrack } from './files/coverters';
+import { beToFETrack } from './files/converters';
 import { libraryDirectories$, tracks$ } from './store';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 
