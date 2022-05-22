@@ -1,12 +1,11 @@
 import { For, Observable } from 'voby';
 import { play } from '../stores/player';
-import { DbTrack } from '../worker/database';
 
 export const TracksList = ({
   tracks,
   displayNumber,
 }: {
-  tracks: DbTrack[] | Observable<DbTrack[]>;
+  tracks: FETrack[] | Observable<FETrack[]>;
   displayNumber?: boolean;
 }) => (
   <ul class='grid gap-2'>
@@ -20,15 +19,16 @@ export const TracksList = ({
               <img
                 decoding='async'
                 class='w-12 h-12 rounded-2 object-cover object-center'
-                src={URL.createObjectURL(track.cover)}
+                src={track.cover}
               />
             ) : (
               <div class='w-12 h-12 i-mdi-disk'></div>
             )}
             <div>
-              {track.title || track.fileName}
-              {track.artist && <small class='block'>{track.artist}</small>}
+              {track.title}
+              <small class='block'>{track.artist}</small>
             </div>
+            <span class='m-l-a'>{track.durationFormatted}</span>
           </li>
         </>
       )}

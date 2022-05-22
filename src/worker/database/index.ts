@@ -1,32 +1,8 @@
-import { FileHandle } from '../files/FileHandle';
 import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
 
 export interface DbLibraryDirectory {
   id?: number;
   handle: FileSystemDirectoryHandle;
-}
-
-export interface DbTrack extends FileHandle {
-  id?: number;
-  duration: number;
-  number?: number;
-  count?: number;
-  diskNumber?: number;
-  diskCount?: number;
-  year?: number;
-  artist?: string;
-  title?: string;
-  albumArtist?: string;
-  albumTitle?: string;
-  cover?: Blob;
-
-  /** only for album view in frontend */
-  displayDiskNumber?: boolean;
-}
-
-export interface DbCover extends FileHandle {
-  id?: number;
-  image: Blob;
 }
 
 export interface AppDataDb extends DBSchema {

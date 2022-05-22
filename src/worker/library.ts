@@ -1,5 +1,5 @@
 import { postMessage } from './utils';
-import { DbCover, getDatabase, DbTrack } from './database';
+import { getDatabase } from './database';
 import {
   getFileHandlesFromRootDirectories,
   diffFiles,
@@ -11,6 +11,7 @@ import {
 } from './files';
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
+import { beToFETrack } from './files/coverters';
 
 export const getTracks = async () => {
   const database = await getDatabase();
@@ -105,6 +106,6 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  postMessage({ message: 'updateState', state: { tracks: await getTracks() } });
+  postMessage({ message: 'updateState', state: { tracks: (await getTracks()).map(beToFETrack) } });
   console.timeEnd('update');
 };

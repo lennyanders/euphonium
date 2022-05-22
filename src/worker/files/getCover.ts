@@ -1,4 +1,3 @@
-import { DbCover } from '../database';
 import { FileHandle } from './FileHandle';
 
 export const getCover = async (fileHandle: FileHandle): Promise<DbCover | null> => {

@@ -1,8 +1,8 @@
 import { If, useComputed } from 'voby';
 import { TracksList } from '../components/TracksList';
 import { params, RouterLink } from '../router';
+import { getFormattedTime } from '../shared/utils';
 import { library } from '../stores/library';
-import { getFormattedTime } from '../utils';
 
 export const Album = () => {
   const { artist, year, albumTitle } = params();

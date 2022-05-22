@@ -2,9 +2,8 @@ import { If, useComputed } from 'voby';
 import { Album, AlbumsList, RawAlbums } from '../components/AlbumsList';
 import { TracksList } from '../components/TracksList';
 import { params, RouterLink } from '../router';
+import { getFormattedTime } from '../shared/utils';
 import { library } from '../stores/library';
-import { getFormattedTime } from '../utils';
-import { DbTrack } from '../worker/database';
 
 export const Artist = () => {
   const { artist } = params();
@@ -12,7 +11,7 @@ export const Artist = () => {
 
   const artistData = useComputed(() => {
     const albumsObject: RawAlbums = {};
-    const singles: DbTrack[] = [];
+    const singles: FETrack[] = [];
     let tracks = 0;
     let duration = 0;
     for (const track of library().tracks) {

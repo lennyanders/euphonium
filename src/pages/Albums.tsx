@@ -1,8 +1,8 @@
 import { If, useComputed } from 'voby';
 import { Album, AlbumsList, RawAlbums } from '../components/AlbumsList';
 import { RouterLink } from '../router';
+import { getFormattedTime } from '../shared/utils';
 import { library } from '../stores/library';
-import { getFormattedTime } from '../utils';
 
 export const Albums = () => {
   const albums = useComputed(() => {
