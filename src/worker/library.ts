@@ -1,5 +1,5 @@
 import { postMessage } from './utils';
-import { getDatabase, Track } from './database';
+import { Cover, getDatabase, Track } from './database';
 import {
   getFileHandlesFromRootDirectories,
   diffFiles,
@@ -8,7 +8,9 @@ import {
   Relation,
   DirectoryRelationType,
   getTrack,
-} from './track';
+} from './files';
+import { fileHandleIsCover } from './files/utils';
+import { getCover } from './files/getCover';
 
 export const getTracks = async () => {
   const database = await getDatabase();
@@ -70,26 +72,36 @@ export const updateFiles = async () => {
   console.timeEnd('get files from directories');
 
   console.time('get difference to existing files');
-  const { newFiles, removedTrackIds } = await diffFiles(fileHandles);
+  const { newFiles, removedTrackIds, removedCoverIds } = await diffFiles(fileHandles);
   console.timeEnd('get difference to existing files');
 
-  console.time('get tracks');
+  console.time('parse files');
   const tracks: Track[] = [];
+  const covers: Cover[] = [];
   let count = 0;
   for (const fileHandle of newFiles) {
-    const track = await getTrack(fileHandle);
-    if (track) tracks.push(track);
-    console.log(`added track ${++count} of ${newFiles.length}`);
+    if (fileHandleIsCover(fileHandle)) {
+      const cover = await getCover(fileHandle);
+      if (cover) covers.push(cover);
+    } else {
+      const track = await getTrack(fileHandle);
+      if (track) tracks.push(track);
+    }
+    console.log(`parsed file ${++count} of ${newFiles.length}`);
   }
-  console.timeEnd('get tracks');
+  console.timeEnd('parse files');
 
   console.time('update database');
   const database = await getDatabase();
-  const tx = database.transaction('track', 'readwrite');
+  const txT = database.transaction('track', 'readwrite');
+  const txC = database.transaction('cover', 'readwrite');
   await Promise.all([
-    ...removedTrackIds.map((id) => tx.store.delete(id)),
-    ...tracks.map((f) => tx.store.add(f)),
-    tx.done,
+    ...removedTrackIds.map((id) => txT.store.delete(id)),
+    ...tracks.map((t) => txT.store.add(t)),
+    txT.done,
+    ...removedCoverIds.map((id) => txC.store.delete(id)),
+    ...covers.map((c) => txC.store.add(c)),
+    txC.done,
   ]);
   console.timeEnd('update database');
 

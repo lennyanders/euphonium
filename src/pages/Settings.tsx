@@ -2,7 +2,7 @@ import { For, If } from 'voby';
 import { library } from '../stores/library';
 import { requestFileAccess } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';
-import { DirectoryRelationType } from '../worker/track';
+import { DirectoryRelationType } from '../worker/files';
 
 const addDirectoryToLibrary = async (directories: { name: string; id: number }[]) => {
   const directoryHandle = await showDirectoryPicker();

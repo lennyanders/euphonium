@@ -2,6 +2,9 @@ import { getDatabase } from '../database';
 import { postMessage } from '../utils';
 import { FileHandle } from './FileHandle';
 
+export const trackMatcher = /\.aac$|\.mp3$|\.ogg$|\.wav$|\.flac$|\.m4a$/;
+export const coverMatcher = /^cover\.png$|^cover\.jpg$/i;
+
 export const getFileHandlesFromRootDirectories = async (): Promise<FileHandle[]> => {
   const database = await getDatabase();
   const rootDirectoryHandles = await database.getAll('libraryDirectory');
@@ -23,8 +26,8 @@ const getAllFileHandlesFromDirectory = async ({
   path = libraryDirectory.toString(),
 }: {
   directoryHandle: FileSystemDirectoryHandle;
-  path?: string;
   libraryDirectory: number;
+  path?: string;
 }) => {
   const fileSystemHandles: FileHandle[] = [];
   try {
@@ -39,7 +42,7 @@ const getAllFileHandlesFromDirectory = async ({
             libraryDirectory,
           })),
         );
-      } else if (/\.aac$|\.mp3$|\.ogg$|\.wav$|\.flac$|\.m4a$/.test(fileSystemHandle.name)) {
+      } else if ([trackMatcher, coverMatcher].some((m) => m.test(fileSystemHandle.name))) {
         fileSystemHandles.push({
           filePath: handlePath,
           folderPath,

@@ -1,5 +1,5 @@
 import { WME, MWME } from '../../utils/worker';
-import { Relation } from '../track/getDirectoryRelation';
+import { Relation } from '../files/getDirectoryRelation';
 
 export type WWME =
   | WME<'getStore'>

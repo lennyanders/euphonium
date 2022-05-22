@@ -1,5 +1,5 @@
 import { worker } from '../shared';
-import { Relation } from '../worker/track/getDirectoryRelation';
+import { Relation } from '../worker/files/getDirectoryRelation';
 import type { WWME } from '../worker/utils';
 import type { Library } from '../stores/library';
 

@@ -1,4 +1,4 @@
-import { FileHandle } from '../track/FileHandle';
+import { FileHandle } from '../files/FileHandle';
 import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
 
 export interface Track extends FileHandle {
@@ -19,6 +19,11 @@ export interface Track extends FileHandle {
   displayDiskNumber?: boolean;
 }
 
+export interface Cover extends FileHandle {
+  id?: number;
+  image: Blob;
+}
+
 export interface AppDataDb extends DBSchema {
   libraryDirectory: {
     key: number;
@@ -27,6 +32,11 @@ export interface AppDataDb extends DBSchema {
   track: {
     key: number;
     value: Track;
+    indexes: { libraryDirectory: number };
+  };
+  cover: {
+    key: number;
+    value: Cover;
     indexes: { libraryDirectory: number };
   };
 }
@@ -41,6 +51,9 @@ export const getDatabase = async () => {
 
       const trackStore = db.createObjectStore('track', { keyPath: 'id', autoIncrement: true });
       trackStore.createIndex('libraryDirectory', 'libraryDirectory');
+
+      const coverStore = db.createObjectStore('cover', { keyPath: 'id', autoIncrement: true });
+      coverStore.createIndex('libraryDirectory', 'libraryDirectory');
     },
   });
 
