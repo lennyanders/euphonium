@@ -1,5 +1,5 @@
 import { postMessage } from './utils';
-import { Cover, getDatabase, Track } from './database';
+import { DbCover, getDatabase, DbTrack } from './database';
 import {
   getFileHandlesFromRootDirectories,
   diffFiles,
@@ -76,8 +76,8 @@ export const updateFiles = async () => {
   console.timeEnd('get difference to existing files');
 
   console.time('parse files');
-  const tracks: Track[] = [];
-  const covers: Cover[] = [];
+  const tracks: DbTrack[] = [];
+  const covers: DbCover[] = [];
   let count = 0;
   for (const fileHandle of newFiles) {
     if (fileHandleIsCover(fileHandle)) {

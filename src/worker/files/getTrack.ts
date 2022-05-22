@@ -3,10 +3,10 @@ import { Buffer } from 'buffer';
 globalThis.Buffer = Buffer;
 
 import { parseBuffer } from 'music-metadata';
-import { Track } from '../database';
+import { DbTrack } from '../database';
 import { FileHandle } from './FileHandle';
 
-export const getTrack = async (fileHandle: FileHandle): Promise<Track | null> => {
+export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> => {
   try {
     const file = await fileHandle.fileHandle.getFile();
     const { format, common } = await parseBuffer(

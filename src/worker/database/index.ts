@@ -1,7 +1,12 @@
 import { FileHandle } from '../files/FileHandle';
 import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
 
-export interface Track extends FileHandle {
+export interface DbLibraryDirectory {
+  id?: number;
+  handle: FileSystemDirectoryHandle;
+}
+
+export interface DbTrack extends FileHandle {
   id?: number;
   duration: number;
   number?: number;
@@ -19,7 +24,7 @@ export interface Track extends FileHandle {
   displayDiskNumber?: boolean;
 }
 
-export interface Cover extends FileHandle {
+export interface DbCover extends FileHandle {
   id?: number;
   image: Blob;
 }
@@ -27,16 +32,16 @@ export interface Cover extends FileHandle {
 export interface AppDataDb extends DBSchema {
   libraryDirectory: {
     key: number;
-    value: { id?: number; handle: FileSystemDirectoryHandle };
+    value: DbLibraryDirectory;
   };
   track: {
     key: number;
-    value: Track;
+    value: DbTrack;
     indexes: { libraryDirectory: number };
   };
   cover: {
     key: number;
-    value: Cover;
+    value: DbCover;
     indexes: { libraryDirectory: number };
   };
 }

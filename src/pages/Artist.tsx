@@ -4,7 +4,7 @@ import { TracksList } from '../components/TracksList';
 import { params, RouterLink } from '../router';
 import { library } from '../stores/library';
 import { getFormattedTime } from '../utils';
-import { Track } from '../worker/database';
+import { DbTrack } from '../worker/database';
 
 export const Artist = () => {
   const { artist } = params();
@@ -12,7 +12,7 @@ export const Artist = () => {
 
   const artistData = useComputed(() => {
     const albumsObject: RawAlbums = {};
-    const singles: Track[] = [];
+    const singles: DbTrack[] = [];
     let tracks = 0;
     let duration = 0;
     for (const track of library().tracks) {

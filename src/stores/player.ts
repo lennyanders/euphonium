@@ -1,12 +1,12 @@
 import { $, useEffect, useSample } from 'voby';
 import { requestFileAccess } from '../utils';
-import { Track } from '../worker/database';
+import { DbTrack } from '../worker/database';
 import { library } from './library';
 
 const audioEl = new Audio();
 
 export const playing = $(false);
-export const currentTrack = $<Track>();
+export const currentTrack = $<DbTrack>();
 
 useEffect(() => {
   const { tracks } = library();
@@ -14,7 +14,7 @@ useEffect(() => {
   currentTrack(tracks[0]);
 });
 
-export const play = async (track?: Track) => {
+export const play = async (track?: DbTrack) => {
   await requestFileAccess();
   if (!audioEl.src && !track) track = useSample(currentTrack);
   if (track) {

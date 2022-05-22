@@ -1,10 +1,10 @@
 import { $ } from 'voby';
 import { onMessage } from '../utils/worker';
-import { Track } from '../worker/database';
+import { DbTrack } from '../worker/database';
 
 export interface Library {
   libraryDirectories: { id: number; name: string; directoryHandle: FileSystemDirectoryHandle }[];
-  tracks: Track[];
+  tracks: DbTrack[];
 }
 
 export const library = $<Library>({ libraryDirectories: [], tracks: [] });

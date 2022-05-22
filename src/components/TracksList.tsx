@@ -1,12 +1,12 @@
 import { For, Observable } from 'voby';
 import { play } from '../stores/player';
-import { Track } from '../worker/database';
+import { DbTrack } from '../worker/database';
 
 export const TracksList = ({
   tracks,
   displayNumber,
 }: {
-  tracks: Track[] | Observable<Track[]>;
+  tracks: DbTrack[] | Observable<DbTrack[]>;
   displayNumber?: boolean;
 }) => (
   <ul class='grid gap-2'>
