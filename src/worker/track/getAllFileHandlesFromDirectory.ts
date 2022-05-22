@@ -19,8 +19,8 @@ export const getFileHandlesFromRootDirectories = async (): Promise<FileHandle[]>
 
 const getAllFileHandlesFromDirectory = async ({
   directoryHandle,
-  path = '',
   libraryDirectory,
+  path = libraryDirectory.toString(),
 }: {
   directoryHandle: FileSystemDirectoryHandle;
   path?: string;
