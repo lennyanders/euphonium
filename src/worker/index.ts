@@ -2,10 +2,9 @@ import { forceAddDirectory, removeDirectory, tryAddDirectory, updateFiles } from
 import { getStore } from './store';
 import { onMessage } from './utils';
 
+getStore();
+
 onMessage(async ({ data }) => {
-  if (data.message === 'getStore') {
-    return getStore();
-  }
   if (data.message == 'reloadLibrary') {
     return updateFiles();
   }

@@ -1,5 +1,5 @@
 import { $ } from 'voby';
-import { onMessage, postMessage } from '../utils/worker';
+import { onMessage } from '../utils/worker';
 import { Track } from '../worker/database';
 
 export interface Library {
@@ -8,9 +8,13 @@ export interface Library {
 }
 
 export const library = $<Library>({ libraryDirectories: [], tracks: [] });
+export const loading = $(true);
 
-postMessage({ message: 'getStore' });
 onMessage(({ data }) => {
-  if (data.message === 'setStore') return library(data.state);
-  if (data.message === 'updateState') library((state) => ({ ...state, ...data.state }));
+  if (data.message === 'setStore') {
+    library(data.state);
+    loading(false);
+  } else if (data.message === 'updateState') {
+    library((state) => ({ ...state, ...data.state }));
+  }
 });

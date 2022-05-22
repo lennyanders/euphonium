@@ -2,7 +2,6 @@ import { WME, MWME } from '../../utils/worker';
 import { Relation } from '../files/getDirectoryRelation';
 
 export type WWME =
-  | WME<'getStore'>
   | WME<'reloadLibrary'>
   | WME<'removeLibraryDirectory', { id: number }>
   | WME<'tryAddDirectoryToLibrary', { directoryHandle: FileSystemDirectoryHandle }>
