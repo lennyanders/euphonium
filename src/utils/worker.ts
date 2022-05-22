@@ -1,14 +1,5 @@
 import { worker } from '../shared';
-import { Relation } from '../worker/files/getDirectoryRelation';
-import type { WWME } from '../worker/utils';
-
-export type WME<T extends string, U extends object = {}> = MessageEvent<U & { message: T }>;
-
-export type MWME =
-  | WME<'setStore', { state: Library }>
-  | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
-  | WME<'updateState', { state: Partial<Library> }>
-  | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
+import { MWME, WWME } from '../shared/workerFeCommunicationTypes';
 
 export const postMessage = (message: WWME['data']) => worker.postMessage(message);
 

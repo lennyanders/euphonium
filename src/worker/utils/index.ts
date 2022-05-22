@@ -1,14 +1,4 @@
-import { WME, MWME } from '../../utils/worker';
-import { Relation } from '../files/getDirectoryRelation';
-
-export type WWME =
-  | WME<'reloadLibrary'>
-  | WME<'removeLibraryDirectory', { id: number }>
-  | WME<'tryAddDirectoryToLibrary', { directoryHandle: FileSystemDirectoryHandle }>
-  | WME<
-      'forceAddDirectoryToLibrary',
-      { relation: Relation; directoryHandle: FileSystemDirectoryHandle }
-    >;
+import { MWME, WWME } from '../../shared/workerFeCommunicationTypes';
 
 export const postMessage = (message: MWME['data']) => {
   // @ts-ignore vite-plugin-checker does not know that this is in a worker

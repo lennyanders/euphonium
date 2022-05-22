@@ -5,14 +5,13 @@ import {
   diffFiles,
   updateTrackPaths,
   getDirectoryRelation,
-  Relation,
-  DirectoryRelationType,
   getTrack,
 } from './files';
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/coverters';
 import { libraryDirectories$, tracks$ } from './store';
+import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 
 export const getFETracks = async () => {
   const database = await getDatabase();

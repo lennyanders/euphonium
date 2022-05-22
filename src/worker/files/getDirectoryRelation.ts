@@ -1,20 +1,5 @@
+import { DirectoryRelationType, Relation } from '../../shared/workerFeCommunicationTypes';
 import { getDatabase } from '../database';
-
-export enum DirectoryRelationType {
-  DirectoryIsNew,
-  DirectoryIsAlreadyImportet,
-  DirectoryIsInsideImportetDirectory,
-  DirectoryIsParentOfImportetDirectories,
-}
-
-export type Relation =
-  | { type: DirectoryRelationType.DirectoryIsNew }
-  | { type: DirectoryRelationType.DirectoryIsAlreadyImportet; id: number }
-  | { type: DirectoryRelationType.DirectoryIsInsideImportetDirectory; id: number }
-  | {
-      type: DirectoryRelationType.DirectoryIsParentOfImportetDirectories;
-      parentOfDirectories: { id: number; pathDifference: string[] }[];
-    };
 
 export const getDirectoryRelation = async (
   directoryHandle: FileSystemDirectoryHandle,
