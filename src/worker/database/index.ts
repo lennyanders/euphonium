@@ -1,13 +1,8 @@
+import { FileHandle } from '../track/FileHandle';
 import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
 
-export interface Track {
+export interface Track extends FileHandle {
   id?: number;
-  filePath: string;
-  fileName: string;
-  fileModified?: number;
-  fileHandle: FileSystemFileHandle;
-  directoryHandle: FileSystemDirectoryHandle;
-  libraryDirectory: number;
   duration: number;
   number?: number;
   count?: number;

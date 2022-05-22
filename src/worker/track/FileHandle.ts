@@ -1,6 +1,8 @@
-import { Track } from '../database';
-
-export type FileHandle = Pick<
-  Track,
-  'filePath' | 'fileName' | 'fileModified' | 'fileHandle' | 'directoryHandle' | 'libraryDirectory'
->;
+export interface FileHandle {
+  filePath: string;
+  fileName: string;
+  fileModified?: number;
+  fileHandle: FileSystemFileHandle;
+  directoryHandle: FileSystemDirectoryHandle;
+  libraryDirectory: number;
+}
