@@ -12,6 +12,7 @@ import {
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/coverters';
+import { libraryDirectories$, tracks$ } from './store';
 
 export const getFETracks = async () => {
   const database = await getDatabase();
@@ -30,14 +31,10 @@ export const getFEDirectories = async () => {
   }));
 };
 
-const sendDirectories = async () => {
-  postMessage({ message: 'updateState', state: { libraryDirectories: await getFEDirectories() } });
-};
-
 export const removeDirectory = async (id: number) => {
   const database = await getDatabase();
   await database.delete('libraryDirectory', id);
-  await sendDirectories();
+  libraryDirectories$(await getFEDirectories());
   await updateFiles();
 };
 
@@ -46,7 +43,7 @@ export const tryAddDirectory = async (handle: FileSystemDirectoryHandle) => {
   if (relation.type === DirectoryRelationType.DirectoryIsNew) {
     const database = await getDatabase();
     await database.add('libraryDirectory', { handle });
-    await sendDirectories();
+    libraryDirectories$(await getFEDirectories());
     await updateFiles();
   }
   postMessage({ message: 'tryAddDirectoryToLibrary', relation });
@@ -64,7 +61,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
     await database.delete('libraryDirectory', oldId);
   }
   console.timeEnd('reparent directories');
-  await sendDirectories();
+  libraryDirectories$(await getFEDirectories());
   await updateFiles();
 };
 
@@ -108,6 +105,9 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  postMessage({ message: 'updateState', state: { tracks: await getFETracks() } });
+  tracks$(await getFETracks());
   console.timeEnd('update');
 };
+
+getFEDirectories().then(libraryDirectories$);
+getFETracks().then(tracks$);
