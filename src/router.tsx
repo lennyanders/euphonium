@@ -2,12 +2,11 @@ import { parse } from 'regexparam';
 import { $, useComputed, useSample } from 'voby';
 
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
-  const matches = result.pattern.exec(path);
-  if (!matches) return {};
-  const res: Record<string, string | null> = {};
-  let i = 0;
-  while (i < result.keys.length) res[result.keys[i]] = matches[++i] ? decodeURI(matches[i]) : null;
-  return res;
+  const matches = result.pattern.exec(path)!;
+  return matches.slice(1).reduce<Record<string, string | null>>((res, val, index) => {
+    res[result.keys[index]] = val ? decodeURIComponent(val) : null;
+    return res;
+  }, {});
 };
 
 export const params = $<Record<string, string | null>>({});
@@ -33,7 +32,8 @@ export const Router = ({
     }
     if (!route) return;
 
-    params(exec(p, route.regex));
+    // I don't like it but it fixes some weird error where voby can't remove a htmlelement
+    requestAnimationFrame(() => params(exec(p, route.regex)));
     return route.component;
   });
 };
