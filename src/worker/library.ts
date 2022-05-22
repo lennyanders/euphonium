@@ -88,7 +88,7 @@ export const updateFiles = async () => {
   const tx = database.transaction('track', 'readwrite');
   await Promise.all([
     ...removedTrackIds.map((id) => tx.store.delete(id)),
-    ...tracks.map((f) => tx.store.add(f) as unknown as void),
+    ...tracks.map((f) => tx.store.add(f)),
     tx.done,
   ]);
   console.timeEnd('update database');

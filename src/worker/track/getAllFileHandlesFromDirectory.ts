@@ -29,7 +29,8 @@ const getAllFileHandlesFromDirectory = async ({
   const fileSystemHandles: FileHandle[] = [];
   try {
     for await (const fileSystemHandle of directoryHandle.values()) {
-      const handlePath = `${path ? `${path}/` : ''}${fileSystemHandle.name}`;
+      const folderPath = `${path ? `${path}/` : ''}`;
+      const handlePath = `${folderPath}${fileSystemHandle.name}`;
       if (fileSystemHandle.kind === 'directory') {
         fileSystemHandles.push(
           ...(await getAllFileHandlesFromDirectory({
@@ -41,6 +42,7 @@ const getAllFileHandlesFromDirectory = async ({
       } else if (/\.aac$|\.mp3$|\.ogg$|\.wav$|\.flac$|\.m4a$/.test(fileSystemHandle.name)) {
         fileSystemHandles.push({
           filePath: handlePath,
+          folderPath,
           fileName: fileSystemHandle.name.split('.')[0],
           libraryDirectory,
           directoryHandle,

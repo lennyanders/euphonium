@@ -13,6 +13,7 @@ export const updateTrackPaths = async (
   await Promise.all(
     tracks.map((fileHandle) => {
       fileHandle.filePath = `${newPathStart}/${fileHandle.filePath}`;
+      fileHandle.folderPath = `${newPathStart}/${fileHandle.folderPath}`;
       fileHandle.libraryDirectory = newKey;
       tx.store.put(fileHandle);
     }),
