@@ -1,3 +1,4 @@
+import $ from 'oby';
 import { postMessage } from './utils';
 import { getDatabase } from './database';
 import {
@@ -108,5 +109,9 @@ export const updateFiles = async () => {
   console.timeEnd('update');
 };
 
-getFEDirectories().then(libraryDirectories$);
-getFETracks().then(tracks$);
+Promise.all([getFEDirectories(), getFETracks()]).then(([directories, tracks]) => {
+  $.batch(() => {
+    libraryDirectories$(directories);
+    tracks$(tracks);
+  });
+});
