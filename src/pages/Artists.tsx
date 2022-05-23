@@ -1,10 +1,10 @@
-import { For, If, useComputed } from 'voby';
+import { useComputed } from 'voby';
 import { RouterLink } from '../router';
 import { getFormattedTime } from '../shared/utils';
 import { library } from '../stores/library';
 
 export const Artists = () => {
-  const artists = useComputed(() => {
+  const artists$ = useComputed(() => {
     const artistsObject: Record<string, { tracks: number; duration: number; albums: Set<string> }> =
       {};
     for (const { artist, duration, albumTitle, albumArtist } of library().tracks) {
@@ -30,41 +30,38 @@ export const Artists = () => {
     }));
   });
 
+  const artists = artists$();
+
   return (
     <>
       <h1>Artists</h1>
-      <If
-        when={artists().length}
-        fallback={
-          <p>
-            Add directories in the{' '}
-            <RouterLink href='/settings' class='underline'>
-              settings
-            </RouterLink>{' '}
-            and start listening to music!
-          </p>
-        }
-      >
+      {!artists.length ? (
+        <p>
+          Add directories in the{' '}
+          <RouterLink href='/settings' class='underline'>
+            settings
+          </RouterLink>{' '}
+          and start listening to music!
+        </p>
+      ) : (
         <ul class='grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4'>
-          <For values={artists}>
-            {(artist) => (
-              <li>
-                <RouterLink
-                  href={`/artist/${artist.name}`}
-                  class='flex flex-col gap-2 bg-[#1c1c1c] p-2 rd-2 h-100%'
-                >
-                  {artist.name}
-                  <div class='flex flex-wrap gap-2 m-t-a'>
-                    <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.tracks}</span>
-                    <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.albums}</span>
-                    <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.duration}</span>
-                  </div>
-                </RouterLink>
-              </li>
-            )}
-          </For>
+          {artists.map((artist) => (
+            <li>
+              <RouterLink
+                href={`/artist/${artist.name}`}
+                class='flex flex-col gap-2 bg-[#1c1c1c] p-2 rd-2 h-100%'
+              >
+                {artist.name}
+                <div class='flex flex-wrap gap-2 m-t-a'>
+                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.tracks}</span>
+                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.albums}</span>
+                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.duration}</span>
+                </div>
+              </RouterLink>
+            </li>
+          ))}
         </ul>
-      </If>
+      )}
     </>
   );
 };

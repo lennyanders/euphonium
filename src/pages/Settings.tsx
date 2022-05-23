@@ -1,4 +1,3 @@
-import { For, If } from 'voby';
 import { DirectoryRelationType } from '../shared/workerFeCommunicationTypes';
 import { library } from '../stores/library';
 import { requestFileAccess } from '../utils';
@@ -61,23 +60,20 @@ export const Settings = () => {
         </button>
         <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
       </div>
-      <If
-        when={libraryDirectories.length}
-        fallback={<p>Add directories and start listening to music!</p>}
-      >
+      {!libraryDirectories?.length ? (
+        <p>Add directories and start listening to music!</p>
+      ) : (
         <ul class='grid gap-2'>
-          <For values={libraryDirectories}>
-            {({ name, id }) => (
-              <li class='flex gap-1'>
-                {name}
-                <button onClick={() => postMessage({ message: 'removeLibraryDirectory', id })}>
-                  ×
-                </button>
-              </li>
-            )}
-          </For>
+          {libraryDirectories.map(({ name, id }) => (
+            <li class='flex gap-1'>
+              {name}
+              <button onClick={() => postMessage({ message: 'removeLibraryDirectory', id })}>
+                ×
+              </button>
+            </li>
+          ))}
         </ul>
-      </If>
+      )}
       <small class='w-80% op-50'>
         You need to give permission again for each folder after reloading/revisiting the player so
         it's good to use as few folders as possible

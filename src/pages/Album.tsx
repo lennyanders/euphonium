@@ -1,4 +1,4 @@
-import { If, useComputed } from 'voby';
+import { useComputed } from 'voby';
 import { TracksList } from '../components/TracksList';
 import { params, RouterLink } from '../router';
 import { library } from '../stores/library';
@@ -26,28 +26,25 @@ export const Album = () => {
       <RouterLink class='m-t--2' href={`/artist/${artist}`}>
         {artist}
       </RouterLink>
-      <If
-        when={tracks?.length}
-        fallback={
-          <p>
-            You don't have that album in you'r library, add directories in the{' '}
-            <RouterLink href='/settings' class='underline'>
-              settings
-            </RouterLink>{' '}
-            and start listening to music!
-          </p>
-        }
-      >
-        <div class='flex flex-wrap gap-2 m-t--2 m-b-2'>
-          <If when={year}>
-            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{year}</span>
-          </If>
-          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{tracks?.length}</span>
-          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{diskCount}</span>
-          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{durationFormatted}</span>
-        </div>
-        <TracksList tracks={tracks!} displayNumber displayDiskNumber />
-      </If>
+      {!tracks?.length ? (
+        <p>
+          You don't have that album in you'r library, add directories in the{' '}
+          <RouterLink href='/settings' class='underline'>
+            settings
+          </RouterLink>{' '}
+          and start listening to music!
+        </p>
+      ) : (
+        <>
+          <div class='flex flex-wrap gap-2 m-t--2 m-b-2'>
+            {year && <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{year}</span>}
+            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{tracks?.length}</span>
+            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{diskCount}</span>
+            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{durationFormatted}</span>
+          </div>
+          <TracksList tracks={tracks} displayNumber displayDiskNumber />
+        </>
+      )}
     </>
   );
 };
