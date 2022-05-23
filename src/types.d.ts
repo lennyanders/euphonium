@@ -48,8 +48,6 @@ type FETrack = Omit<
   title: string;
   cover?: string;
   durationFormatted: string;
-  /** only for album view in frontend */
-  displayDiskNumber?: boolean;
 };
 
 interface FEAlbum {
@@ -58,6 +56,7 @@ interface FEAlbum {
   year?: number;
   tracks: number[];
   diskCount: number;
+  duration: number;
   durationFormatted: string;
 }
 

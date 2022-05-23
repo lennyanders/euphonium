@@ -1,7 +1,6 @@
 import { If, useComputed } from 'voby';
 import { TracksList } from '../components/TracksList';
 import { params, RouterLink } from '../router';
-import { getFormattedTime } from '../shared/utils';
 import { library } from '../stores/library';
 
 export const Album = () => {
@@ -9,35 +8,17 @@ export const Album = () => {
   if (!artist || !albumTitle) return 'Something went wrong';
 
   const albumData = useComputed(() => {
-    const tracks = library()
-      .tracks.filter(
-        (t) =>
-          t.albumArtist === artist &&
-          t.albumTitle === albumTitle &&
-          (year ? t.year == +year : !t.year),
-      )
-      .sort((a, b) => (a.number || 0) - (b.number || 0))
-      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
-
-    let duration = 0;
-    let prevDiskNumber = 0;
-    for (const track of tracks) {
-      duration += track.duration;
-
-      if (track.diskNumber && track.diskNumber !== prevDiskNumber) {
-        track.displayDiskNumber = true;
-        prevDiskNumber = track.diskNumber;
-      }
-    }
-
+    const { albums, tracks } = library();
+    const album = albums.find(
+      (a) => a.artist === artist && a.title === albumTitle && (year ? a.year === +year : !a.year),
+    );
     return {
-      tracks,
-      duration: getFormattedTime(duration),
-      disks: tracks.slice(-1)[0]?.diskNumber || 1,
+      ...album,
+      tracks: album?.tracks.map((id) => tracks.find((track) => track.id === id)!),
     };
   });
 
-  const { tracks, disks, duration } = albumData();
+  const { tracks, diskCount, durationFormatted } = albumData();
 
   return (
     <>
@@ -46,7 +27,7 @@ export const Album = () => {
         {artist}
       </RouterLink>
       <If
-        when={tracks.length}
+        when={tracks?.length}
         fallback={
           <p>
             You don't have that album in you'r library, add directories in the{' '}
@@ -61,11 +42,11 @@ export const Album = () => {
           <If when={year}>
             <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{year}</span>
           </If>
-          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{tracks.length}</span>
-          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{disks}</span>
-          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{duration}</span>
+          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{tracks?.length}</span>
+          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{diskCount}</span>
+          <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{durationFormatted}</span>
         </div>
-        <TracksList tracks={tracks} displayNumber />
+        <TracksList tracks={tracks!} displayNumber displayDiskNumber />
       </If>
     </>
   );

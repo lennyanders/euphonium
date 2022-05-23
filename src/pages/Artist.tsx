@@ -1,5 +1,5 @@
 import { If, useComputed } from 'voby';
-import { Album, AlbumsList, RawAlbums } from '../components/AlbumsList';
+import { AlbumsList } from '../components/AlbumsList';
 import { TracksList } from '../components/TracksList';
 import { params, RouterLink } from '../router';
 import { getFormattedTime } from '../shared/utils';
@@ -10,42 +10,23 @@ export const Artist = () => {
   if (!artist) return 'Something went wrong';
 
   const artistData = useComputed(() => {
-    const albumsObject: RawAlbums = {};
+    const { tracks, albums } = library();
     const singles: FETrack[] = [];
-    let tracks = 0;
     let duration = 0;
-    for (const track of library().tracks) {
-      if (track.albumTitle && track.albumArtist === artist) {
-        tracks++;
-        duration += track.duration;
-        const key = `${track.albumArtist}${track.albumTitle}${track.year}`;
-        const albumObject = albumsObject[key];
-        if (albumObject) {
-          albumObject.tracks++;
-          albumObject.duration += track.duration;
-        } else {
-          albumsObject[key] = {
-            albumTitle: track.albumTitle,
-            albumArtist: track.albumArtist || 'unknown artist',
-            year: track.year,
-            tracks: 1,
-            duration: track.duration,
-          };
-        }
-      } else if (!track.albumTitle && track.artist === artist) {
-        tracks++;
+    let trackscount = 0;
+    for (const track of tracks) {
+      if (!track.albumTitle && track.artist === artist) {
+        trackscount++;
         duration += track.duration;
         singles.push(track);
       }
     }
+    const artistAlbums = albums.filter((a) => a.artist === artist);
     return {
-      albums: Object.values(albumsObject).map<Album>((album) => ({
-        ...album,
-        duration: getFormattedTime(album.duration),
-      })),
+      albums: artistAlbums,
       singles,
-      tracks,
-      duration: getFormattedTime(duration),
+      tracks: artistAlbums.reduce((res, val) => res + val.tracks.length, trackscount),
+      duration: getFormattedTime(artistAlbums.reduce((res, val) => res + val.duration, duration)),
     };
   });
 
