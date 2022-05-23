@@ -34,14 +34,17 @@ export const albums$ = $.computed<FEAlbum[] | undefined>(() => {
       };
     }
   }
-  return Object.values(albumsObject).map<FEAlbum>((album) => ({
-    ...album,
-    tracks: album.tracks
+  return Object.values(albumsObject).map<FEAlbum>((album) => {
+    const sortedTracks = album.tracks
       .sort((a, b) => (a.number || 0) - (b.number || 0))
-      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0))
-      .map((track) => track.id!),
-    durationFormatted: getFormattedTime(album.duration),
-  }));
+      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+    return {
+      ...album,
+      tracks: sortedTracks.map((track) => track.id!),
+      durationFormatted: getFormattedTime(album.duration),
+      cover: sortedTracks.find((track) => track.cover)?.cover,
+    };
+  });
 });
 
 const dispose = $.effect(() => {

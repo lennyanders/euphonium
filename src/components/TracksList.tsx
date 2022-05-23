@@ -7,11 +7,11 @@ const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boole
     {track.cover ? (
       <img
         decoding='async'
-        class='w-12 h-12 rounded-2 object-cover object-center'
+        class='w-12 h-12 rounded-2 object-cover object-center shrink-0'
         src={track.cover}
       />
     ) : (
-      <div class='w-12 h-12 i-mdi-disk'></div>
+      <div class='w-12 h-12 shrink-0 i-mdi-disk'></div>
     )}
     <div>
       {track.title}

@@ -58,6 +58,7 @@ interface FEAlbum {
   diskCount: number;
   duration: number;
   durationFormatted: string;
+  cover?: string;
 }
 
 interface Library {

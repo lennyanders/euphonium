@@ -2,24 +2,26 @@ import { RouterLink } from '../router';
 
 export const AlbumsList = ({ albums }: { albums: FEAlbum[] }) => {
   return (
-    <ul class='grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4'>
+    <ul class='grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-4'>
       {albums.map((album) => (
         <li>
           <RouterLink
-            class='flex flex-col gap-2 bg-[#1c1c1c] p-2 rd-2 h-100%'
+            class='flex flex-col justify-end items-start bg-[#1c1c1c] p-1 rd-2 overflow-hidden aspect-1 text-sm relative'
             href={`/artist/${album.artist}${album.year ? `/${album.year}` : ''}/${album.title}`}
           >
-            {album.title}
-            <small>{album.artist}</small>
-            <div class='flex flex-wrap gap-2 m-t-a'>
-              {album.year && (
-                <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{album.year}</span>
-              )}
-              <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{album.tracks.length}</span>
-              <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>
-                {album.durationFormatted}
-              </span>
-            </div>
+            {album.cover ? (
+              <img
+                decoding='async'
+                class='absolute top-0 left-0 w-100% h-100% object-cover object-center'
+                src={album.cover}
+              />
+            ) : (
+              <div class='absolute top-0 left-0 w-100% h-100% color-[#111] i-mdi-disk'></div>
+            )}
+            <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate relative'>{album.title}</span>
+            <small class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate relative m-t-1'>
+              {album.artist}
+            </small>
           </RouterLink>
         </li>
       ))}
