@@ -38,7 +38,7 @@ export const Album = () => {
         <>
           <div class='flex flex-wrap gap-2 m-t--2 m-b-2'>
             {year && <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{year}</span>}
-            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{tracks?.length}</span>
+            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{tracks.length}</span>
             <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{diskCount}</span>
             <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{durationFormatted}</span>
           </div>

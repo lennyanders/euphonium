@@ -50,13 +50,13 @@ export const Artist = () => {
             <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{albums.length}</span>
             <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{duration}</span>
           </div>
-          {albums.length && (
+          {albums.length > 0 && (
             <>
               <h2>Albums ({albums.length})</h2>
               <AlbumsList albums={albums} />
             </>
           )}
-          {singles.length && (
+          {singles.length > 0 && (
             <>
               <h2>Singles ({singles.length})</h2>
               <TracksList tracks={singles} />

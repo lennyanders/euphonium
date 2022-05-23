@@ -60,7 +60,7 @@ export const Settings = () => {
         </button>
         <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
       </div>
-      {!libraryDirectories?.length ? (
+      {!libraryDirectories.length ? (
         <p>Add directories and start listening to music!</p>
       ) : (
         <ul class='grid gap-2'>

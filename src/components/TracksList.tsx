@@ -1,4 +1,3 @@
-import { For, Observable } from 'voby';
 import { play } from '../stores/player';
 
 const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boolean }) => (
@@ -26,27 +25,25 @@ export const TracksList = ({
   displayNumber,
   displayDiskNumber,
 }: {
-  tracks: FETrack[] | Observable<FETrack[]>;
+  tracks: FETrack[];
   displayNumber?: boolean;
   displayDiskNumber?: boolean;
 }) => {
   let prevDiskNumber = 0;
   return (
     <ul class='grid gap-2'>
-      <For values={tracks}>
-        {(track) => {
-          if (displayDiskNumber && track.diskNumber && prevDiskNumber !== track.diskNumber) {
-            prevDiskNumber = track.diskNumber;
-            return (
-              <>
-                <li>Disk: {track.diskNumber}</li>
-                <Track track={track} displayNumber={displayNumber} />
-              </>
-            );
-          }
-          return <Track track={track} displayNumber={displayNumber} />;
-        }}
-      </For>
+      {tracks.map((track) => {
+        if (displayDiskNumber && track.diskNumber && prevDiskNumber !== track.diskNumber) {
+          prevDiskNumber = track.diskNumber;
+          return (
+            <>
+              <li>Disk: {track.diskNumber}</li>
+              <Track track={track} displayNumber={displayNumber} />
+            </>
+          );
+        }
+        return <Track track={track} displayNumber={displayNumber} />;
+      })}
     </ul>
   );
 };
