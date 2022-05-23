@@ -18,7 +18,9 @@ export const getFETracks = async () => {
   const database = await getDatabase();
   const covers = await database.getAll('cover');
   const tracks = await database.getAll('track');
-  return tracks.map((track) => beToFETrack(track, covers));
+  return tracks
+    .map((track) => beToFETrack(track, covers))
+    .sort((a, b) => a.title.localeCompare(b.title));
 };
 
 export const getFEDirectories = async () => {

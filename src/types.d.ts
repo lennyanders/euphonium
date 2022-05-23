@@ -43,7 +43,9 @@ type FETrack = Omit<
   | 'fileModified'
   | 'directoryHandle'
   | 'libraryDirectory'
+  | 'title'
 > & {
+  title: string;
   cover?: string;
   durationFormatted: string;
   /** only for album view in frontend */
@@ -53,7 +55,7 @@ type FETrack = Omit<
 interface FEAlbum {
   title: string;
   artist: string;
-  year: string;
+  year?: number;
   tracks: number[];
   diskCount: number;
   durationFormatted: string;
