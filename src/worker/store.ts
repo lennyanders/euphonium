@@ -6,7 +6,8 @@ export const libraryDirectories$ = $<FELibraryDirectory[]>();
 export const tracks$ = $<FETrack[]>();
 export const albums$ = $.computed<FEAlbum[] | undefined>(() => {
   const tracks = tracks$();
-  if (!tracks?.length) return;
+  if (!tracks) return;
+  if (!tracks.length) return [];
 
   const albumsObject: Record<
     string,
