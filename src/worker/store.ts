@@ -20,8 +20,8 @@ export const albums$ = $.computed<FEAlbum[] | undefined>(() => {
     if (albumObject) {
       albumObject.duration += track.duration;
       albumObject.tracks.push(track);
-      if (track.diskCount && track.diskCount > albumObject.diskCount) {
-        albumObject.diskCount = track.diskCount;
+      if (track.diskNumber && track.diskNumber > albumObject.diskCount) {
+        albumObject.diskCount = track.diskNumber;
       }
     } else {
       albumsObject[key] = {
