@@ -4,6 +4,7 @@ globalThis.Buffer = Buffer;
 
 import { parseBuffer } from 'music-metadata';
 import { FileHandle } from './FileHandle';
+import { getOptimizedImage } from './getOptimizedImage';
 
 export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> => {
   try {
@@ -18,7 +19,7 @@ export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> 
     if (common.picture?.length) {
       const [image] = common.picture;
       const imageData = new Uint8ClampedArray(image.data);
-      cover = new Blob([imageData], { type: image.type });
+      cover = await getOptimizedImage(new Blob([imageData], { type: image.type }));
     }
 
     return {
