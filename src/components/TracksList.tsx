@@ -2,7 +2,7 @@ import { play } from '../stores/player';
 
 const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boolean }) => (
   <li class='flex gap-2 items-center' onClick={() => play(track)}>
-    {displayNumber && <span class='w-2ch text-center'>{track.number}</span>}
+    {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number}</span>}
     {track.cover ? (
       <img
         decoding='async'
