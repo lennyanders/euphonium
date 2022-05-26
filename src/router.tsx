@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useComputed, useSample } from 'voby';
+import { $, useSample } from 'voby';
 
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
@@ -21,7 +21,7 @@ export const Router = ({
   routes: { path: string; component: JSX.Child; title?: string }[];
 }) => {
   const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
-  return useComputed(() => {
+  return () => {
     const p = path();
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
@@ -32,10 +32,9 @@ export const Router = ({
     }
     if (!route) return;
 
-    // I don't like it but it fixes some weird error where voby can't remove a htmlelement
-    requestAnimationFrame(() => params(exec(p, route.regex)));
+    params(exec(p, route.regex));
     return route.component;
-  });
+  };
 };
 
 export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {

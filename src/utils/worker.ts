@@ -1,5 +1,7 @@
-import { worker } from '../shared';
+import MyWorker from '../worker?worker';
 import { MWME, WWME } from '../shared/workerFeCommunicationTypes';
+
+export const worker = new MyWorker();
 
 export const postMessage = (message: WWME['data']) => worker.postMessage(message);
 
