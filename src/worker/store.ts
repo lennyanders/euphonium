@@ -13,7 +13,7 @@ const albums$ = $.computed<FEAlbum[] | undefined>(() => {
   for (const track of tracks) {
     if (!track.albumTitle) continue;
 
-    const key = `${track.albumArtist}${track.albumTitle}${track.year}`;
+    const key = `${track.albumArtist}${track.albumTitle}`;
     const albumObject = albumsObject[key];
     if (albumObject) {
       albumObject.duration += track.duration;

@@ -5,13 +5,11 @@ import { params, RouterLink } from '../router';
 import { library } from '../stores/library';
 
 export const Album = () => {
-  const { artist, year, albumTitle } = params();
+  const { artist, albumTitle } = params();
   if (!artist || !albumTitle) return 'Something went wrong';
 
   const albumData = useComputed(() => {
-    return library().albums.find(
-      (a) => a.artist === artist && a.title === albumTitle && (year ? a.year === +year : !a.year),
-    );
+    return library().albums.find((a) => a.artist === artist && a.title === albumTitle);
   });
 
   const album = albumData();

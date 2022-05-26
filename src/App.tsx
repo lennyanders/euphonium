@@ -24,7 +24,7 @@ export const App = () => (
             { path: '/artists', component: Artists },
             { path: '/album-artists', component: AlbumArtists },
             { path: '/artist/:artistName', component: Artist },
-            { path: '/artist/:artist/:year?/:albumTitle', component: Album },
+            { path: '/artist/:artist/:albumTitle', component: Album },
             { path: '/settings', component: Settings },
             { path: '*', component: '404' },
           ]}
