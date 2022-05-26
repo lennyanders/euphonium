@@ -1,5 +1,6 @@
 import { useComputed } from 'voby';
 import { AlbumList } from '../components/AlbumList';
+import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { params, RouterLink } from '../router';
 import { library } from '../stores/library';
@@ -15,7 +16,6 @@ export const Artist = () => {
 
   return (
     <>
-      <h1>{artistName}</h1>
       {!artist?.trackCount ? (
         <p>
           You don't have any music for this artist, add directories in the{' '}
@@ -26,11 +26,13 @@ export const Artist = () => {
         </p>
       ) : (
         <>
-          <div class='flex flex-wrap gap-2 m-t--2 m-b-2'>
-            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.trackCount}</span>
-            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.albums.length}</span>
-            <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.durationFormatted}</span>
-          </div>
+          <HeroImage
+            image={artist.image}
+            title={artist.name}
+            sublines={[
+              [artist.trackCount, artist.albums.length, artist.durationFormatted].join(' | '),
+            ]}
+          />
           {artist.albums.length > 0 && (
             <>
               <h2>Albums ({artist.albums.length})</h2>
