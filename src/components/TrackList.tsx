@@ -12,7 +12,7 @@ const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boole
     ) : (
       <div class='w-12 h-12 shrink-0 i-mdi-disk'></div>
     )}
-    <div>
+    <div class='break-all'>
       {track.title}
       <small class='block'>{track.artist}</small>
     </div>
