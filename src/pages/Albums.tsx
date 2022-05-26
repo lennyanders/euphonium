@@ -1,4 +1,4 @@
-import { AlbumsList } from '../components/AlbumsList';
+import { AlbumList } from '../components/AlbumList';
 import { RouterLink } from '../router';
 import { library } from '../stores/library';
 
@@ -17,7 +17,7 @@ export const Albums = () => {
           and start listening to music!
         </p>
       ) : (
-        <AlbumsList albums={albums} />
+        <AlbumList albums={albums} />
       )}
     </>
   );

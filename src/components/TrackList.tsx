@@ -20,7 +20,7 @@ const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boole
   </li>
 );
 
-export const TracksList = ({
+export const TrackList = ({
   tracks,
   displayNumber,
   displayDiskNumber,

@@ -1,5 +1,5 @@
 import { $, useComputed } from 'voby';
-import { TracksList } from '../components/TracksList';
+import { TrackList } from '../components/TrackList';
 import { params, RouterLink } from '../router';
 import { library } from '../stores/library';
 
@@ -112,7 +112,7 @@ export const Album = () => {
   return (
     <>
       <AlbumInfo album={album} />
-      <TracksList tracks={album.tracks} displayNumber displayDiskNumber />
+      <TrackList tracks={album.tracks} displayNumber displayDiskNumber />
     </>
   );
 };

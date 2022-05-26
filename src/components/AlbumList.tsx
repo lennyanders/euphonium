@@ -1,6 +1,6 @@
 import { RouterLink } from '../router';
 
-export const AlbumsList = ({ albums }: { albums: FEAlbum[] }) => {
+export const AlbumList = ({ albums }: { albums: FEAlbum[] }) => {
   return (
     <ul class='grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-4'>
       {albums.map((album) => (

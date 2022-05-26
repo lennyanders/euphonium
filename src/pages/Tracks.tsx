@@ -1,4 +1,4 @@
-import { TracksList } from '../components/TracksList';
+import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
 import { library } from '../stores/library';
 
@@ -17,7 +17,7 @@ export const Tracks = () => {
           and start listening to music!
         </p>
       ) : (
-        <TracksList tracks={tracks} />
+        <TrackList tracks={tracks} />
       )}
     </>
   );

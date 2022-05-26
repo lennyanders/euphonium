@@ -1,6 +1,6 @@
 import { useComputed } from 'voby';
-import { AlbumsList } from '../components/AlbumsList';
-import { TracksList } from '../components/TracksList';
+import { AlbumList } from '../components/AlbumList';
+import { TrackList } from '../components/TrackList';
 import { params, RouterLink } from '../router';
 import { library } from '../stores/library';
 
@@ -34,13 +34,13 @@ export const Artist = () => {
           {artist.albums.length > 0 && (
             <>
               <h2>Albums ({artist.albums.length})</h2>
-              <AlbumsList albums={artist.albums} />
+              <AlbumList albums={artist.albums} />
             </>
           )}
           {artist.singles.length > 0 && (
             <>
               <h2>Singles ({artist.singles.length})</h2>
-              <TracksList tracks={artist.singles} />
+              <TrackList tracks={artist.singles} />
             </>
           )}
         </>
