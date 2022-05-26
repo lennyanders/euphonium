@@ -41,7 +41,7 @@ export const albums$ = $.computed<FEAlbum[] | undefined>(() => {
       .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
     return {
       ...album,
-      tracks: sortedTracks.map((track) => track.id!),
+      tracks: sortedTracks,
       durationFormatted: getFormattedTime(album.duration),
       cover: sortedTracks.find((track) => track.cover)?.cover,
     };

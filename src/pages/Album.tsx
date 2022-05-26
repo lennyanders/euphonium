@@ -87,18 +87,12 @@ export const Album = () => {
   if (!artist || !albumTitle) return 'Something went wrong';
 
   const albumData = useComputed(() => {
-    const { albums, tracks } = library();
-    const album = albums.find(
+    return library().albums.find(
       (a) => a.artist === artist && a.title === albumTitle && (year ? a.year === +year : !a.year),
     );
-    if (!album) return {};
-    return {
-      album,
-      tracks: album?.tracks.map((id) => tracks.find((track) => track.id === id)!),
-    };
   });
 
-  const { album, tracks } = albumData();
+  const album = albumData();
   if (!album) {
     return (
       <p>
@@ -114,7 +108,7 @@ export const Album = () => {
   return (
     <>
       <AlbumInfo album={album} />
-      <TracksList tracks={tracks} displayNumber displayDiskNumber />
+      <TracksList tracks={album.tracks} displayNumber displayDiskNumber />
     </>
   );
 };

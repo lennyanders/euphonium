@@ -54,7 +54,7 @@ interface FEAlbum {
   title: string;
   artist: string;
   year?: number;
-  tracks: number[];
+  tracks: FETrack[];
   diskCount: number;
   duration: number;
   durationFormatted: string;
