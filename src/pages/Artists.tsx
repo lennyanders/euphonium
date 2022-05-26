@@ -1,37 +1,8 @@
-import { useComputed } from 'voby';
 import { RouterLink } from '../router';
-import { getFormattedTime } from '../shared/utils';
 import { library } from '../stores/library';
 
 export const Artists = () => {
-  const artists$ = useComputed(() => {
-    const artistsObject: Record<string, { tracks: number; duration: number; albums: Set<string> }> =
-      {};
-    for (const { artist, duration, albumTitle, albumArtist } of library().tracks) {
-      const key = artist || 'unknown artist';
-      const artistObject = artistsObject[key];
-      if (artistObject) {
-        artistObject.tracks += 1;
-        artistObject.duration += duration;
-        if (albumTitle && artist === albumArtist) artistObject.albums.add(albumTitle);
-      } else {
-        artistsObject[key] = {
-          tracks: 1,
-          duration,
-          albums: new Set(albumTitle && artist === albumArtist ? [albumTitle] : null),
-        };
-      }
-    }
-    return Object.entries(artistsObject).map(([name, { tracks, duration, albums }]) => ({
-      name,
-      tracks,
-      duration: getFormattedTime(duration),
-      albums: albums.size,
-    }));
-  });
-
-  const artists = artists$();
-
+  const { artists } = library();
   return (
     <>
       <h1>Artists</h1>
@@ -44,19 +15,19 @@ export const Artists = () => {
           and start listening to music!
         </p>
       ) : (
-        <ul class='grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4'>
+        <ul class='grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-8'>
           {artists.map((artist) => (
             <li>
               <RouterLink
                 href={`/artist/${artist.name}`}
-                class='flex flex-col gap-2 bg-[#1c1c1c] p-2 rd-2 h-100%'
+                class='flex flex-col gap-2 content-center h-100%'
               >
-                {artist.name}
-                <div class='flex flex-wrap gap-2 m-t-a'>
-                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.tracks}</span>
-                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.albums}</span>
-                  <span class='p-x-2 min-w-6 rd-4 bg-[#111] text-center'>{artist.duration}</span>
-                </div>
+                {artist.image ? (
+                  <img class='w-100% rd-50%' width='1' height='1' src={artist.image} />
+                ) : (
+                  <div class='w-100% h-100% aspect-1 color-[#111] mask-size-150% mask-position-center i-mdi-disk'></div>
+                )}
+                <div class='m-y-auto text-center'>{artist.name}</div>
               </RouterLink>
             </li>
           ))}

@@ -22,7 +22,7 @@ export const App = () => {
               { path: '/tracks', component: Tracks },
               { path: '/albums', component: Albums },
               { path: '/artists', component: Artists },
-              { path: '/artist/:artist', component: Artist },
+              { path: '/artist/:artistName', component: Artist },
               { path: '/artist/:artist/:year?/:albumTitle', component: Album },
               { path: '/settings', component: Settings },
               { path: '*', component: '404' },

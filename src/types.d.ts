@@ -54,15 +54,26 @@ interface FEAlbum {
   title: string;
   artist: string;
   year?: number;
+  cover?: string;
   tracks: FETrack[];
   diskCount: number;
   duration: number;
   durationFormatted: string;
-  cover?: string;
+}
+
+interface FEArtist {
+  name: string;
+  image?: string;
+  albums: FEAlbum[];
+  singles: FETrack[];
+  trackCount: number;
+  duration: number;
+  durationFormatted: string;
 }
 
 interface Library {
   libraryDirectories: FELibraryDirectory[];
   tracks: FETrack[];
   albums: FEAlbum[];
+  artists: FEArtist[];
 }

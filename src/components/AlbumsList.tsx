@@ -7,7 +7,9 @@ export const AlbumsList = ({ albums }: { albums: FEAlbum[] }) => {
         <li>
           <RouterLink
             class='flex flex-col justify-end items-start bg-[#1c1c1c] p-1 rd-2 overflow-hidden aspect-1 text-sm relative'
-            href={`/artist/${album.artist}${album.year ? `/${album.year}` : ''}/${album.title}`}
+            href={`/artist/${encodeURIComponent(album.artist)}${
+              album.year ? `/${album.year}` : ''
+            }/${encodeURIComponent(album.title)}`}
           >
             {album.cover ? (
               <img

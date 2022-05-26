@@ -4,15 +4,12 @@ import { postMessage } from './utils';
 
 export const libraryDirectories$ = $<FELibraryDirectory[]>();
 export const tracks$ = $<FETrack[]>();
-export const albums$ = $.computed<FEAlbum[] | undefined>(() => {
+const albums$ = $.computed<FEAlbum[] | undefined>(() => {
   const tracks = tracks$();
   if (!tracks) return;
   if (!tracks.length) return [];
 
-  const albumsObject: Record<
-    string,
-    Omit<FEAlbum, 'durationFormatted' | 'tracks'> & { duration: number; tracks: FETrack[] }
-  > = {};
+  const albumsObject: Record<string, Omit<FEAlbum, 'durationFormatted'>> = {};
   for (const track of tracks) {
     if (!track.albumTitle) continue;
 
@@ -47,14 +44,44 @@ export const albums$ = $.computed<FEAlbum[] | undefined>(() => {
     };
   });
 });
+const artists$ = $.computed<FEArtist[] | undefined>(() => {
+  const tracks = tracks$();
+  const albums = albums$();
+  if (!tracks || !albums) return;
+  if (!tracks.length) return [];
+
+  const artists = [...new Set(tracks.map((track) => track.artist))];
+  return artists.map<FEArtist>((artist) => {
+    const artistAlbums = albums.filter((album) => album.artist === artist);
+    const singles = tracks.filter(
+      (track) => track.albumArtist !== artist && track.artist === artist,
+    );
+    const duration = artistAlbums.reduce(
+      (res, album) => res + album.duration,
+      singles.reduce((res, track) => res + track.duration, 0),
+    );
+    return {
+      name: artist || 'unknown artist',
+      image:
+        artistAlbums.find((album) => album.cover)?.cover ||
+        singles.find((track) => track.cover)?.cover,
+      albums: artistAlbums,
+      singles,
+      trackCount: artistAlbums.reduce((res, album) => res + album.tracks.length, singles.length),
+      duration,
+      durationFormatted: getFormattedTime(duration),
+    };
+  });
+});
 
 const dispose = $.effect(() => {
   const libraryDirectories = libraryDirectories$();
   const tracks = tracks$();
   const albums = albums$();
-  if (!tracks || !libraryDirectories || !albums) return;
+  const artists = artists$();
+  if (!tracks || !libraryDirectories || !albums || !artists) return;
 
-  postMessage({ message: 'setStore', state: { libraryDirectories, tracks, albums: [] } });
+  postMessage({ message: 'setStore', state: { libraryDirectories, tracks, albums, artists } });
   dispose();
 
   $.effect(() => {
@@ -65,5 +92,8 @@ const dispose = $.effect(() => {
   });
   $.effect(() => {
     postMessage({ message: 'updateState', state: { albums: albums$() } });
+  });
+  $.effect(() => {
+    postMessage({ message: 'updateState', state: { artists: artists$() } });
   });
 });

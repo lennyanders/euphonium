@@ -21,7 +21,9 @@ const AlbumInfo =
           <div class='flex flex-col justify-end items-start p-b-4 overflow-hidden'>
             <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate relative'>{album.title}</span>
             <small class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate relative m-t-1'>
-              <RouterLink href={`/artist/${album.artist}`}>{album.artist}</RouterLink>
+              <RouterLink href={`/artist/${encodeURIComponent(album.artist)}`}>
+                {album.artist}
+              </RouterLink>
             </small>
             <small class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate relative m-t-1'>
               {[album.year, album.tracks?.length, album.diskCount, album.durationFormatted]
@@ -63,7 +65,9 @@ const AlbumInfo =
         >
           <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>{album.title}</span>
           <small class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>
-            <RouterLink href={`/artist/${album.artist}`}>{album.artist}</RouterLink>
+            <RouterLink href={`/artist/${encodeURIComponent(album.artist)}`}>
+              {album.artist}
+            </RouterLink>
           </small>
           <small class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>
             {[album.year, album.tracks?.length, album.diskCount, album.durationFormatted]

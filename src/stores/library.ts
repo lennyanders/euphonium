@@ -1,7 +1,7 @@
 import { $ } from 'voby';
 import { onMessage } from '../utils/worker';
 
-export const library = $<Library>({ libraryDirectories: [], tracks: [], albums: [] });
+export const library = $<Library>({ libraryDirectories: [], tracks: [], albums: [], artists: [] });
 export const loading = $(true);
 
 onMessage(({ data }) => {
