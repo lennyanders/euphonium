@@ -2,12 +2,13 @@ import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
 import { library } from '../stores/library';
 
-export const Artists = () => {
+export const AlbumArtists = () => {
   const { artists } = library();
+  const albumArtists = artists.filter((artist) => artist.albums.length);
   return (
     <>
-      <h1>Artists</h1>
-      {!artists.length ? (
+      <h1>Album Artists</h1>
+      {!albumArtists.length ? (
         <p>
           Add directories in the{' '}
           <RouterLink href='/settings' class='underline'>
@@ -16,7 +17,7 @@ export const Artists = () => {
           and start listening to music!
         </p>
       ) : (
-        <ArtistList artists={artists} />
+        <ArtistList artists={albumArtists} />
       )}
     </>
   );
