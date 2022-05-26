@@ -9,6 +9,7 @@ export const Home = () => {
       <RouterLink href='/album-artists'>Album Artists</RouterLink>
       {/* <RouterLink href='/playlists'>Playlists</RouterLink> */}
       {/* <RouterLink href='/folders'>Folders</RouterLink> */}
+      <RouterLink href='/settings'>Settings</RouterLink>
     </>
   );
 };
