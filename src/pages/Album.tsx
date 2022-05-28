@@ -34,9 +34,16 @@ export const Album = () => {
           <RouterLink href={`/artist/${encodeURIComponent(album.artist)}`}>
             {album.artist}
           </RouterLink>,
-          [album.year, album.tracks?.length, album.diskCount, album.durationFormatted]
-            .filter((v) => v)
-            .join(' | '),
+          <>
+            {album.year && (
+              <>
+                {album.year} <div class='i-mdi-candle m-l-.5 m-r-2' />
+              </>
+            )}
+            {album.tracks.length} <div class='i-mdi-music-note m-l-.5 m-r-2' />
+            {album.diskCount} <div class='i-mdi-disk m-l-.5 m-r-2' />
+            {album.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
+          </>,
         ]}
       />
       <TrackList tracks={album.tracks} displayNumber displayDiskNumber />

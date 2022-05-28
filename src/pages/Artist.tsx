@@ -30,7 +30,15 @@ export const Artist = () => {
             image={artist.image}
             title={artist.name}
             sublines={[
-              [artist.trackCount, artist.albums.length, artist.durationFormatted].join(' | '),
+              <>
+                {artist.trackCount} <div class='i-mdi-music-note m-l-.5 m-r-2' />
+                {artist.albums.length > 0 && (
+                  <>
+                    {artist.albums.length} <div class='i-mdi-disk m-l-.5 m-r-2' />
+                  </>
+                )}
+                {artist.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
+              </>,
             ]}
           />
           {artist.albums.length > 0 && (
