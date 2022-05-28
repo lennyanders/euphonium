@@ -4,12 +4,11 @@ import { currentTrack, pause, play, playing } from '../../stores/player';
 const MiniPlayer = () => () => {
   const track = currentTrack();
   if (!track) return;
-  const isPlaying = playing();
   return (
     <div class='flex-1 flex items-center'>
       <button
-        onClick={() => (isPlaying ? pause() : play())}
-        class={`${isPlaying ? 'i-mdi-pause' : 'i-mdi-play'} m-4 w-8 h-8`}
+        onClick={() => (playing() ? pause() : play())}
+        class={() => ['m-4 w-8 h-8', playing() ? 'i-mdi-pause' : 'i-mdi-play']}
       />
       <div>
         <span class='truncate'>{track.title}</span>
