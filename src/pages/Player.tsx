@@ -51,7 +51,6 @@ export const Player = () => {
           min='0'
           max={() => currentTrack$()?.duration || 0}
           onInput={(event) => seek((event.target as any).value)}
-          disabled={() => !playing$()}
         />
       </div>
       <div class='flex justify-center'>

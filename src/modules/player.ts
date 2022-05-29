@@ -41,7 +41,7 @@ export const go = (offset: number) => {
   if (nextTrackIndex < 0 || nextTrackIndex > queue.length) return;
   play(queue[nextTrackIndex]);
 };
-export const seek = (time: number) => (audioEl.currentTime = time);
+export const seek = (time: number) => currentTime$((audioEl.currentTime = time));
 
 useEventListener(audioEl, 'play', () => playing$(true));
 useEventListener(audioEl, 'pause', () => playing$(false));
