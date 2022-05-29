@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useSample } from 'voby';
+import { $, useSample, useReadonly } from 'voby';
 
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
@@ -9,11 +9,13 @@ const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   }, {});
 };
 
-export const params$ = $<Record<string, string | null>>({});
-const path$ = $(location.pathname);
+const _params$ = $<Record<string, string | null>>({});
+export const params$ = useReadonly(_params$);
+const _path$ = $(location.pathname);
+export const path$ = useReadonly(_path$);
 let updateUrl = false;
 
-addEventListener('popstate', () => path$(location.pathname));
+addEventListener('popstate', () => _path$(location.pathname));
 
 export const Router = ({
   routes,
@@ -22,7 +24,7 @@ export const Router = ({
 }) => {
   const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
   return () => {
-    const p = path$();
+    const p = _path$();
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
       const url = new URL(location.href);
@@ -32,7 +34,7 @@ export const Router = ({
     }
     if (!route) return;
 
-    params$(exec(p, route.regex));
+    _params$(exec(p, route.regex));
     return route.component;
   };
 };
@@ -45,7 +47,7 @@ export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) =
 
     event.preventDefault();
     updateUrl = true;
-    path$(anchor.pathname);
+    _path$(anchor.pathname);
   };
   return <a ref={el$} {...props}></a>;
 };
