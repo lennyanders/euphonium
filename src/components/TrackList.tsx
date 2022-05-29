@@ -1,4 +1,4 @@
-import { play } from '../modules/player';
+import { currentTrackId$, play } from '../modules/player';
 import { CoverImage } from './CoverImage';
 
 const Track = ({
@@ -10,7 +10,13 @@ const Track = ({
   track: FETrack;
   displayNumber?: boolean;
 }) => (
-  <li class='flex gap-2 items-center' onClick={() => play(track, tracks)}>
+  <li
+    class={() => [
+      'flex gap-2 items-center p-1 rd-1',
+      currentTrackId$() === track.id && 'bg-[#333]',
+    ]}
+    onClick={() => play(track, tracks)}
+  >
     {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number || '-'}</span>}
     <CoverImage src={track.cover} class='w-12 h-12 rd-1 shrink-0' />
     <div class='break-all'>
@@ -32,7 +38,7 @@ export const TrackList = ({
 }) => {
   let prevDiskNumber = 0;
   return (
-    <ul class='grid gap-2'>
+    <ul class='grid m--1'>
       {tracks.map((track) => {
         if (displayDiskNumber && track.diskNumber && prevDiskNumber !== track.diskNumber) {
           prevDiskNumber = track.diskNumber;
