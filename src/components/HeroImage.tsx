@@ -1,4 +1,5 @@
 import { $, Ternary } from 'voby';
+import { CoverImage } from './CoverImage';
 
 export const HeroImage = ({
   image,
@@ -17,11 +18,7 @@ export const HeroImage = ({
   return (
     <Ternary when={desktop}>
       <div class='flex gap-4'>
-        {image ? (
-          <img class='w-25% rd-2' src={image} />
-        ) : (
-          <div class='w-25% color-[#111] i-mdi-disk'></div>
-        )}
+        <CoverImage src={image} class='w-25% rd-2' />
         <div class='flex flex-col justify-end items-start gap-1 p-b-4 overflow-hidden'>
           <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>{title}</span>
           {sublines?.map((subline) => (
@@ -39,17 +36,13 @@ export const HeroImage = ({
         ]}
         onClick={() => fullImage((val) => !val)}
       >
-        {image ? (
-          <img
-            class={() => [
-              'w-100% transition-transform duration-250',
-              fullImage() ? 'translate-y--8' : 'translate-y-15vw',
-            ]}
-            src={image}
-          />
-        ) : (
-          <div class='w-100% h-100% color-[#111] i-mdi-disk'></div>
-        )}
+        <CoverImage
+          src={image}
+          class={() => [
+            'w-100% transition-transform duration-250',
+            fullImage() ? 'translate-y--8' : 'translate-y-15vw',
+          ]}
+        />
         <div
           class={() => [
             'transition-opacity duration-250 absolute left-3 right-3 bottom-3 flex flex-col items-start gap-1',

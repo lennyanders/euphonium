@@ -1,17 +1,10 @@
 import { play } from '../stores/player';
+import { CoverImage } from './CoverImage';
 
 const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boolean }) => (
   <li class='flex gap-2 items-center' onClick={() => play(track)}>
     {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number || '-'}</span>}
-    {track.cover ? (
-      <img
-        decoding='async'
-        class='w-12 h-12 rounded-2 object-cover object-center shrink-0'
-        src={track.cover}
-      />
-    ) : (
-      <div class='w-12 h-12 shrink-0 i-mdi-disk'></div>
-    )}
+    <CoverImage src={track.cover} class='w-12 h-12 rd-1 shrink-0' />
     <div class='break-all'>
       {track.title}
       <small class='block'>{track.artist}</small>
