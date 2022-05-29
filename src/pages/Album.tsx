@@ -1,11 +1,11 @@
 import { useComputed } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
-import { params, RouterLink } from '../router';
+import { params$, RouterLink } from '../router';
 import { albums$ } from '../stores/library';
 
 export const Album = () => {
-  const { artist, albumTitle } = params();
+  const { artist, albumTitle } = params$();
   if (!artist || !albumTitle) return 'Something went wrong';
 
   const album$ = useComputed(() => {

@@ -5,7 +5,7 @@ export const tracks$ = $<FETrack[]>();
 export const albums$ = $<FEAlbum[]>();
 export const artists$ = $<FEArtist[]>();
 export const libraryDirectories$ = $<FELibraryDirectory[]>();
-export const loading = useComputed(
+export const loading$ = useComputed(
   () => !tracks$() || !albums$() || !artists$() || !libraryDirectories$(),
 );
 

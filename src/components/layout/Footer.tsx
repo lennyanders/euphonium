@@ -1,14 +1,14 @@
 import { RouterLink } from '../../router';
-import { currentTrack, pause, play, playing } from '../../stores/player';
+import { currentTrack$, pause, play, playing$ } from '../../stores/player';
 
 const MiniPlayer = () => () => {
-  const track = currentTrack();
+  const track = currentTrack$();
   if (!track) return;
   return (
     <div class='w-64 flex items-center'>
       <button
-        onClick={() => (playing() ? pause() : play())}
-        class={() => ['m-4 w-8 h-8', playing() ? 'i-mdi-pause' : 'i-mdi-play']}
+        onClick={() => (playing$() ? pause() : play())}
+        class={() => ['m-4 w-8 h-8', playing$() ? 'i-mdi-pause' : 'i-mdi-play']}
       />
       <RouterLink href='/player' class='flex-1'>
         <span class='truncate'>{track.title}</span>

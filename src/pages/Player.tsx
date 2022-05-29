@@ -4,44 +4,44 @@ import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
 import { getFormattedTime } from '../shared/utils';
 import {
-  currentTime,
-  currentTrack,
+  currentTime$,
+  currentTrack$,
   go,
-  isFirst,
-  isLast,
+  isFirst$,
+  isLast$,
   pause,
   play,
-  playing,
+  playing$,
   queue$,
 } from '../stores/player';
 
 export const Player = () => {
   return (
-    <If when={currentTrack}>
+    <If when={currentTrack$}>
       <div class='relative'>
-        <CoverImage src={() => currentTrack()?.cover!} class='w-100% rd-2' />
+        <CoverImage src={() => currentTrack$()?.cover!} class='w-100% rd-2' />
         <div class='absolute left-3 right-3 bottom-3 flex flex-col items-start gap-1'>
           <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>
-            {() => currentTrack()?.title}
+            {() => currentTrack$()?.title}
           </span>
           <small class='p-x-1 flex items-center bg-[#000D] rd-1 max-w-100% truncate'>
             {() => (
-              <RouterLink href={`/artist/${encodeURIComponent(currentTrack()?.artist!)}`}>
-                {currentTrack()?.artist}
+              <RouterLink href={`/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
+                {currentTrack$()?.artist}
               </RouterLink>
             )}
           </small>
         </div>
       </div>
       <div class='flex justify-between'>
-        <span>{() => getFormattedTime(currentTime())}</span>
-        <span>{() => currentTrack()?.durationFormatted}</span>
+        <span>{() => getFormattedTime(currentTime$())}</span>
+        <span>{() => currentTrack$()?.durationFormatted}</span>
       </div>
       <div>
         <div
           class='h-2 bg-red transform-origin-l'
           style={{
-            transform: () => `scaleX(${currentTime() / currentTrack()?.duration!})`,
+            transform: () => `scaleX(${currentTime$() / currentTrack$()?.duration!})`,
           }}
         />
       </div>
@@ -49,16 +49,16 @@ export const Player = () => {
         <button
           onClick={() => go(-1)}
           class={() => ['m-4 w-8 h-8 i-mdi-skip-previous-outline']}
-          disabled={isFirst}
+          disabled={isFirst$}
         />
         <button
-          onClick={() => (playing() ? pause() : play())}
-          class={() => ['m-4 w-8 h-8', playing() ? 'i-mdi-pause' : 'i-mdi-play']}
+          onClick={() => (playing$() ? pause() : play())}
+          class={() => ['m-4 w-8 h-8', playing$() ? 'i-mdi-pause' : 'i-mdi-play']}
         />
         <button
           onClick={() => go(1)}
           class={() => ['m-4 w-8 h-8 i-mdi-skip-next-outline']}
-          disabled={isLast}
+          disabled={isLast$}
         />
       </div>
       <div>Queue</div>

@@ -9,11 +9,11 @@ const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   }, {});
 };
 
-export const params = $<Record<string, string | null>>({});
-const path = $(location.pathname);
+export const params$ = $<Record<string, string | null>>({});
+const path$ = $(location.pathname);
 let updateUrl = false;
 
-addEventListener('popstate', () => path(location.pathname));
+addEventListener('popstate', () => path$(location.pathname));
 
 export const Router = ({
   routes,
@@ -22,7 +22,7 @@ export const Router = ({
 }) => {
   const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
   return () => {
-    const p = path();
+    const p = path$();
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
       const url = new URL(location.href);
@@ -32,20 +32,20 @@ export const Router = ({
     }
     if (!route) return;
 
-    params(exec(p, route.regex));
+    params$(exec(p, route.regex));
     return route.component;
   };
 };
 
 export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  const el = $<HTMLAnchorElement>();
+  const el$ = $<HTMLAnchorElement>();
   props.onClick = (event: MouseEvent) => {
-    const anchor = useSample(el);
+    const anchor = useSample(el$);
     if (!anchor || anchor.origin !== location.origin) return;
 
     event.preventDefault();
     updateUrl = true;
-    path(anchor.pathname);
+    path$(anchor.pathname);
   };
-  return <a ref={el} {...props}></a>;
+  return <a ref={el$} {...props}></a>;
 };

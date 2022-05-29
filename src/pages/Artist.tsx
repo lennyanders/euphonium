@@ -2,11 +2,11 @@ import { useComputed } from 'voby';
 import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
-import { params, RouterLink } from '../router';
+import { params$, RouterLink } from '../router';
 import { artists$ } from '../stores/library';
 
 export const Artist = () => {
-  const { artistName } = params();
+  const { artistName } = params$();
   if (!artistName) return 'Something went wrong';
 
   const artist$ = useComputed(() => artists$()?.find((artist) => artist.name === artistName));
