@@ -1,8 +1,16 @@
 import { play } from '../modules/player';
 import { CoverImage } from './CoverImage';
 
-const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boolean }) => (
-  <li class='flex gap-2 items-center' onClick={() => play(track)}>
+const Track = ({
+  tracks,
+  track,
+  displayNumber,
+}: {
+  tracks: FETrack[];
+  track: FETrack;
+  displayNumber?: boolean;
+}) => (
+  <li class='flex gap-2 items-center' onClick={() => play(track, tracks)}>
     {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number || '-'}</span>}
     <CoverImage src={track.cover} class='w-12 h-12 rd-1 shrink-0' />
     <div class='break-all'>
@@ -31,11 +39,11 @@ export const TrackList = ({
           return (
             <>
               <li>Disk: {track.diskNumber}</li>
-              <Track track={track} displayNumber={displayNumber} />
+              <Track track={track} displayNumber={displayNumber} tracks={tracks} />
             </>
           );
         }
-        return <Track track={track} displayNumber={displayNumber} />;
+        return <Track track={track} displayNumber={displayNumber} tracks={tracks} />;
       })}
     </ul>
   );

@@ -3,7 +3,6 @@ import { requestFileAccess } from '../utils';
 import { tracks$ } from './library';
 
 const audioEl = new Audio();
-audioEl.muted = true;
 
 export const playing$ = $(false);
 export const queue$ = $<FETrack[]>();
