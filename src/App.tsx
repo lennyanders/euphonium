@@ -1,11 +1,13 @@
 import { If } from 'voby';
 import { Footer } from './components/layout/Footer';
+import { About } from './pages/About';
 import { Album } from './pages/Album';
 import { AlbumArtists } from './pages/AlbumArtists';
 import { Albums } from './pages/Albums';
 import { Artist } from './pages/Artist';
 import { Artists } from './pages/Artists';
 import { Home } from './pages/Home';
+import { Privacy } from './pages/Privacy';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { Router } from './router';
@@ -26,6 +28,8 @@ export const App = () => (
             { path: '/artist/:artistName', component: Artist },
             { path: '/artist/:artist/:albumTitle', component: Album },
             { path: '/settings', component: Settings },
+            { path: '/about', component: About },
+            { path: '/privacy', component: Privacy },
             { path: '*', component: '404' },
           ]}
         />
