@@ -45,6 +45,7 @@ export const seek = (time: number) => (audioEl.currentTime = time);
 
 useEventListener(audioEl, 'play', () => playing$(true));
 useEventListener(audioEl, 'pause', () => playing$(false));
+useEventListener(audioEl, 'ended', () => go(1));
 
 let animationFrameId: number;
 const updateTime = () => {
