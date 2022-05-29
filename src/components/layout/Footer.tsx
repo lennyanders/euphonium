@@ -31,7 +31,7 @@ export const Footer = () => {
             onClick={() => (playing$() ? pause() : play())}
             class={() => ['m-4 w-8 h-8', playing$() ? 'i-mdi-pause' : 'i-mdi-play']}
           />
-          <RouterLink href='/player' class='flex-1'>
+          <RouterLink href='/player' class='flex-1 grid'>
             <span class='truncate'>{() => currentTrack$()?.title}</span>
             <small class='truncate block'>{() => currentTrack$()?.artist}</small>
           </RouterLink>
