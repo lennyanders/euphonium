@@ -10,10 +10,10 @@ const MiniPlayer = () => () => {
         onClick={() => (playing() ? pause() : play())}
         class={() => ['m-4 w-8 h-8', playing() ? 'i-mdi-pause' : 'i-mdi-play']}
       />
-      <div>
+      <RouterLink href='/player' class='flex-1'>
         <span class='truncate'>{track.title}</span>
         <small class='truncate block'>{track.artist}</small>
-      </div>
+      </RouterLink>
     </div>
   );
 };

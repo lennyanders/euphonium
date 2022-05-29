@@ -7,6 +7,7 @@ import { Albums } from './pages/Albums';
 import { Artist } from './pages/Artist';
 import { Artists } from './pages/Artists';
 import { Home } from './pages/Home';
+import { Player } from './pages/Player';
 import { Privacy } from './pages/Privacy';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
@@ -21,6 +22,7 @@ export const App = () => (
         <Router
           routes={[
             { path: '/', component: Home },
+            { path: '/player', component: Player },
             { path: '/tracks', component: Tracks },
             { path: '/albums', component: Albums },
             { path: '/artists', component: Artists },
