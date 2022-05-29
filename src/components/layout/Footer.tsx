@@ -5,7 +5,7 @@ const MiniPlayer = () => () => {
   const track = currentTrack();
   if (!track) return;
   return (
-    <div class='flex-1 flex items-center'>
+    <div class='w-64 flex items-center'>
       <button
         onClick={() => (playing() ? pause() : play())}
         class={() => ['m-4 w-8 h-8', playing() ? 'i-mdi-pause' : 'i-mdi-play']}
@@ -21,7 +21,7 @@ const MiniPlayer = () => () => {
 export const Footer = () => {
   return (
     <div
-      class='fixed right-2 w-76 max-w-[calc(100%-0.5rem)] flex items-center bottom-4 bg-[#111]'
+      class='fixed right-2 max-w-[calc(100%-1rem)] flex items-center bottom-4 bg-[#111]'
       onTouchStart={(e) => e.stopImmediatePropagation()}
     >
       <MiniPlayer />
