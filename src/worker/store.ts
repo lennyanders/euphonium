@@ -80,26 +80,19 @@ const artists$ = $.computed<FEArtist[] | undefined>(() => {
   });
 });
 
-const dispose = $.effect(() => {
-  const libraryDirectories = libraryDirectories$();
-  const tracks = tracks$();
-  const albums = albums$();
-  const artists = artists$();
-  if (!tracks || !libraryDirectories || !albums || !artists) return;
-
-  postMessage({ message: 'setStore', state: { libraryDirectories, tracks, albums, artists } });
-  dispose();
-
-  $.effect(() => {
-    postMessage({ message: 'updateState', state: { libraryDirectories: libraryDirectories$() } });
-  });
-  $.effect(() => {
-    postMessage({ message: 'updateState', state: { tracks: tracks$() } });
-  });
-  $.effect(() => {
-    postMessage({ message: 'updateState', state: { albums: albums$() } });
-  });
-  $.effect(() => {
-    postMessage({ message: 'updateState', state: { artists: artists$() } });
-  });
+$.effect(() => {
+  const state = libraryDirectories$();
+  if (state) postMessage({ message: 'setLibraryDirectories', state });
+});
+$.effect(() => {
+  const state = tracks$();
+  if (state) postMessage({ message: 'setTracks', state });
+});
+$.effect(() => {
+  const state = albums$();
+  if (state) postMessage({ message: 'setAlbums', state });
+});
+$.effect(() => {
+  const state = artists$();
+  if (state) postMessage({ message: 'setArtists', state });
 });

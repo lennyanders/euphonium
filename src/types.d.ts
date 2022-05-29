@@ -70,10 +70,3 @@ interface FEArtist {
   duration: number;
   durationFormatted: string;
 }
-
-interface Library {
-  libraryDirectories: FELibraryDirectory[];
-  tracks: FETrack[];
-  albums: FEAlbum[];
-  artists: FEArtist[];
-}

@@ -1,6 +1,6 @@
 import { $, useEffect, useSample } from 'voby';
 import { requestFileAccess } from '../utils';
-import { library } from './library';
+import { tracks$ } from './library';
 
 const audioEl = new Audio();
 
@@ -8,8 +8,8 @@ export const playing = $(false);
 export const currentTrack = $<FETrack>();
 
 useEffect(() => {
-  const { tracks } = library();
-  if (!tracks.length || useSample(currentTrack)) return;
+  const tracks = tracks$();
+  if (!tracks?.length || useSample(currentTrack)) return;
   currentTrack(tracks[0]);
 });
 

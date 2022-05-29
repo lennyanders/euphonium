@@ -1,13 +1,13 @@
 import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
-import { library } from '../stores/library';
+import { artists$ } from '../stores/library';
 
 export const Artists = () => {
-  const { artists } = library();
+  const artists = artists$();
   return (
     <>
       <h1>Artists</h1>
-      {!artists.length ? (
+      {!artists?.length ? (
         <p>
           Add directories in the{' '}
           <RouterLink href='/settings' class='underline'>

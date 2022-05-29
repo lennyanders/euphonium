@@ -3,17 +3,14 @@ import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { params, RouterLink } from '../router';
-import { library } from '../stores/library';
+import { artists$ } from '../stores/library';
 
 export const Artist = () => {
   const { artistName } = params();
   if (!artistName) return 'Something went wrong';
 
-  const artist$ = useComputed(() => {
-    return library().artists.find((artist) => artist.name === artistName);
-  });
+  const artist$ = useComputed(() => artists$()?.find((artist) => artist.name === artistName));
   const artist = artist$();
-
   return (
     <>
       {!artist?.trackCount ? (

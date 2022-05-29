@@ -1,16 +1,16 @@
 import { DirectoryRelationType } from '../shared/workerFeCommunicationTypes';
-import { library } from '../stores/library';
+import { libraryDirectories$ } from '../stores/library';
 import { requestFileAccess } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';
 
-const addDirectoryToLibrary = async (directories: { name: string; id: number }[]) => {
+const addDirectoryToLibrary = async (directories?: { name: string; id: number }[]) => {
   const directoryHandle = await showDirectoryPicker();
   postMessage({ message: 'tryAddDirectoryToLibrary', directoryHandle });
   const unlisten = onMessage(({ data }) => {
     if (data.message !== 'tryAddDirectoryToLibrary') return;
 
     unlisten();
-    const getDirName = (id: number) => directories.find((d) => d.id! === id)?.name;
+    const getDirName = (id: number) => directories?.find((d) => d.id! === id)?.name;
     const { relation } = data;
     if (relation.type === DirectoryRelationType.DirectoryIsAlreadyImportet) {
       return alert('You already imported this directory');
@@ -48,8 +48,7 @@ onMessage(async ({ data }) => {
 });
 
 export const Settings = () => {
-  const { libraryDirectories } = library();
-
+  const libraryDirectories = libraryDirectories$();
   return (
     <>
       <h1>Settings</h1>
@@ -60,7 +59,7 @@ export const Settings = () => {
         </button>
         <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
       </div>
-      {!libraryDirectories.length ? (
+      {!libraryDirectories?.length ? (
         <p>Add directories and start listening to music!</p>
       ) : (
         <ul class='grid gap-2'>

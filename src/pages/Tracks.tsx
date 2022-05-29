@@ -1,14 +1,13 @@
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
-import { library } from '../stores/library';
+import { tracks$ } from '../stores/library';
 
 export const Tracks = () => {
-  const { tracks } = library();
-
+  const tracks = tracks$();
   return (
     <>
-      <h1>Tracks ({tracks.length})</h1>
-      {!tracks.length ? (
+      <h1>Tracks</h1>
+      {!tracks?.length ? (
         <p>
           Add directories in the{' '}
           <RouterLink href='/settings' class='underline'>

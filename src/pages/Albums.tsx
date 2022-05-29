@@ -1,14 +1,13 @@
 import { AlbumList } from '../components/AlbumList';
 import { RouterLink } from '../router';
-import { library } from '../stores/library';
+import { albums$ } from '../stores/library';
 
 export const Albums = () => {
-  const albums = library().albums;
-
+  const albums = albums$();
   return (
     <>
-      <h1>Albums ({albums.length})</h1>
-      {!albums.length ? (
+      <h1>Albums</h1>
+      {!albums?.length ? (
         <p>
           Add directories in the{' '}
           <RouterLink href='/settings' class='underline'>
