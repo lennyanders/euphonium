@@ -1,6 +1,5 @@
 import { $, useComputed, useEffect, useEventListener, useSample } from 'voby';
 import { requestFileAccess } from '../utils';
-import { tracks$ } from './library';
 
 const audioEl = new Audio();
 
