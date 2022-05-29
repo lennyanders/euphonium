@@ -13,6 +13,7 @@ import {
   play,
   playing$,
   queue$,
+  seek,
 } from '../modules/player';
 
 export const Player = () => {
@@ -37,12 +38,20 @@ export const Player = () => {
         <span>{() => getFormattedTime(currentTime$())}</span>
         <span>{() => currentTrack$()?.durationFormatted}</span>
       </div>
-      <div>
+      <div class='relative'>
         <div
           class='h-2 bg-red transform-origin-l'
           style={{
             transform: () => `scaleX(${currentTime$() / currentTrack$()?.duration!})`,
           }}
+        />
+        <input
+          class='absolute top-0 left-0 w-100% h-100% m-0 op-0'
+          type='range'
+          min='0'
+          max={() => currentTrack$()?.duration || 0}
+          onInput={(event) => seek((event.target as any).value)}
+          disabled={() => !playing$()}
         />
       </div>
       <div class='flex justify-center'>
