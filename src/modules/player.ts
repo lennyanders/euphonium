@@ -6,7 +6,7 @@ const audioEl = new Audio();
 
 export const playing$ = $(false);
 export const queue$ = $<FETrack[]>();
-const currentTrackId$ = $<number>();
+export const currentTrackId$ = $<number>();
 export const currentTime$ = $(0);
 export const currentTrack$ = useComputed(() => {
   const id = currentTrackId$();
@@ -18,14 +18,6 @@ const currentTrackIndex$ = useComputed(() => {
 });
 export const isFirst$ = useComputed(() => currentTrackIndex$() === 0);
 export const isLast$ = useComputed(() => currentTrackIndex$() === (queue$()?.length || 0) - 1);
-
-const dispose = useEffect(() => {
-  const tracks = tracks$();
-  if (!tracks?.length || useSample(currentTrack$)) return;
-  queue$(tracks);
-  currentTrackId$(tracks[0].id);
-  dispose();
-});
 
 export const play = async (track?: FETrack, queue?: FETrack[]) => {
   await requestFileAccess();
