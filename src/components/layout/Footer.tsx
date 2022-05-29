@@ -1,5 +1,5 @@
 import { RouterLink } from '../../router';
-import { currentTrack$, pause, play, playing$ } from '../../stores/player';
+import { currentTrack$, pause, play, playing$ } from '../../modules/player';
 
 const MiniPlayer = () => () => {
   const track = currentTrack$();

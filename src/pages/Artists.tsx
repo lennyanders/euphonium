@@ -1,6 +1,6 @@
 import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
-import { artists$ } from '../stores/library';
+import { artists$ } from '../modules/library';
 
 export const Artists = () => {
   const artists = artists$();

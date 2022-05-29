@@ -1,5 +1,5 @@
 import { DirectoryRelationType } from '../shared/workerFeCommunicationTypes';
-import { libraryDirectories$ } from '../stores/library';
+import { libraryDirectories$ } from '../modules/library';
 import { requestFileAccess } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';
 

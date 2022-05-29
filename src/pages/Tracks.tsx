@@ -1,6 +1,6 @@
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
-import { tracks$ } from '../stores/library';
+import { tracks$ } from '../modules/library';
 
 export const Tracks = () => {
   const tracks = tracks$();

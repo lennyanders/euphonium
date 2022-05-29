@@ -1,4 +1,4 @@
-import { play } from '../stores/player';
+import { play } from '../modules/player';
 import { CoverImage } from './CoverImage';
 
 const Track = ({ track, displayNumber }: { track: FETrack; displayNumber?: boolean }) => (

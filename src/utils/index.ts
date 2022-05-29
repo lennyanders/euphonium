@@ -1,4 +1,4 @@
-import { libraryDirectories$ } from '../stores/library';
+import { libraryDirectories$ } from '../modules/library';
 
 let first = true;
 export const requestFileAccess = async () => {

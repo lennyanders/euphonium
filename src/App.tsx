@@ -12,7 +12,7 @@ import { Privacy } from './pages/Privacy';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { Router } from './router';
-import { loading$ } from './stores/library';
+import { loading$ } from './modules/library';
 
 export const App = () => (
   <If

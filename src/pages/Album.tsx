@@ -2,7 +2,7 @@ import { useComputed } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { params$, RouterLink } from '../router';
-import { albums$ } from '../stores/library';
+import { albums$ } from '../modules/library';
 
 export const Album = () => {
   const { artist, albumTitle } = params$();

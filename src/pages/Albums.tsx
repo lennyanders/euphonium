@@ -1,6 +1,6 @@
 import { AlbumList } from '../components/AlbumList';
 import { RouterLink } from '../router';
-import { albums$ } from '../stores/library';
+import { albums$ } from '../modules/library';
 
 export const Albums = () => {
   const albums = albums$();

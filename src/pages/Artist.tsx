@@ -3,7 +3,7 @@ import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { params$, RouterLink } from '../router';
-import { artists$ } from '../stores/library';
+import { artists$ } from '../modules/library';
 
 export const Artist = () => {
   const { artistName } = params$();

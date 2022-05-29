@@ -13,7 +13,7 @@ import {
   play,
   playing$,
   queue$,
-} from '../stores/player';
+} from '../modules/player';
 
 export const Player = () => {
   return (
