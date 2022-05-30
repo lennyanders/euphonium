@@ -9,7 +9,7 @@ const MiniPlayer = () => () => {
     <div class='w-64 flex items-center'>
       <button
         onClick={() => (playing$() ? pause() : play())}
-        class={() => ['m-4 w-8 h-8', playing$() ? 'i-mdi-pause' : 'i-mdi-play']}
+        class={['m-4 w-8 h-8', () => (playing$() ? 'i-mdi-pause' : 'i-mdi-play')]}
       />
       <RouterLink href='/player' class='flex-1'>
         <span class='truncate'>{track.title}</span>
@@ -29,7 +29,7 @@ export const Footer = () => {
         <div class='w-64 flex items-center'>
           <button
             onClick={() => (playing$() ? pause() : play())}
-            class={() => ['m-4 w-8 h-8', playing$() ? 'i-mdi-pause' : 'i-mdi-play']}
+            class={['m-4 w-8 h-8', () => (playing$() ? 'i-mdi-pause' : 'i-mdi-play')]}
           />
           <RouterLink href='/player' class='flex-1 grid'>
             <span class='truncate'>{() => currentTrack$()?.title}</span>

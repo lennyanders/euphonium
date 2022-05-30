@@ -56,16 +56,16 @@ export const Player = () => {
       <div class='flex justify-center'>
         <button
           onClick={() => go(-1)}
-          class={() => ['m-4 w-8 h-8 i-mdi-skip-previous-outline']}
+          class='m-4 w-8 h-8 i-mdi-skip-previous-outline'
           disabled={isFirst$}
         />
         <button
           onClick={() => (playing$() ? pause() : play())}
-          class={() => ['m-4 w-8 h-8', playing$() ? 'i-mdi-pause' : 'i-mdi-play']}
+          class={['m-4 w-8 h-8', () => (playing$() ? 'i-mdi-pause' : 'i-mdi-play')]}
         />
         <button
           onClick={() => go(1)}
-          class={() => ['m-4 w-8 h-8 i-mdi-skip-next-outline']}
+          class='m-4 w-8 h-8 i-mdi-skip-next-outline'
           disabled={isLast$}
         />
       </div>

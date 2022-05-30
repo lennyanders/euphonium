@@ -30,23 +30,23 @@ export const HeroImage = ({
       </div>
       {/* mobile */}
       <div
-        class={() => [
+        class={[
           'p-t-8 relative m--4 min-w-[calc(100%+2rem)] overflow-hidden transition-margin duration-250 m-b-2',
-          !fullImage$() && 'm-t-[calc(-30vw-3rem)]',
+          () => !fullImage$() && 'm-t-[calc(-30vw-3rem)]',
         ]}
         onClick={() => fullImage$((val) => !val)}
       >
         <CoverImage
           src={image}
-          class={() => [
+          class={[
             'w-100% transition-transform duration-250',
-            fullImage$() ? 'translate-y--8' : 'translate-y-15vw',
+            () => (fullImage$() ? 'translate-y--8' : 'translate-y-15vw'),
           ]}
         />
         <div
-          class={() => [
+          class={[
             'transition-opacity duration-250 absolute left-3 right-3 bottom-3 flex flex-col items-start gap-1',
-            fullImage$() && 'opacity-0',
+            () => fullImage$() && 'opacity-0',
           ]}
         >
           <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>{title}</span>
@@ -57,9 +57,9 @@ export const HeroImage = ({
           ))}
         </div>
         <div
-          class={() => [
+          class={[
             'i-mdi-chevron-up absolute bottom--3 w-12 h-12 left-50% m-l--6 transition-opacity duration-250',
-            !fullImage$() && 'opacity-0',
+            () => !fullImage$() && 'opacity-0',
           ]}
         />
       </div>

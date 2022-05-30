@@ -11,9 +11,9 @@ const Track = ({
   displayNumber?: boolean;
 }) => (
   <li
-    class={() => [
+    class={[
       'flex gap-2 items-center p-1 rd-1',
-      currentTrackId$() === track.id && 'bg-[#333]',
+      () => currentTrackId$() === track.id && 'bg-[#333]',
     ]}
     onClick={() => play(track, tracks)}
   >
