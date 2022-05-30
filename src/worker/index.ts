@@ -1,4 +1,10 @@
-import { forceAddDirectory, removeDirectory, tryAddDirectory, updateFiles } from './library';
+import {
+  forceAddDirectory,
+  removeDirectory,
+  setQueue,
+  tryAddDirectory,
+  updateFiles,
+} from './library';
 import { onMessage } from './utils';
 
 onMessage(async ({ data }) => {
@@ -13,5 +19,11 @@ onMessage(async ({ data }) => {
   }
   if (data.message === 'forceAddDirectoryToLibrary') {
     return forceAddDirectory(data.relation, data.directoryHandle);
+  }
+  if (data.message === 'setQueue') {
+    return setQueue({ tracks: data.state });
+  }
+  if (data.message == 'setActiveTrack') {
+    return setQueue({ activeTrackId: data.state });
   }
 });

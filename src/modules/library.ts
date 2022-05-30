@@ -12,8 +12,10 @@ export const loading$ = useComputed(
 
 onMessage(({ data }) => {
   if (data.message === 'setTracks') {
-    if (!queue$()) queue$(data.state), currentTrackId$(data.state[0].id);
-    return tracks$(data.state);
+    tracks$(data.state.tracks);
+    queue$(data.state.queue || data.state.tracks);
+    currentTrackId$(data.state.activeTrackId || data.state.tracks[0]?.id);
+    return;
   }
   if (data.message === 'setAlbums') return albums$(data.state);
   if (data.message === 'setArtists') return artists$(data.state);

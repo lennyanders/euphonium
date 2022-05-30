@@ -3,6 +3,7 @@ import { getFormattedTime } from '../shared/utils';
 import { postMessage } from './utils';
 
 export const libraryDirectories$ = $<FELibraryDirectory[]>();
+export const queue$ = $<DbQueue>();
 export const tracks$ = $<FETrack[]>();
 const albums$ = $.computed<FEAlbum[] | undefined>(() => {
   const tracks = tracks$();
@@ -84,14 +85,35 @@ $.effect(() => {
   const state = libraryDirectories$();
   if (state) postMessage({ message: 'setLibraryDirectories', state });
 });
+
+let first = true;
 $.effect(() => {
-  const state = tracks$();
-  if (state) postMessage({ message: 'setTracks', state });
+  const tracks = tracks$();
+  const queue = $.sample(queue$);
+  if (tracks) {
+    if (first && queue) {
+      postMessage({
+        message: 'setTracks',
+        state: {
+          tracks,
+          queue: queue.trackIds
+            .map((id) => tracks.find((track) => track.id === id))
+            .filter((track) => track) as FETrack[],
+          activeTrackId: queue.activeTrackId,
+        },
+      });
+    } else {
+      postMessage({ message: 'setTracks', state: { tracks } });
+    }
+    first = false;
+  }
 });
+
 $.effect(() => {
   const state = albums$();
   if (state) postMessage({ message: 'setAlbums', state });
 });
+
 $.effect(() => {
   const state = artists$();
   if (state) postMessage({ message: 'setArtists', state });

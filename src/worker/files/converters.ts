@@ -20,7 +20,7 @@ export const beToFETrack = (track: DbTrack, covers: DbCover[]): FETrack => {
 
   return {
     fileHandle: track.fileHandle,
-    id: track.id,
+    id: track.id!,
     duration: track.duration,
     durationFormatted: getFormattedTime(track.duration),
     number: track.number,

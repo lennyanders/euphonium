@@ -1,10 +1,5 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
 
-export interface DbLibraryDirectory {
-  id?: number;
-  handle: FileSystemDirectoryHandle;
-}
-
 export interface AppDataDb extends DBSchema {
   libraryDirectory: {
     key: number;
@@ -19,6 +14,10 @@ export interface AppDataDb extends DBSchema {
     key: number;
     value: DbCover;
     indexes: { libraryDirectory: number };
+  };
+  queue: {
+    key: number;
+    value: DbQueue;
   };
 }
 
@@ -35,6 +34,8 @@ export const getDatabase = async () => {
 
       const coverStore = db.createObjectStore('cover', { keyPath: 'id', autoIncrement: true });
       coverStore.createIndex('libraryDirectory', 'libraryDirectory');
+
+      db.createObjectStore('queue');
     },
   });
 

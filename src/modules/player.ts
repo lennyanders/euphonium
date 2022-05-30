@@ -1,5 +1,6 @@
 import { $, useComputed, useEffect, useEventListener, useSample } from 'voby';
 import { requestFileAccess } from '../utils';
+import { postMessage } from '../utils/worker';
 
 const audioEl = new Audio();
 
@@ -33,6 +34,15 @@ export const play = async (track?: FETrack, queue?: FETrack[]) => {
   }
   if (audioEl.src) audioEl.play();
 };
+
+useEffect(() => {
+  const state = queue$();
+  if (state?.length) postMessage({ message: 'setQueue', state });
+});
+useEffect(() => {
+  const state = currentTrackId$();
+  if (state !== undefined) postMessage({ message: 'setActiveTrack', state });
+});
 
 export const pause = () => audioEl.pause();
 export const go = (offset: number) => {

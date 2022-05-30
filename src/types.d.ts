@@ -8,6 +8,11 @@ interface FileHandle {
   libraryDirectory: number;
 }
 
+interface DbLibraryDirectory {
+  id?: number;
+  handle: FileSystemDirectoryHandle;
+}
+
 interface DbTrack extends FileHandle {
   id?: number;
   duration: number;
@@ -28,6 +33,11 @@ interface DbCover extends FileHandle {
   image: Blob;
 }
 
+interface DbQueue {
+  trackIds: number[];
+  activeTrackId: number;
+}
+
 interface FELibraryDirectory {
   id: number;
   name: string;
@@ -36,6 +46,7 @@ interface FELibraryDirectory {
 
 type FETrack = Omit<
   DbTrack,
+  | 'id'
   | 'cover'
   | 'filePath'
   | 'folderPath'
@@ -45,6 +56,7 @@ type FETrack = Omit<
   | 'libraryDirectory'
   | 'title'
 > & {
+  id: number;
   title: string;
   cover?: string;
   durationFormatted: string;

@@ -11,8 +11,13 @@ import {
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/converters';
-import { libraryDirectories$, tracks$ } from './store';
+import { libraryDirectories$, queue$, tracks$ } from './store';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
+
+const getDbQueue = async () => {
+  const database = await getDatabase();
+  return await database.get('queue', 0);
+};
 
 export const getFETracks = async () => {
   const database = await getDatabase();
@@ -111,9 +116,27 @@ export const updateFiles = async () => {
   console.timeEnd('update');
 };
 
-Promise.all([getFEDirectories(), getFETracks()]).then(([directories, tracks]) => {
-  $.batch(() => {
-    libraryDirectories$(directories);
-    tracks$(tracks);
-  });
-});
+export const setQueue = async ({
+  tracks,
+  activeTrackId,
+}: {
+  tracks?: FETrack[];
+  activeTrackId?: number;
+}) => {
+  queue$((oldQueue) => ({
+    trackIds: tracks?.map((t) => t.id) || oldQueue?.trackIds || [],
+    activeTrackId: activeTrackId || oldQueue?.activeTrackId || 0,
+  }));
+  const database = await getDatabase();
+  await database.put('queue', $.sample(queue$)!, 0);
+};
+
+Promise.all([getFEDirectories(), getDbQueue(), getFETracks()]).then(
+  ([directories, queue, tracks]) => {
+    $.batch(() => {
+      libraryDirectories$(directories);
+      queue$(queue);
+      tracks$(tracks);
+    });
+  },
+);
