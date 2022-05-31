@@ -15,7 +15,20 @@ const _path$ = $(location.pathname);
 export const path$ = useReadonly(_path$);
 let updateUrl = false;
 
-addEventListener('popstate', () => _path$(location.pathname));
+const updatePage = (path: string) => {
+  // @ts-ignore
+  if (!document.createDocumentTransition) return _path$(path);
+
+  document.documentElement.classList.add('transition-warming-up');
+  // @ts-ignore
+  const transition = document.createDocumentTransition();
+  transition.start(() => {
+    _path$(path);
+    document.documentElement.classList.remove('transition-warming-up');
+  });
+};
+
+addEventListener('popstate', () => updatePage(location.pathname));
 
 export const Router = ({
   routes,
@@ -47,7 +60,7 @@ export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) =
 
     event.preventDefault();
     updateUrl = true;
-    _path$(anchor.pathname);
+    updatePage(anchor.pathname);
   };
   return <a ref={el$} {...props}></a>;
 };

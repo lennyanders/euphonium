@@ -38,3 +38,14 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+.transition-warming-up::page-transition-container(*),
+.transition-warming-up::page-transition-incoming-image(*),
+.transition-warming-up::page-transition-outgoing-image(*) {
+  animation-play-state: paused !important;
+}
+
+::page-transition-outgoing-image(root),
+::page-transition-incoming-image(root) {
+  animation-duration: 0.1s;
+}
