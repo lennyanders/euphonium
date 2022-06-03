@@ -15,25 +15,24 @@ import {
   queue$,
   seek,
 } from '../modules/player';
+import { HeroImage } from '../components/HeroImage';
+import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
 
 export const Player = () => {
   return (
     <If when={currentTrack$}>
-      <div class='relative'>
-        <CoverImage src={() => currentTrack$()?.cover!} class='w-100% rd-2' />
-        <div class='absolute left-3 right-3 bottom-3 flex flex-col items-start gap-1'>
-          <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>
-            {() => currentTrack$()?.title}
-          </span>
-          <small class='p-x-1 flex items-center bg-[#000D] rd-1 max-w-100% truncate'>
-            {() => (
-              <RouterLink href={`/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
-                {currentTrack$()?.artist}
-              </RouterLink>
-            )}
-          </small>
-        </div>
-      </div>
+      {() => (
+        <HeroImage
+          image={currentTrack$()?.cover}
+          title={currentTrack$()?.title}
+          sublines={[
+            <RouterLink href={`/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
+              {currentTrack$()?.artist}
+            </RouterLink>,
+          ]}
+          mobileComp={HeroImageMobilePlayer}
+        />
+      )}
       <div class='flex justify-between'>
         <span>{() => getFormattedTime(currentTime$())}</span>
         <span>{() => currentTrack$()?.durationFormatted}</span>
