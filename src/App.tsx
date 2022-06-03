@@ -13,28 +13,38 @@ import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { Router } from './router';
 import { loading$ } from './modules/library';
+import { w1024$ } from './modules/layout';
+
+const baseRoutes = [
+  { path: '/player', component: Player },
+  { path: '/tracks', component: Tracks },
+  { path: '/albums', component: Albums },
+  { path: '/artists', component: Artists },
+  { path: '/album-artists', component: AlbumArtists },
+  { path: '/artist/:artistName', component: Artist },
+  { path: '/artist/:artist/:albumTitle', component: Album },
+  { path: '/settings', component: Settings },
+  { path: '/about', component: About },
+  { path: '/privacy', component: Privacy },
+  { path: '*', component: '404' },
+];
+
+const mobileRoutes = [{ path: '/', component: Home }, ...baseRoutes];
+const desktopRoutes = [{ path: '/', component: Tracks }, ...baseRoutes];
 
 export const App = () => (
   <If
     when={loading$}
     fallback={
       <>
-        <Router
-          routes={[
-            { path: '/', component: Home },
-            { path: '/player', component: Player },
-            { path: '/tracks', component: Tracks },
-            { path: '/albums', component: Albums },
-            { path: '/artists', component: Artists },
-            { path: '/album-artists', component: AlbumArtists },
-            { path: '/artist/:artistName', component: Artist },
-            { path: '/artist/:artist/:albumTitle', component: Album },
-            { path: '/settings', component: Settings },
-            { path: '/about', component: About },
-            { path: '/privacy', component: Privacy },
-            { path: '*', component: '404' },
-          ]}
-        />
+        <If when={w1024$} fallback={<Router routes={mobileRoutes} />}>
+          <div class='flex flex-col gap-4 p-4 overflow-y-auto'>
+            <Home />
+          </div>
+          <div class='flex flex-col gap-4 flex-1 p-4 p-b-24 overflow-y-scroll'>
+            <Router routes={desktopRoutes} />
+          </div>
+        </If>
         <Footer />
       </>
     }
