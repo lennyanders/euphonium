@@ -1,10 +1,13 @@
-import { If } from 'voby';
+import { FunctionMaybe, If } from 'voby';
 
 export const CoverImage = ({
   src,
   fallbackCss,
   ...props
-}: JSX.ImgHTMLAttributes<HTMLElement> & { fallbackCss?: string }) => (
+}: Omit<JSX.ImgHTMLAttributes<HTMLDivElement>, 'src'> & {
+  fallbackCss?: string;
+  src?: FunctionMaybe<string>;
+}) => (
   <If
     when={src}
     fallback={

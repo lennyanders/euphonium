@@ -21,18 +21,16 @@ import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
 export const Player = () => {
   return (
     <If when={currentTrack$}>
-      {() => (
-        <HeroImage
-          image={currentTrack$()?.cover}
-          title={currentTrack$()?.title}
-          sublines={[
-            <RouterLink href={`/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
-              {currentTrack$()?.artist}
-            </RouterLink>,
-          ]}
-          mobileComp={HeroImageMobilePlayer}
-        />
-      )}
+      <HeroImage
+        image={() => currentTrack$()?.cover!}
+        title={() => currentTrack$()?.title}
+        sublines={[
+          <RouterLink href={() => `/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
+            {() => currentTrack$()?.artist}
+          </RouterLink>,
+        ]}
+        mobileComp={HeroImageMobilePlayer}
+      />
       <div class='flex justify-between'>
         <span>{() => getFormattedTime(currentTime$())}</span>
         <span>{() => currentTrack$()?.durationFormatted}</span>

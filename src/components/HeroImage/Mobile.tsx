@@ -1,11 +1,8 @@
-import { $ } from 'voby';
+import { $, For } from 'voby';
+import { HeroImageProps } from '.';
 import { CoverImage } from '../CoverImage';
 
-export const HeroImageMobile = (props: {
-  image?: string;
-  title: JSX.Element;
-  sublines?: JSX.Element[];
-}) => {
+export const HeroImageMobile = (props: HeroImageProps) => {
   const fullImage$ = $(false);
   return (
     <div
@@ -29,11 +26,15 @@ export const HeroImageMobile = (props: {
         ]}
       >
         <span class='p-x-1 bg-[#000D] rd-1 max-w-100% truncate'>{props.title}</span>
-        {props.sublines?.map((subline) => (
-          <small class='p-x-1 flex items-center bg-[#000D] rd-1 max-w-100% truncate'>
-            {subline}
-          </small>
-        ))}
+        {props.sublines && (
+          <For values={props.sublines}>
+            {(subline) => (
+              <small class='p-x-1 flex items-center bg-[#000D] rd-1 max-w-100% truncate'>
+                {subline}
+              </small>
+            )}
+          </For>
+        )}
       </div>
       <div
         class={[
