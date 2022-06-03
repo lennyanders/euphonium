@@ -1,4 +1,5 @@
-import { $, FunctionMaybe, Ternary } from 'voby';
+import { FunctionMaybe, Ternary } from 'voby';
+import { w640$ } from '../../modules/layout';
 import { HeroImageDesktop } from './Desktop';
 import { HeroImageMobile } from './Mobile';
 import { HeroImageMobilePlayer } from './MobilePlayer';
@@ -16,11 +17,8 @@ export const HeroImage = ({
   mobileComp?: typeof HeroImageMobile | typeof HeroImageMobilePlayer;
 }) => {
   MobileComp ||= HeroImageMobile;
-  const desktopMatcher = matchMedia('(min-width: 640px)');
-  const desktop$ = $(desktopMatcher.matches);
-  desktopMatcher.addEventListener('change', ({ matches }) => desktop$(matches));
   return (
-    <Ternary when={desktop$}>
+    <Ternary when={w640$}>
       <HeroImageDesktop {...props} />
       <MobileComp {...props} />
     </Ternary>
