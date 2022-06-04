@@ -17,13 +17,18 @@ let updateUrl = false;
 
 const updatePage = (path: string) => {
   // @ts-ignore
-  if (!document.createDocumentTransition) return _path$(path);
+  if (!document.createDocumentTransition) {
+    _path$(path);
+    window.scrollTo({ top: 0 });
+    return;
+  }
 
   document.documentElement.classList.add('transition-warming-up');
   // @ts-ignore
   const transition = document.createDocumentTransition();
   transition.start(() => {
     _path$(path);
+    window.scrollTo({ top: 0 });
     document.documentElement.classList.remove('transition-warming-up');
   });
 };
