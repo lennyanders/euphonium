@@ -14,26 +14,13 @@ import {
 import { w1024$ } from '../../modules/layout';
 import { CoverImage } from '../CoverImage';
 import { getFormattedTime } from '../../shared/utils';
+import { ProgressBar } from '../Player/ProgressBar';
 
 const Desktop = () => (
   <>
     <div class='flex items-center gap-4 p-x-4 p-t-2 p-b-1'>
       {() => getFormattedTime(currentTime$())}
-      <div class='relative flex-1 bg-[#222] rd-1 overflow-hidden'>
-        <div
-          class='h-2 bg-red transform-origin-l'
-          style={{
-            transform: () => `scaleX(${currentTime$() / currentTrack$()?.duration!})`,
-          }}
-        />
-        <input
-          class='absolute top-0 left-0 w-100% h-100% m-0 op-0 cursor-pointer'
-          type='range'
-          min='0'
-          max={() => currentTrack$()?.duration || 0}
-          onInput={(event) => seek((event.target as any).value)}
-        />
-      </div>
+      <ProgressBar />
       {() => currentTrack$()?.durationFormatted}
     </div>
     <div class='flex items-center'>

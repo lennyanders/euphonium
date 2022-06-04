@@ -17,6 +17,7 @@ import {
 } from '../modules/player';
 import { HeroImage } from '../components/HeroImage';
 import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
+import { ProgressBar } from '../components/Player/ProgressBar';
 
 export const Player = () => {
   return (
@@ -35,21 +36,7 @@ export const Player = () => {
         <span>{() => getFormattedTime(currentTime$())}</span>
         <span>{() => currentTrack$()?.durationFormatted}</span>
       </div>
-      <div class='relative'>
-        <div
-          class='h-2 bg-red transform-origin-l'
-          style={{
-            transform: () => `scaleX(${currentTime$() / currentTrack$()?.duration!})`,
-          }}
-        />
-        <input
-          class='absolute top-0 left-0 w-100% h-100% m-0 op-0'
-          type='range'
-          min='0'
-          max={() => currentTrack$()?.duration || 0}
-          onInput={(event) => seek((event.target as any).value)}
-        />
-      </div>
+      <ProgressBar bg='bg-[#191919]' />
       <div class='flex justify-center'>
         <button
           onClick={() => go(-1)}

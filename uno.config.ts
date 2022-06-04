@@ -2,6 +2,7 @@ import { defineConfig } from 'unocss';
 import presetUno from '@unocss/preset-uno';
 import presetFonts from '@unocss/preset-web-fonts';
 import presetIcons from '@unocss/preset-icons';
+import transformerVariantGroup from '@unocss/transformer-variant-group';
 
 export default defineConfig({
   presets: [
@@ -15,8 +16,11 @@ export default defineConfig({
     }),
     presetIcons(),
   ],
+  transformers: [transformerVariantGroup()],
   rules: [
     [/^mask-size-(.*)$/, ([, d]) => ({ 'mask-size': d, '-webkit-mask-size': d })],
     [/^mask-position-(.*)$/, ([, d]) => ({ 'mask-position': d, '-webkit-mask-position': d })],
+    [/^var-(.*)-(.*)$/, ([, name, val]) => ({ [`--${name}`]: val })],
+    [/^shadow-\[(.*)\]$/, ([, val]) => ({ 'box-shadow': val.replace(/_/g, ' ') })],
   ],
 });
