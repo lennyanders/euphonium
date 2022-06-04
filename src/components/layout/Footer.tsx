@@ -1,10 +1,11 @@
 import { If, Ternary } from 'voby';
 import { path$, RouterLink } from '../../router';
-import { currentTrack$, pause, play, playing$ } from '../../modules/player';
+import { currentTrack$ } from '../../modules/player';
 import { w1024$ } from '../../modules/layout';
 import { CoverImage } from '../CoverImage';
 import { MainControls } from '../Player/MainControls';
 import { Progress } from '../Player/Progress';
+import { PlayPause } from '../Player/PlayPause';
 
 const Desktop = () => (
   <>
@@ -35,10 +36,7 @@ const Mobile = () => (
   <>
     <If when={() => path$() !== '/player' && currentTrack$()}>
       <div class='w-64 flex items-center'>
-        <button
-          onClick={() => (playing$() ? pause() : play())}
-          class={['m-4 w-8 h-8', () => (playing$() ? 'i-mdi-pause' : 'i-mdi-play')]}
-        />
+        <PlayPause />
         <RouterLink href='/player' class='flex-1 grid'>
           <span class='truncate'>{() => currentTrack$()?.title}</span>
           <small class='truncate block'>{() => currentTrack$()?.artist}</small>
