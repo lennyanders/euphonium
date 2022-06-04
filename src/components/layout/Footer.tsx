@@ -1,20 +1,11 @@
 import { If, Ternary } from 'voby';
 import { path$, RouterLink } from '../../router';
-import {
-  currentTime$,
-  currentTrack$,
-  go,
-  isFirst$,
-  isLast$,
-  pause,
-  play,
-  playing$,
-  seek,
-} from '../../modules/player';
+import { currentTime$, currentTrack$, pause, play, playing$ } from '../../modules/player';
 import { w1024$ } from '../../modules/layout';
 import { CoverImage } from '../CoverImage';
 import { getFormattedTime } from '../../shared/utils';
 import { ProgressBar } from '../Player/ProgressBar';
+import { MainControls } from '../Player/MainControls';
 
 const Desktop = () => (
   <>
@@ -39,22 +30,7 @@ const Desktop = () => (
           </small>
         </div>
       </div>
-      <div class='flex'>
-        <button
-          onClick={() => go(-1)}
-          class='m-4 w-8 h-8 i-mdi-skip-previous-outline'
-          disabled={isFirst$}
-        />
-        <button
-          onClick={() => (playing$() ? pause() : play())}
-          class={['m-4 w-8 h-8', () => (playing$() ? 'i-mdi-pause' : 'i-mdi-play')]}
-        />
-        <button
-          onClick={() => go(1)}
-          class='m-4 w-8 h-8 i-mdi-skip-next-outline'
-          disabled={isLast$}
-        />
-      </div>
+      <MainControls />
       <div class='flex-1 p-x-4 text-right'></div>
     </div>
   </>
