@@ -1,12 +1,11 @@
 import { If } from 'voby';
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
-import { getFormattedTime } from '../shared/utils';
-import { currentTime$, currentTrack$, queue$ } from '../modules/player';
+import { currentTrack$, queue$ } from '../modules/player';
 import { HeroImage } from '../components/HeroImage';
 import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
-import { ProgressBar } from '../components/Player/ProgressBar';
 import { MainControls } from '../components/Player/MainControls';
+import { Progress } from '../components/Player/Progress';
 
 export const Player = () => {
   return (
@@ -21,11 +20,7 @@ export const Player = () => {
         ]}
         mobileComp={HeroImageMobilePlayer}
       />
-      <div class='flex justify-between'>
-        <span>{() => getFormattedTime(currentTime$())}</span>
-        <span>{() => currentTrack$()?.durationFormatted}</span>
-      </div>
-      <ProgressBar bg='bg-[#191919]' />
+      <Progress bg='bg-[#191919]' />
       <MainControls />
       <div>Queue</div>
       {() => <TrackList tracks={queue$() || []} />}

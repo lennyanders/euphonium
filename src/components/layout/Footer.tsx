@@ -1,19 +1,14 @@
 import { If, Ternary } from 'voby';
 import { path$, RouterLink } from '../../router';
-import { currentTime$, currentTrack$, pause, play, playing$ } from '../../modules/player';
+import { currentTrack$, pause, play, playing$ } from '../../modules/player';
 import { w1024$ } from '../../modules/layout';
 import { CoverImage } from '../CoverImage';
-import { getFormattedTime } from '../../shared/utils';
-import { ProgressBar } from '../Player/ProgressBar';
 import { MainControls } from '../Player/MainControls';
+import { Progress } from '../Player/Progress';
 
 const Desktop = () => (
   <>
-    <div class='flex items-center gap-4 p-x-4 p-t-2 p-b-1'>
-      {() => getFormattedTime(currentTime$())}
-      <ProgressBar />
-      {() => currentTrack$()?.durationFormatted}
-    </div>
+    <Progress css='p-x-4 p-t-2 p-b-1' />
     <div class='flex items-center'>
       <div class='flex-1 flex gap-4 p-x-4'>
         <CoverImage
