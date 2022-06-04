@@ -3,7 +3,7 @@ import { currentTime$, currentTrack$, seek } from '../../modules/player';
 export const ProgressBar = ({ bg = 'bg-[#222]' }: { bg?: string }) => (
   <div
     class='relative flex-1 h-2 hover:var-thumb-size-1.5 color-red'
-    style={{ '--pos': () => `${(currentTime$() / currentTrack$()?.duration! - 1) * 100}%` }}
+    style={{ '--pos': () => `${(currentTime$() / (currentTrack$()?.duration || 1) - 1) * 100}%` }}
   >
     <div
       class={[
