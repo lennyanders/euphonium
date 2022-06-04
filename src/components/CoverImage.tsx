@@ -2,7 +2,7 @@ import { FunctionMaybe, If } from 'voby';
 
 export const CoverImage = ({
   src,
-  fallbackCss,
+  fallbackCss = 'color-[#111]',
   ...props
 }: Omit<JSX.ImgHTMLAttributes<HTMLDivElement>, 'src'> & {
   fallbackCss?: string;
@@ -12,7 +12,7 @@ export const CoverImage = ({
     when={src}
     fallback={
       <div {...props}>
-        <div class={['aspect-1 w-100% h-100% color-[#111] i-mdi-disk', fallbackCss]} />
+        <div class={['aspect-1 w-100% h-100% i-mdi-disk', fallbackCss]} />
       </div>
     }
   >
