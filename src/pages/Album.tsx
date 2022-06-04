@@ -46,7 +46,7 @@ export const Album = () => {
           </>,
         ]}
       />
-      <TrackList tracks={album.tracks} displayNumber displayDiskNumber />
+      <TrackList tracks={album.tracks} displayNumber />
     </>
   );
 };

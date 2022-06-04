@@ -39,6 +39,15 @@ const albums$ = $.computed<FEAlbum[] | undefined>(() => {
       const sortedTracks = album.tracks
         .sort((a, b) => (a.number || 0) - (b.number || 0))
         .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+
+      let prevDiskNumber = 0;
+      sortedTracks.forEach((track, index) => {
+        if (track.diskNumber && prevDiskNumber !== track.diskNumber) {
+          sortedTracks[index] = { ...track, showDiskNumber: true };
+          prevDiskNumber = track.diskNumber;
+        }
+      });
+
       return {
         ...album,
         tracks: sortedTracks,

@@ -60,6 +60,7 @@ type FETrack = Omit<
   title: string;
   cover?: string;
   durationFormatted: string;
+  showDiskNumber?: boolean;
 };
 
 interface FEAlbum {

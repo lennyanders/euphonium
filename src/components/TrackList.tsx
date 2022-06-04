@@ -1,3 +1,10 @@
+import {
+  observeWindowOffset,
+  observeWindowRect,
+  Virtualizer,
+  windowScroll,
+} from '@tanstack/virtual-core';
+import { $, For, If, useEffect } from 'voby';
 import { currentTrackId$, play } from '../modules/player';
 import { CoverImage } from './CoverImage';
 
@@ -10,49 +17,75 @@ const Track = ({
   track: FETrack;
   displayNumber?: boolean;
 }) => (
-  <li>
-    <button
-      class={[
-        'w-100% flex gap-2 items-center p-1 rd-1',
-        () => currentTrackId$() === track.id && 'bg-[#333]',
-      ]}
-      onClick={() => play(track, tracks)}
-    >
-      {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number || '-'}</span>}
-      <CoverImage src={track.cover} class='w-12 h-12 rd-1 shrink-0' />
-      <div class='break-all'>
-        {track.title}
-        <small class='block'>{track.artist}</small>
-      </div>
-      <span class='m-l-a'>{track.durationFormatted}</span>
-    </button>
-  </li>
+  <button
+    class={[
+      'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
+      () => currentTrackId$() === track.id && 'bg-[#333]',
+    ]}
+    onClick={() => play(track, tracks)}
+  >
+    {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number || '-'}</span>}
+    <CoverImage src={track.cover} class='w-12 h-12 rd-1 shrink-0' />
+    <div class='break-all truncate'>
+      {track.title}
+      <small class='block'>{track.artist}</small>
+    </div>
+    <span class='m-l-a'>{track.durationFormatted}</span>
+  </button>
 );
 
 export const TrackList = ({
   tracks,
   displayNumber,
-  displayDiskNumber,
 }: {
   tracks: FETrack[];
   displayNumber?: boolean;
-  displayDiskNumber?: boolean;
 }) => {
-  let prevDiskNumber = 0;
+  const virtualizer = new Virtualizer({
+    count: tracks.length,
+    overscan: 50,
+    getScrollElement: () => window,
+    estimateSize: (index) => (tracks[index].showDiskNumber ? 80 : 56),
+    observeElementRect: observeWindowRect,
+    observeElementOffset: observeWindowOffset,
+    scrollToFn: windowScroll,
+    onChange: () => {
+      virtualItems$(virtualizer.getVirtualItems());
+    },
+  });
+  const virtualHeight$ = $(virtualizer.getTotalSize());
+  const virtualItems$ = $(virtualizer.getVirtualItems(), {
+    equals: (a, b) => JSON.stringify(a) === JSON.stringify(b),
+  });
+  useEffect(() => {
+    virtualItems$();
+    virtualizer._willUpdate();
+  });
+
   return (
-    <ul class='grid m--1'>
-      {tracks.map((track) => {
-        if (displayDiskNumber && track.diskNumber && prevDiskNumber !== track.diskNumber) {
-          prevDiskNumber = track.diskNumber;
-          return (
-            <>
-              <li>Disk: {track.diskNumber}</li>
+    <ul class='relative m--1' style={{ height: virtualHeight$ }}>
+      <For values={virtualItems$}>
+        {({ index, start }, track = tracks[index]) => (
+          <>
+            <If when={track.showDiskNumber}>
+              <li
+                class='absolute top-0 left-0 w-100%'
+                style={{ transform: `translateY(${start}px)` }}
+              >
+                Disk: {track.diskNumber}
+              </li>
+            </If>
+            <li
+              class='absolute top-0 left-0 w-100%'
+              style={{
+                transform: `translateY(${track.showDiskNumber ? start + 24 : start}px)`,
+              }}
+            >
               <Track track={track} displayNumber={displayNumber} tracks={tracks} />
-            </>
-          );
-        }
-        return <Track track={track} displayNumber={displayNumber} tracks={tracks} />;
-      })}
+            </li>
+          </>
+        )}
+      </For>
     </ul>
   );
 };

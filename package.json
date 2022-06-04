@@ -25,6 +25,7 @@
     "voby-vite": "^1.0.0"
   },
   "dependencies": {
+    "@tanstack/virtual-core": "^3.0.0-beta.1",
     "buffer": "^6.0.3",
     "idb": "^7.0.1",
     "music-metadata": "^7.12.3",
