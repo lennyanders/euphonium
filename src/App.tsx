@@ -13,7 +13,7 @@ import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { Router } from './router';
 import { loading$ } from './modules/library';
-import { w1024$ } from './modules/layout';
+import { mainEl$, w1024$ } from './modules/layout';
 
 const baseRoutes = [
   { path: '/player', component: Player },
@@ -37,11 +37,14 @@ export const App = () => (
     when={loading$}
     fallback={
       <>
-        <If when={w1024$} fallback={<Router routes={mobileRoutes} />}>
+        <If
+          when={w1024$}
+          fallback={() => (mainEl$(document.body), (<Router routes={mobileRoutes} />))}
+        >
           <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-4 p-b-33 overflow-y-auto bg-[#191919]'>
             <Home />
           </aside>
-          <main class='flex flex-col gap-4 flex-1 p-4 p-b-33'>
+          <main class='flex flex-col gap-4 flex-1 p-4 p-b-33' ref={mainEl$}>
             <Router routes={desktopRoutes} />
           </main>
         </If>

@@ -15,11 +15,19 @@ const _path$ = $(location.pathname);
 export const path$ = useReadonly(_path$);
 let updateUrl = false;
 
+let scrollY = 0;
+const restoreScrollPosition = () => {
+  window.scrollTo({ top: scrollY });
+  scrollY = 0;
+};
+
 const updatePage = (path: string) => {
+  history.replaceState({ scrollY: window.scrollY }, '');
+
   // @ts-ignore
   if (!document.createDocumentTransition) {
     _path$(path);
-    window.scrollTo({ top: 0 });
+    restoreScrollPosition();
     return;
   }
 
@@ -28,12 +36,15 @@ const updatePage = (path: string) => {
   const transition = document.createDocumentTransition();
   transition.start(() => {
     _path$(path);
-    window.scrollTo({ top: 0 });
+    restoreScrollPosition();
     document.documentElement.classList.remove('transition-warming-up');
   });
 };
 
-addEventListener('popstate', () => updatePage(location.pathname));
+addEventListener('popstate', ({ state }) => {
+  scrollY = typeof state?.scrollY === 'number' ? state.scrollY : 0;
+  updatePage(location.pathname);
+});
 
 export const Router = ({
   routes,

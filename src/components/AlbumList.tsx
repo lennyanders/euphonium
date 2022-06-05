@@ -6,6 +6,7 @@ import {
   windowScroll,
 } from '@tanstack/virtual-core';
 import { $, For, useEffect } from 'voby';
+import { mainElWidth$ } from '../modules/layout';
 import { RouterLink } from '../router';
 import { obyJsonEquals } from '../shared/utils';
 import { CoverImage } from './CoverImage';
@@ -22,25 +23,15 @@ const Album = ({ album }: { album: FEAlbum }) => (
 );
 
 export const AlbumList = ({ albums }: { albums: FEAlbum[] }) => {
-  const ul$ = $<HTMLElement>();
-  const contentWidth$ = $(0);
-  useEffect(() => {
-    const ul = ul$();
-    if (!ul) return;
-
-    const observer = new ResizeObserver(([ul]) => contentWidth$(ul.contentRect.width));
-    observer.observe(ul);
-    return () => observer.disconnect();
-  });
-
   const virtualHeight$ = $(0);
   const virtualItems$ = $<VirtualItem<any>[]>([], { equals: obyJsonEquals });
   const itemsPerRow$ = $(0);
   let virtualizer: Virtualizer<Window, any>;
   useEffect(() => {
-    const contentWidth = contentWidth$();
-    if (!contentWidth) return;
+    const mainElWidth = mainElWidth$();
+    if (!mainElWidth) return;
 
+    const contentWidth = mainElWidth + 16;
     const itemsPerRow = Math.floor(contentWidth / 140);
     const itemSize = contentWidth / itemsPerRow;
 
@@ -67,7 +58,7 @@ export const AlbumList = ({ albums }: { albums: FEAlbum[] }) => {
   });
 
   return (
-    <ul class='relative m--2' style={{ height: virtualHeight$ }} ref={ul$}>
+    <ul class='relative m--2' style={{ height: virtualHeight$ }}>
       <For values={virtualItems$}>
         {({ index, start, size }) => {
           const itemsPerRow = itemsPerRow$();
