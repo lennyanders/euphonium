@@ -22,5 +22,6 @@ export default defineConfig({
     [/^mask-position-(.*)$/, ([, d]) => ({ 'mask-position': d, '-webkit-mask-position': d })],
     [/^var-(.*)-(.*)$/, ([, name, val]) => ({ [`--${name}`]: val })],
     [/^shadow-\[(.*)\]$/, ([, val]) => ({ 'box-shadow': val.replace(/_/g, ' ') })],
+    [/^bgi-\[(.*)\]$/, ([, val]) => ({ 'background-image': val.replace(/_/g, ' ') })],
   ],
 });
