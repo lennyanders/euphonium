@@ -30,7 +30,7 @@ const Track = ({
       {track.title}
       <small class='block'>{track.artist}</small>
     </div>
-    <span class='m-l-a'>{track.durationFormatted}</span>
+    <span class='m-l-a self-start p-r-1'>{track.durationFormatted}</span>
   </button>
 );
 
