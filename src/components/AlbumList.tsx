@@ -7,6 +7,7 @@ import {
 } from '@tanstack/virtual-core';
 import { $, For, useEffect } from 'voby';
 import { RouterLink } from '../router';
+import { obyJsonEquals } from '../shared/utils';
 import { CoverImage } from './CoverImage';
 
 const Album = ({ album }: { album: FEAlbum }) => (
@@ -33,9 +34,7 @@ export const AlbumList = ({ albums }: { albums: FEAlbum[] }) => {
   });
 
   const virtualHeight$ = $(0);
-  const virtualItems$ = $<VirtualItem<any>[]>([], {
-    equals: (a, b) => JSON.stringify(a) === JSON.stringify(b),
-  });
+  const virtualItems$ = $<VirtualItem<any>[]>([], { equals: obyJsonEquals });
   const itemsPerRow$ = $(0);
   let virtualizer: Virtualizer<Window, any>;
   useEffect(() => {

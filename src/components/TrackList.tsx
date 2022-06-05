@@ -6,6 +6,7 @@ import {
 } from '@tanstack/virtual-core';
 import { $, For, If, useEffect } from 'voby';
 import { currentTrackId$, play } from '../modules/player';
+import { obyJsonEquals } from '../shared/utils';
 import { CoverImage } from './CoverImage';
 
 const Track = ({
@@ -56,9 +57,7 @@ export const TrackList = ({
     },
   });
   const virtualHeight$ = $(virtualizer.getTotalSize());
-  const virtualItems$ = $(virtualizer.getVirtualItems(), {
-    equals: (a, b) => JSON.stringify(a) === JSON.stringify(b),
-  });
+  const virtualItems$ = $(virtualizer.getVirtualItems(), { equals: obyJsonEquals });
   useEffect(() => {
     virtualItems$();
     virtualizer._willUpdate();
