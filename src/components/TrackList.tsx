@@ -37,9 +37,11 @@ const Track = ({
 export const TrackList = ({
   tracks,
   displayNumber,
+  stickToActiveTrack,
 }: {
   tracks: FETrack[];
   displayNumber?: boolean;
+  stickToActiveTrack?: boolean;
 }) => {
   const virtualizer = new Virtualizer({
     count: tracks.length,
@@ -61,6 +63,13 @@ export const TrackList = ({
     virtualItems$();
     virtualizer._willUpdate();
   });
+  if (stickToActiveTrack) {
+    useEffect(() => {
+      const currentTrackId = currentTrackId$();
+      const index = tracks.findIndex((track) => track.id === currentTrackId);
+      if (index > -1) virtualizer.scrollToIndex(index, { align: 'start' });
+    });
+  }
 
   return (
     <ul class='relative m--1' style={{ height: virtualHeight$ }}>

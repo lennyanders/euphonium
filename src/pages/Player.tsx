@@ -25,7 +25,7 @@ export const Player = () => {
         <MainControls />
         Queue
       </div>
-      {() => <TrackList tracks={queue$() || []} />}
+      {() => <TrackList tracks={queue$() || []} stickToActiveTrack />}
     </If>
   );
 };
