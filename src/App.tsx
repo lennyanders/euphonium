@@ -38,12 +38,12 @@ export const App = () => (
     fallback={
       <>
         <If when={w1024$} fallback={<Router routes={mobileRoutes} />}>
-          <div class='h-100vh sticky top-0 flex flex-col gap-4 p-4 p-b-33 overflow-y-auto bg-[#191919]'>
+          <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-4 p-b-33 overflow-y-auto bg-[#191919]'>
             <Home />
-          </div>
-          <div class='flex flex-col gap-4 flex-1 p-4 p-b-33'>
+          </aside>
+          <main class='flex flex-col gap-4 flex-1 p-4 p-b-33'>
             <Router routes={desktopRoutes} />
-          </div>
+          </main>
         </If>
         <Footer />
       </>
