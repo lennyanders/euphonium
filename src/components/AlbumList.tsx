@@ -1,14 +1,7 @@
-import {
-  observeWindowOffset,
-  observeWindowRect,
-  VirtualItem,
-  Virtualizer,
-  windowScroll,
-} from '@tanstack/virtual-core';
-import { $, For, useEffect } from 'voby';
+import { For } from 'voby';
 import { mainElWidth$ } from '../modules/layout';
+import { useVirtualGrid } from '../modules/virtual';
 import { RouterLink } from '../router';
-import { obyJsonEquals } from '../shared/utils';
 import { CoverImage } from './CoverImage';
 
 const Album = ({ album }: { album: FEAlbum }) => (
@@ -23,38 +16,13 @@ const Album = ({ album }: { album: FEAlbum }) => (
 );
 
 export const AlbumList = ({ albums }: { albums: FEAlbum[] }) => {
-  const virtualHeight$ = $(0);
-  const virtualItems$ = $<VirtualItem<any>[]>([], { equals: obyJsonEquals });
-  const itemsPerRow$ = $(0);
-  let virtualizer: Virtualizer<Window, any>;
-  useEffect(() => {
-    const mainElWidth = mainElWidth$();
-    if (!mainElWidth) return;
-
-    const contentWidth = mainElWidth + 16;
-    const itemsPerRow = Math.floor(contentWidth / 140);
-    const itemSize = contentWidth / itemsPerRow;
-
-    virtualizer = new Virtualizer<Window, any>({
-      count: Math.ceil(albums.length / itemsPerRow),
-      overscan: 2,
-      getScrollElement: () => window,
-      estimateSize: () => itemSize,
-      observeElementRect: observeWindowRect,
-      observeElementOffset: observeWindowOffset,
-      scrollToFn: windowScroll,
-      onChange: () => {
-        virtualItems$(virtualizer.getVirtualItems());
-      },
-    });
-
-    itemsPerRow$(itemsPerRow);
-    virtualHeight$(virtualizer.getTotalSize());
-    virtualItems$(virtualizer.getVirtualItems());
-  });
-  useEffect(() => {
-    virtualItems$();
-    virtualizer?._willUpdate();
+  const { virtualHeight$, virtualItems$, itemsPerRow$ } = useVirtualGrid({
+    overscan: 2,
+    count: albums.length,
+    parentWidth: mainElWidth$,
+    selfWidthDifference: 16,
+    itemMinWidth: 140,
+    itemHeight: (width) => width,
   });
 
   return (

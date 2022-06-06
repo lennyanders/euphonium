@@ -1,12 +1,6 @@
-import {
-  observeWindowOffset,
-  observeWindowRect,
-  Virtualizer,
-  windowScroll,
-} from '@tanstack/virtual-core';
-import { $, For, If, useEffect } from 'voby';
+import { For, If, useEffect } from 'voby';
 import { currentTrackId$, play } from '../modules/player';
-import { obyJsonEquals } from '../shared/utils';
+import { useVirtual } from '../modules/virtual';
 import { CoverImage } from './CoverImage';
 
 const Track = ({
@@ -44,23 +38,10 @@ export const TrackList = ({
   displayNumber?: boolean;
   stickToActiveTrack?: boolean;
 }) => {
-  const virtualizer = new Virtualizer({
+  const { virtualizer, virtualHeight$, virtualItems$ } = useVirtual({
     count: tracks.length,
-    overscan: 50,
-    getScrollElement: () => window,
+    overscan: 25,
     estimateSize: (index) => (tracks[index].showDiskNumber ? 80 : 56),
-    observeElementRect: observeWindowRect,
-    observeElementOffset: observeWindowOffset,
-    scrollToFn: windowScroll,
-    onChange: () => {
-      virtualItems$(virtualizer.getVirtualItems());
-    },
-  });
-  const virtualHeight$ = $(virtualizer.getTotalSize());
-  const virtualItems$ = $(virtualizer.getVirtualItems(), { equals: obyJsonEquals });
-  useEffect(() => {
-    virtualItems$();
-    virtualizer._willUpdate();
   });
   if (stickToActiveTrack) {
     useEffect(() => {
