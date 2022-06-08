@@ -17,6 +17,15 @@ const baseOptions = {
   scrollToFn: windowScroll,
 };
 
+const getVvirtualItemsIndexes = (items: VirtualItem<any>[]) => items.map(({ index }) => index);
+
+const getVirtualItemsIndexesToStart = (items: VirtualItem<any>[]) => {
+  return items.reduce<Record<number, number>>(
+    (res, item) => ({ ...res, [item.index]: item.start }),
+    {},
+  );
+};
+
 export const useVirtual = (
   options: Pick<VirtualizerOptions, 'count' | 'overscan' | 'estimateSize'>,
 ) => {
@@ -24,16 +33,22 @@ export const useVirtual = (
     ...baseOptions,
     ...options,
     onChange: () => {
-      virtualItems$(virtualizer.getVirtualItems());
+      const items = virtualizer.getVirtualItems();
+      useBatch(() => {
+        virtualItemsIndexes$(getVvirtualItemsIndexes(items));
+        virtualItemsIndexesToStart$(getVirtualItemsIndexesToStart(items));
+      });
     },
   });
   const virtualHeight$ = $(virtualizer.getTotalSize());
-  const virtualItems$ = $(virtualizer.getVirtualItems(), { equals: obyJsonEquals });
+  const items = virtualizer.getVirtualItems();
+  const virtualItemsIndexes$ = $(getVvirtualItemsIndexes(items));
+  const virtualItemsIndexesToStart$ = $(getVirtualItemsIndexesToStart(items));
   useEffect(() => {
-    virtualItems$();
+    virtualItemsIndexes$();
     virtualizer._willUpdate();
   });
-  return { virtualizer, virtualHeight$, virtualItems$ };
+  return { virtualizer, virtualHeight$, virtualItemsIndexes$, virtualItemsIndexesToStart$ };
 };
 
 export const useVirtualGrid = (

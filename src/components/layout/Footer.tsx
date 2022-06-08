@@ -14,8 +14,7 @@ const Desktop = () => (
       <div class='flex-1 flex gap-4 p-x-4'>
         <CoverImage
           src={() => currentTrack$()?.cover!}
-          class='w-12 h-12 rd-1 shrink-0'
-          fallbackCss='mask-size-125% mask-position-center c-[#333]'
+          css='w-12 h-12 rd-1 shrink-0 background-size-125%'
         />
         <div class='truncate'>
           {() => currentTrack$()?.title}

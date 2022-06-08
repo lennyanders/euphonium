@@ -3,32 +3,6 @@ import { currentTrackId$, play } from '../modules/player';
 import { useVirtual } from '../modules/virtual';
 import { CoverImage } from './CoverImage';
 
-const Track = ({
-  tracks,
-  track,
-  displayNumber,
-}: {
-  tracks: FETrack[];
-  track: FETrack;
-  displayNumber?: boolean;
-}) => (
-  <button
-    class={[
-      'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
-      () => currentTrackId$() === track.id && 'bg-[#333]',
-    ]}
-    onClick={() => play(track, tracks)}
-  >
-    {displayNumber && <span class='w-2ch text-center shrink-0'>{track.number || '-'}</span>}
-    <CoverImage src={track.cover} class='w-12 h-12 rd-1 shrink-0' />
-    <div class='break-all truncate'>
-      {track.title}
-      <small class='block'>{track.artist}</small>
-    </div>
-    <span class='m-l-a self-start p-r-1'>{track.durationFormatted}</span>
-  </button>
-);
-
 export const TrackList = ({
   tracks,
   displayNumber,
@@ -38,11 +12,12 @@ export const TrackList = ({
   displayNumber?: boolean;
   stickToActiveTrack?: boolean;
 }) => {
-  const { virtualizer, virtualHeight$, virtualItems$ } = useVirtual({
-    count: tracks.length,
-    overscan: 25,
-    estimateSize: (index) => (tracks[index].showDiskNumber ? 80 : 56),
-  });
+  const { virtualizer, virtualHeight$, virtualItemsIndexes$, virtualItemsIndexesToStart$ } =
+    useVirtual({
+      count: tracks.length,
+      overscan: 25,
+      estimateSize: (index) => (tracks[index].showDiskNumber ? 80 : 56),
+    });
   if (stickToActiveTrack) {
     useEffect(() => {
       const currentTrackId = currentTrackId$();
@@ -53,24 +28,48 @@ export const TrackList = ({
 
   return (
     <ul class='relative m--1' style={{ height: virtualHeight$ }}>
-      <For values={virtualItems$}>
-        {({ index, start }, track = tracks[index]) => (
+      <For values={virtualItemsIndexes$}>
+        {(item) => (
           <>
-            <If when={track.showDiskNumber}>
+            <If when={() => tracks[item].showDiskNumber}>
               <li
                 class='absolute top-0 left-0 w-100%'
-                style={{ transform: `translateY(${start}px)` }}
+                style={{
+                  transform: () => `translateY(${virtualItemsIndexesToStart$()[item]}px)`,
+                }}
               >
-                Disk: {track.diskNumber}
+                Disk: {() => tracks[item].diskNumber}
               </li>
             </If>
             <li
               class='absolute top-0 left-0 w-100%'
               style={{
-                transform: `translateY(${track.showDiskNumber ? start + 24 : start}px)`,
+                transform: () =>
+                  `translateY(${
+                    virtualItemsIndexesToStart$()[item] + (tracks[item].showDiskNumber ? 24 : 0)
+                  }px)`,
               }}
             >
-              <Track track={track} displayNumber={displayNumber} tracks={tracks} />
+              <button
+                class={[
+                  'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
+                  () => currentTrackId$() === tracks[item].id && 'bg-[#333]',
+                ]}
+                onClick={() => play(tracks[item], tracks)}
+              >
+                {displayNumber && (
+                  <span class='w-2ch text-center shrink-0'>{() => tracks[item].number || '-'}</span>
+                )}
+                <CoverImage
+                  src={() => tracks[item].cover!}
+                  css='w-12 h-12 rd-1 shrink-0 background-size-125%'
+                />
+                <div class='break-all truncate'>
+                  {() => tracks[item].title}
+                  <small class='block'>{() => tracks[item].artist}</small>
+                </div>
+                <span class='m-l-a self-start p-r-1'>{() => tracks[item].durationFormatted}</span>
+              </button>
             </li>
           </>
         )}

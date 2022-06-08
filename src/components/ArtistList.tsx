@@ -32,11 +32,7 @@ export const ArtistList = ({ artists }: { artists: FEArtist[] }) => {
               }}
             >
               <RouterLink href={`/artist/${artist.name}`} class='block truncate text-center'>
-                <CoverImage
-                  src={artist.image}
-                  class='w-100% rd-50% m-b-4'
-                  fallbackCss='mask-size-150% mask-position-center'
-                />
+                <CoverImage src={artist.image} css='w-100% rd-50% m-b-4 background-size-125%' />
                 {artist.name}
               </RouterLink>
             </li>

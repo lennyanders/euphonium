@@ -14,12 +14,23 @@ export default defineConfig({
         lato: [{ name: 'Lato', weights: [100, 300, 400, 700, 900], italic: true }],
       },
     }),
-    presetIcons(),
+    presetIcons({
+      extraProperties: {
+        'background-position': 'center',
+        'background-size': 'contain',
+        'aspect-ratio': '1',
+        height: 'auto',
+      },
+      customizations: {
+        iconCustomizer(collection, icon, props) {
+          if (collection === 'mdi' && icon === 'disk') props.color = '#fecc3d';
+        },
+      },
+    }),
   ],
   transformers: [transformerVariantGroup()],
   rules: [
-    [/^mask-size-(.*)$/, ([, d]) => ({ 'mask-size': d, '-webkit-mask-size': d })],
-    [/^mask-position-(.*)$/, ([, d]) => ({ 'mask-position': d, '-webkit-mask-position': d })],
+    [/^background-size-(.*)$/, ([, d]) => ({ 'background-size': d })],
     [/^var-(.*)-(.*)$/, ([, name, val]) => ({ [`--${name}`]: val })],
     [/^shadow-\[(.*)\]$/, ([, val]) => ({ 'box-shadow': val.replace(/_/g, ' ') })],
     [/^bgi-\[(.*)\]$/, ([, val]) => ({ 'background-image': val.replace(/_/g, ' ') })],
