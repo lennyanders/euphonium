@@ -68,3 +68,33 @@ useEffect(() => {
   if (playing$()) updateTime();
   else cancelAnimationFrame(animationFrameId);
 });
+
+const mediaSession = navigator.mediaSession;
+if (mediaSession) {
+  mediaSession.setActionHandler('nexttrack', () => go(1));
+  mediaSession.setActionHandler('previoustrack', () => go(-1));
+  mediaSession.setActionHandler('seekforward', (event) => {
+    audioEl.currentTime += event.seekOffset || 10;
+  });
+  mediaSession.setActionHandler('seekbackward', (event) => {
+    audioEl.currentTime -= event.seekOffset || 10;
+  });
+  mediaSession.setActionHandler('seekto', (event) => {
+    if (event.seekTime) audioEl.currentTime = event.seekTime;
+  });
+
+  useEffect(() => {
+    const track = currentTrack$();
+    if (!track) {
+      mediaSession.metadata = null;
+      return;
+    }
+
+    mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: track.artist,
+      ...(track.albumTitle && { album: track.albumTitle }),
+      ...(track.cover && { artwork: [{ src: track.cover }] }),
+    });
+  });
+}
