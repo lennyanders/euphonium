@@ -12,12 +12,11 @@ export const TrackList = ({
   displayNumber?: boolean;
   stickToActiveTrack?: boolean;
 }) => {
-  const { virtualizer, virtualHeight$, virtualItemsIndexes$, virtualItemsIndexesToStart$ } =
-    useVirtual({
-      count: tracks.length,
-      overscan: 25,
-      estimateSize: (index) => (tracks[index].showDiskNumber ? 80 : 56),
-    });
+  const { virtualizer, virtualHeight$, virtualItems$, virtualItemToStart$ } = useVirtual({
+    items: tracks,
+    overscan: 25,
+    size: (track) => (track.showDiskNumber ? 80 : 56),
+  });
   if (stickToActiveTrack) {
     useEffect(() => {
       const currentTrackId = currentTrackId$();
@@ -28,34 +27,34 @@ export const TrackList = ({
 
   return (
     <ul class='relative m--1' style={{ height: virtualHeight$ }}>
-      <For values={virtualItemsIndexes$}>
-        {(item) => (
+      <For values={virtualItems$}>
+        {(track) => (
           <li
             class='absolute top-0 left-0 w-100%'
             style={{
-              transform: () => `translateY(${virtualItemsIndexesToStart$()[item]}px)`,
+              transform: () => `translateY(${virtualItemToStart$().get(track)}px)`,
             }}
           >
-            <If when={() => tracks[item].showDiskNumber}>Disk: {() => tracks[item].diskNumber}</If>
+            <If when={() => track.showDiskNumber}>Disk: {() => track.diskNumber}</If>
             <button
               class={[
                 'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
-                () => currentTrackId$() === tracks[item].id && 'bg-[#333]',
+                () => currentTrackId$() === track.id && 'bg-[#333]',
               ]}
-              onClick={() => play(tracks[item], tracks)}
+              onClick={() => play(track, tracks)}
             >
               {displayNumber && (
-                <span class='w-2ch text-center shrink-0'>{() => tracks[item].number || '-'}</span>
+                <span class='w-2ch text-center shrink-0'>{() => track.number || '-'}</span>
               )}
               <CoverImage
-                src={() => tracks[item].cover!}
+                src={() => track.cover!}
                 css='w-12 h-12 rd-1 shrink-0 background-size-125%'
               />
               <div class='break-all truncate'>
-                {() => tracks[item].title}
-                <small class='block'>{() => tracks[item].artist}</small>
+                {() => track.title}
+                <small class='block'>{() => track.artist}</small>
               </div>
-              <span class='m-l-a self-start p-r-1'>{() => tracks[item].durationFormatted}</span>
+              <span class='m-l-a self-start p-r-1'>{() => track.durationFormatted}</span>
             </button>
           </li>
         )}

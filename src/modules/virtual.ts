@@ -17,38 +17,40 @@ const baseOptions = {
   scrollToFn: windowScroll,
 };
 
-const getVvirtualItemsIndexes = (items: VirtualItem<any>[]) => items.map(({ index }) => index);
-
-const getVirtualItemsIndexesToStart = (items: VirtualItem<any>[]) => {
-  return items.reduce<Record<number, number>>(
-    (res, item) => ({ ...res, [item.index]: item.start }),
-    {},
-  );
+const getVvirtualItems = <T>(vItems: VirtualItem<any>[], items: T[]) => {
+  return vItems.map((vItem) => items[vItem.index]);
 };
 
-export const useVirtual = (
-  options: Pick<VirtualizerOptions, 'count' | 'overscan' | 'estimateSize'>,
-) => {
+const getVirtualItemToStart = <T>(vItems: VirtualItem<any>[], items: T[]) => {
+  const map = new Map<T, number>();
+  for (const vItem of vItems) map.set(items[vItem.index], vItem.start);
+  return map;
+};
+
+type VirtualProps<T> = { items: T[]; overscan: number; size: (item: T) => number };
+export const useVirtual = <T>({ items, overscan, size }: VirtualProps<T>) => {
   const virtualizer = new Virtualizer({
     ...baseOptions,
-    ...options,
+    overscan,
+    count: items.length,
+    estimateSize: (index) => size(items[index]),
     onChange: () => {
-      const items = virtualizer.getVirtualItems();
+      const vItems = virtualizer.getVirtualItems();
       useBatch(() => {
-        virtualItemsIndexes$(getVvirtualItemsIndexes(items));
-        virtualItemsIndexesToStart$(getVirtualItemsIndexesToStart(items));
+        virtualItems$(getVvirtualItems(vItems, items));
+        virtualItemToStart$(getVirtualItemToStart(vItems, items));
       });
     },
   });
   const virtualHeight$ = $(virtualizer.getTotalSize());
-  const items = virtualizer.getVirtualItems();
-  const virtualItemsIndexes$ = $(getVvirtualItemsIndexes(items));
-  const virtualItemsIndexesToStart$ = $(getVirtualItemsIndexesToStart(items));
+  const vItems = virtualizer.getVirtualItems();
+  const virtualItems$ = $(getVvirtualItems(vItems, items));
+  const virtualItemToStart$ = $(getVirtualItemToStart(vItems, items));
   useEffect(() => {
-    virtualItemsIndexes$();
+    virtualItems$();
     virtualizer._willUpdate();
   });
-  return { virtualizer, virtualHeight$, virtualItemsIndexes$, virtualItemsIndexesToStart$ };
+  return { virtualizer, virtualHeight$, virtualItems$, virtualItemToStart$ };
 };
 
 export const useVirtualGrid = (
