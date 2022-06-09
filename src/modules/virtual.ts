@@ -1,13 +1,11 @@
-import { $, useBatch, useEffect, useSample } from 'voby';
+import { $, useBatch, useCleanup, useEffect, useSample } from 'voby';
 import {
   observeWindowOffset,
   observeWindowRect,
   VirtualItem,
   Virtualizer,
-  VirtualizerOptions,
   windowScroll,
 } from '@tanstack/virtual-core';
-import { obyJsonEquals } from '../shared/utils';
 import { Observable } from 'oby';
 
 const baseOptions = {
@@ -17,18 +15,17 @@ const baseOptions = {
   scrollToFn: windowScroll,
 };
 
-const getVvirtualItems = <T>(vItems: VirtualItem<any>[], items: T[]) => {
-  return vItems.map((vItem) => items[vItem.index]);
-};
-
-const getVirtualItemToStart = <T>(vItems: VirtualItem<any>[], items: T[]) => {
-  const map = new Map<T, number>();
-  for (const vItem of vItems) map.set(items[vItem.index], vItem.start);
-  return map;
-};
-
 type VirtualProps<T> = { items: T[]; overscan: number; size: (item: T) => number };
 export const useVirtual = <T>({ items, overscan, size }: VirtualProps<T>) => {
+  const getVvirtualItems = (vItems: VirtualItem<any>[], items: T[]) => {
+    return vItems.map((vItem) => items[vItem.index]);
+  };
+  const getVirtualItemToStart = (vItems: VirtualItem<any>[], items: T[]) => {
+    const map = new Map<T, number>();
+    for (const vItem of vItems) map.set(items[vItem.index], vItem.start);
+    return map;
+  };
+
   const virtualizer = new Virtualizer({
     ...baseOptions,
     overscan,
@@ -50,22 +47,30 @@ export const useVirtual = <T>({ items, overscan, size }: VirtualProps<T>) => {
     virtualItems$();
     virtualizer._willUpdate();
   });
+  useCleanup(virtualizer._didMount());
   return { virtualizer, virtualHeight$, virtualItems$, virtualItemToStart$ };
 };
 
-export const useVirtualGrid = (
-  options: Pick<VirtualizerOptions, 'overscan'> & {
-    count: number;
-    parentWidth: Observable<number>;
-    selfWidthDifference: number;
-    itemMinWidth: number;
-    itemHeight: number | ((width: number) => number);
-  },
-) => {
-  const virtualHeight$ = $(0);
-  const virtualItems$ = $<VirtualItem<any>[]>([], { equals: obyJsonEquals });
-  const itemsPerRow$ = $(0);
+type VirtualGridProps<T> = Omit<VirtualProps<T>, 'size'> & {
+  parentWidth: Observable<number>;
+  selfWidthDifference: number;
+  itemMinWidth: number;
+  size: (width: number) => number;
+};
+export const useVirtualGrid = <T>(options: VirtualGridProps<T>) => {
+  const getVirtualItems = (vItems: VirtualItem<any>[]) => vItems.map((vItem) => vItem.index);
+  const getVirtualItemToInfo = (vItems: VirtualItem<any>[]) => {
+    const map: Record<number, number> = {};
+    for (const { index, start } of vItems) map[index] = start;
+    return map;
+  };
+
   const virtualizer$ = $<Virtualizer<Window, any>>();
+  const height$ = $(0);
+  const items$ = $<number[]>([]);
+  const itemsToStart$ = $<Record<number, number>>({});
+  const itemWidth$ = $(0);
+  const itemsPerRow$ = $(0);
   useEffect(() => {
     const mainElWidth = options.parentWidth();
     if (!mainElWidth) return;
@@ -73,29 +78,38 @@ export const useVirtualGrid = (
     const contentWidth = mainElWidth + options.selfWidthDifference;
     const itemsPerRow = Math.floor(contentWidth / options.itemMinWidth);
     const itemWidth = contentWidth / itemsPerRow;
-    const itemHeight =
-      typeof options.itemHeight === 'number' ? options.itemHeight : options.itemHeight(itemWidth);
+    const itemHeight = options.size(itemWidth);
 
     useBatch(() => {
       const virtualizer = virtualizer$(
         new Virtualizer<Window, any>({
           ...baseOptions,
-          count: Math.ceil(options.count / itemsPerRow),
+          count: Math.ceil(options.items.length / itemsPerRow),
           overscan: options.overscan,
           estimateSize: () => itemHeight,
           onChange: (virtualizer) => {
-            virtualItems$(virtualizer.getVirtualItems());
+            const vItems = virtualizer.getVirtualItems();
+            useBatch(() => {
+              items$(getVirtualItems(vItems));
+              itemsToStart$(getVirtualItemToInfo(vItems));
+            });
           },
         }),
-      );
-      itemsPerRow$(itemsPerRow);
-      virtualHeight$(virtualizer!.getTotalSize());
-      virtualItems$(virtualizer!.getVirtualItems());
+      )!;
+      const vItems = virtualizer.getVirtualItems();
+      useBatch(() => {
+        itemWidth$(itemWidth);
+        itemsPerRow$(itemsPerRow);
+        height$(virtualizer.getTotalSize());
+        items$(getVirtualItems(vItems));
+        itemsToStart$(getVirtualItemToInfo(vItems));
+      });
+      useCleanup(virtualizer._didMount());
     });
   });
   useEffect(() => {
-    virtualItems$();
+    items$();
     useSample(virtualizer$)?._willUpdate();
   });
-  return { virtualizer$, virtualHeight$, virtualItems$, itemsPerRow$ };
+  return { virtualizer$, height$, items$, itemsToStart$, itemWidth$, itemsPerRow$ };
 };
