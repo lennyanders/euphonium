@@ -15,9 +15,9 @@ export interface AppDataDb extends DBSchema {
     value: DbCover;
     indexes: { libraryDirectory: number };
   };
-  queue: {
-    key: number;
-    value: DbQueue;
+  data: {
+    key: keyof DbGeneralData;
+    value: DbGeneralData[keyof DbGeneralData];
   };
 }
 
@@ -35,7 +35,7 @@ export const getDatabase = async () => {
       const coverStore = db.createObjectStore('cover', { keyPath: 'id', autoIncrement: true });
       coverStore.createIndex('libraryDirectory', 'libraryDirectory');
 
-      db.createObjectStore('queue');
+      db.createObjectStore('data');
     },
   });
 

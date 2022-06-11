@@ -33,10 +33,13 @@ interface DbCover extends FileHandle {
   image: Blob;
 }
 
-interface DbQueue {
-  trackIds: number[];
+type DbGeneralData = Partial<{
+  queue: number[];
   activeTrackId: number;
-}
+  volume: number;
+  shuffle: boolean;
+  loop: 'none' | 'track' | 'queue';
+}>;
 
 interface FELibraryDirectory {
   id: number;

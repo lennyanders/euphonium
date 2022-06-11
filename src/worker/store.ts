@@ -3,7 +3,8 @@ import { getFormattedTime } from '../shared/utils';
 import { postMessage } from './utils';
 
 export const libraryDirectories$ = $<FELibraryDirectory[]>();
-export const queue$ = $<DbQueue>();
+export const queue$ = $<number[]>();
+export const activeTrackId$ = $<number>();
 export const tracks$ = $<FETrack[]>();
 const albums$ = $.computed<FEAlbum[] | undefined>(() => {
   const tracks = tracks$();
@@ -98,17 +99,17 @@ $.effect(() => {
 let first = true;
 $.effect(() => {
   const tracks = tracks$();
-  const queue = $.sample(queue$);
   if (tracks) {
-    if (first && queue) {
+    if (first) {
       postMessage({
         message: 'setTracks',
         state: {
           tracks,
-          queue: queue.trackIds
-            .map((id) => tracks.find((track) => track.id === id))
-            .filter((track) => track) as FETrack[],
-          activeTrackId: queue.activeTrackId,
+          queue:
+            ($.sample(queue$)
+              ?.map((id) => tracks.find((track) => track.id === id))
+              .filter((track) => track) as FETrack[]) || [],
+          activeTrackId: $.sample(activeTrackId$),
         },
       });
     } else {

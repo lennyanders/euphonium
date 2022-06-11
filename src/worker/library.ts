@@ -11,12 +11,15 @@ import {
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/converters';
-import { libraryDirectories$, queue$, tracks$ } from './store';
+import { activeTrackId$, libraryDirectories$, queue$, tracks$ } from './store';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 
-const getDbQueue = async () => {
+const getDbData = async () => {
   const database = await getDatabase();
-  return await database.get('queue', 0);
+  const { store } = database.transaction('data');
+  const data: DbGeneralData = {};
+  for await (const { key, value } of store.iterate()) data[key] = value as any;
+  return data;
 };
 
 export const getFETracks = async () => {
@@ -123,20 +126,24 @@ export const setQueue = async ({
   tracks?: FETrack[];
   activeTrackId?: number;
 }) => {
-  queue$((oldQueue) => ({
-    trackIds: tracks?.map((t) => t.id) || oldQueue?.trackIds || [],
-    activeTrackId: activeTrackId || oldQueue?.activeTrackId || 0,
-  }));
+  queue$((oldQueue) => tracks?.map((t) => t.id) || oldQueue);
+  activeTrackId$((oldActiveReackId) => {
+    return typeof activeTrackId === 'number' ? activeTrackId : oldActiveReackId;
+  });
   const database = await getDatabase();
-  await database.put('queue', $.sample(queue$)!, 0);
+  await Promise.all([
+    database.put('data', $.sample(queue$), 'queue'),
+    database.put('data', $.sample(activeTrackId$), 'activeTrackId'),
+  ]);
 };
 
-Promise.all([getFEDirectories(), getDbQueue(), getFETracks()]).then(
-  ([directories, queue, tracks]) => {
+Promise.all([getFEDirectories(), getFETracks(), getDbData()]).then(
+  ([directories, tracks, data]) => {
     $.batch(() => {
       libraryDirectories$(directories);
-      queue$(queue);
       tracks$(tracks);
+      queue$(data.queue);
+      activeTrackId$(data.activeTrackId);
     });
   },
 );
