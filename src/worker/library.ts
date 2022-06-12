@@ -119,15 +119,20 @@ export const updateFiles = async () => {
   console.timeEnd('update');
 };
 
-export const setQueue = async (queue: FETrack[]) => {
-  const newQueue = queue.map((track) => track.id);
+export const setGeneralData = async (data: FEGeneralData) => {
   const database = await getDatabase();
-  await database.put('data', newQueue, 'queue');
-};
-
-export const setActiveTrack = async (activeTrackId: number) => {
-  const database = await getDatabase();
-  await database.put('data', activeTrackId, 'activeTrackId');
+  const tx = database.transaction('data', 'readwrite');
+  const txs: Promise<any>[] = [];
+  for (const _key in data) {
+    const key = _key as keyof typeof data;
+    if (key === 'queue') {
+      const newQueue = data[key]!.map((track) => track.id);
+      txs.push(tx.store.put(newQueue, key));
+    } else {
+      txs.push(tx.store.put(data[key], key));
+    }
+  }
+  await Promise.all([...txs, tx.done]);
 };
 
 Promise.all([getFEDirectories(), getFETracks(), getDbData()]).then(

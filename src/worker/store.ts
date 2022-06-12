@@ -21,9 +21,8 @@ export const store = $.store<Store>({
 });
 
 $.effect(() => {
-  if (store.libraryDirectories) {
-    postMessage({ message: 'setLibraryDirectories', state: uw(store).libraryDirectories! });
-  }
+  if (!store.libraryDirectories) return;
+  postMessage({ message: 'setLibraryDirectories', state: uw(store).libraryDirectories! });
 });
 
 $.effect(() => {

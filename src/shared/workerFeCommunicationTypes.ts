@@ -33,5 +33,4 @@ export type WWME =
       'forceAddDirectoryToLibrary',
       { relation: Relation; directoryHandle: FileSystemDirectoryHandle }
     >
-  | WME<'setQueue', { state: FETrack[] }>
-  | WME<'setActiveTrack', { state: number }>;
+  | WME<'setGeneralData', { state: FEGeneralData }>;

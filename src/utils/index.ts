@@ -1,3 +1,4 @@
+import { store } from 'voby';
 import { state } from '../modules/library';
 
 let first = true;
@@ -13,3 +14,5 @@ export const requestFileAccess = async () => {
   }
   return success;
 };
+
+export const uw = <T>(v: T) => store(v, { unwrap: true });

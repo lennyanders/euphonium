@@ -1,5 +1,5 @@
-import { $, store, useComputed, useEffect, useEventListener, useSample } from 'voby';
-import { requestFileAccess } from '../utils';
+import { $, useComputed, useEffect, useEventListener, useSample } from 'voby';
+import { requestFileAccess, uw } from '../utils';
 import { postMessage } from '../utils/worker';
 import { state } from './library';
 
@@ -35,14 +35,12 @@ export const play = async (track?: FETrack, queue?: FETrack[]) => {
 };
 
 useEffect(() => {
-  if (state.queue?.length) {
-    postMessage({ message: 'setQueue', state: store(state, { unwrap: true }).queue! });
-  }
+  if (!state.queue?.length) return;
+  postMessage({ message: 'setGeneralData', state: { queue: uw(state).queue! } });
 });
 useEffect(() => {
-  if (state.activeTrackId !== undefined) {
-    postMessage({ message: 'setActiveTrack', state: state.activeTrackId });
-  }
+  if (state.activeTrackId === undefined) return;
+  postMessage({ message: 'setGeneralData', state: { activeTrackId: state.activeTrackId } });
 });
 
 export const pause = () => audioEl.pause();
