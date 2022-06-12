@@ -51,6 +51,7 @@ $.effect(() => {
         .filter((track) => track) as FETrack[],
       activeTrackId,
       shuffle: store.shuffle,
+      loop: store.loop,
     },
   });
 });
