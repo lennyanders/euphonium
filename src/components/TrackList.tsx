@@ -7,17 +7,19 @@ import { Virtual, VirtualProps } from './Virtual/Index';
 
 export const TrackList = ({
   tracks,
-  displayNumber,
+  showNumber,
   stickToActiveTrack,
+  showDiskNumber,
 }: {
   tracks: FETrack[];
-  displayNumber?: boolean;
+  showNumber?: boolean;
+  showDiskNumber?: boolean;
   stickToActiveTrack?: boolean;
 }) => {
   const props: Omit<VirtualProps<FETrack>, 'children'> = {
     items: tracks,
     overscan: 25,
-    size: (track) => (track.showDiskNumber ? 80 : 56),
+    size: (track) => (showDiskNumber && track.showDiskNumber ? 80 : 56),
     ulClass: 'm--1',
   };
   if (stickToActiveTrack) {
@@ -34,7 +36,9 @@ export const TrackList = ({
     <Virtual {...props}>
       {(track) => (
         <>
-          <If when={() => track().showDiskNumber}>Disk: {() => track().diskNumber}</If>
+          <If when={() => showDiskNumber && track().showDiskNumber}>
+            Disk: {() => track().diskNumber}
+          </If>
           <button
             class={[
               'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
@@ -42,9 +46,9 @@ export const TrackList = ({
             ]}
             onClick={() => play(track(), tracks)}
           >
-            {displayNumber && (
+            <If when={showNumber}>
               <span class='w-2ch text-center shrink-0'>{() => track().number || '-'}</span>
-            )}
+            </If>
             <CoverImage
               src={() => track().cover!}
               css='w-12 h-12 rd-1 shrink-0 background-size-125%'
