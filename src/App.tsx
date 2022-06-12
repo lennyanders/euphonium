@@ -1,4 +1,4 @@
-import { If } from 'voby';
+import { If, Ternary } from 'voby';
 import { Footer } from './components/layout/Footer';
 import { About } from './pages/About';
 import { Album } from './pages/Album';
@@ -33,30 +33,25 @@ const mobileRoutes = [{ path: '/', component: Home }, ...baseRoutes];
 const desktopRoutes = [{ path: '/', component: Tracks }, ...baseRoutes];
 
 export const App = () => (
-  <If
-    when={loading$}
-    fallback={
-      <>
-        <If
-          when={w1024$}
-          fallback={() => (mainEl$(document.body), (<Router routes={mobileRoutes} />))}
-        >
-          <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-4 p-b-33 overflow-y-auto bg-[#191919]'>
-            <Home />
-          </aside>
-          <main class='flex flex-col gap-4 flex-1 p-4 p-b-33' ref={mainEl$}>
-            <Router routes={desktopRoutes} />
-          </main>
-        </If>
-        <Footer />
-      </>
-    }
-  >
-    <div class='fixed flex bg-inherit top-0 right-0 bottom-0 left-0'>
-      <div class='m-a flex flex-col items-center'>
-        <div class='i-mdi-loading w-12 h-12 animate-spin'></div>
-        <span class='m-t-4'>loading</span>
-      </div>
+  <Ternary when={loading$}>
+    <div class='fixed inset-0 grid gap-4 justify-items-center content-center'>
+      <div class='i-mdi-loading w-12 h-12 animate-spin'></div>
+      loading
     </div>
-  </If>
+    {/* loaded */}
+    <>
+      <If
+        when={w1024$}
+        fallback={() => (mainEl$(document.body), (<Router routes={mobileRoutes} />))}
+      >
+        <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-4 p-b-33 overflow-y-auto bg-[#191919]'>
+          <Home />
+        </aside>
+        <main class='flex flex-col gap-4 flex-1 p-4 p-b-33' ref={mainEl$}>
+          <Router routes={desktopRoutes} />
+        </main>
+      </If>
+      <Footer />
+    </>
+  </Ternary>
 );
