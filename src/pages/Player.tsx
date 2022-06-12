@@ -1,12 +1,11 @@
 import { If } from 'voby';
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
-import { currentTrack$ } from '../modules/player';
+import { currentTrack$, queue$ } from '../modules/player';
 import { HeroImage } from '../components/HeroImage';
 import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
 import { MainControls } from '../components/Player/MainControls';
 import { Progress } from '../components/Player/Progress';
-import { state } from '../modules/library';
 
 export const Player = () => {
   return (
@@ -26,7 +25,7 @@ export const Player = () => {
         <MainControls />
         Queue
       </div>
-      {() => <TrackList tracks={state.queue || []} stickToActiveTrack />}
+      {() => <TrackList tracks={queue$() || []} stickToActiveTrack />}
     </If>
   );
 };

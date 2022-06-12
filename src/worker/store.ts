@@ -50,6 +50,7 @@ $.effect(() => {
         .queue!.map((id) => tracks.find((track) => track.id === id))
         .filter((track) => track) as FETrack[],
       activeTrackId,
+      shuffle: store.shuffle,
     },
   });
 });

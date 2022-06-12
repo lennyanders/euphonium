@@ -16,3 +16,22 @@ export const requestFileAccess = async () => {
 };
 
 export const uw = <T>(v: T) => store(v, { unwrap: true });
+
+export const getShuffledQueue = () => {
+  const tracks = [...(uw(state).queue || [])];
+  let currentIndex = tracks.length;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [tracks[currentIndex], tracks[randomIndex]] = [tracks[randomIndex], tracks[currentIndex]];
+  }
+
+  const { activeTrackId } = uw(state);
+  const activeTrackIndex = tracks.findIndex((track) => track.id === activeTrackId);
+  if (activeTrackIndex) {
+    [tracks[0], tracks[activeTrackIndex]] = [tracks[activeTrackIndex], tracks[0]];
+  }
+
+  return tracks;
+};

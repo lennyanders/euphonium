@@ -35,7 +35,7 @@ const Mobile = () => (
   <>
     <If when={() => path$() !== '/player' && currentTrack$()}>
       <div class='w-64 flex items-center'>
-        <PlayPause />
+        <PlayPause css='m-4' />
         <RouterLink href='/player' class='flex-1 grid'>
           <span class='truncate'>{() => currentTrack$()?.title}</span>
           <small class='truncate block'>{() => currentTrack$()?.artist}</small>

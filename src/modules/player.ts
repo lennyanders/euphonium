@@ -1,22 +1,28 @@
 import { $, useComputed, useEffect, useEventListener, useSample } from 'voby';
-import { requestFileAccess, uw } from '../utils';
+import { getShuffledQueue, requestFileAccess, uw } from '../utils';
 import { postMessage } from '../utils/worker';
 import { state } from './library';
 
 const audioEl = new Audio();
 
+export const queue$ = useComputed(() => {
+  if (!state.queue) return [];
+  if (!state.shuffle) return state.queue;
+  return getShuffledQueue();
+});
 export const playing$ = $(false);
 export const currentTime$ = $(0);
 export const currentTrack$ = useComputed(() => {
   const id = state.activeTrackId;
-  return state.queue?.find((track) => track.id === id);
+  return queue$()?.find((track) => track.id === id);
 });
+
 const currentTrackIndex$ = useComputed(() => {
   const id = state.activeTrackId;
-  return state.queue?.findIndex((track) => track.id === id);
+  return queue$()?.findIndex((track) => track.id === id);
 });
 export const isFirst$ = useComputed(() => currentTrackIndex$() === 0);
-export const isLast$ = useComputed(() => currentTrackIndex$() === (state.queue?.length || 0) - 1);
+export const isLast$ = useComputed(() => currentTrackIndex$() === (queue$()?.length || 0) - 1);
 
 export const play = async (track?: FETrack, queue?: FETrack[]) => {
   await requestFileAccess();
@@ -42,10 +48,14 @@ useEffect(() => {
   if (state.activeTrackId === undefined) return;
   postMessage({ message: 'setGeneralData', state: { activeTrackId: state.activeTrackId } });
 });
+useEffect(() => {
+  if (state.shuffle === undefined) return;
+  postMessage({ message: 'setGeneralData', state: { shuffle: state.shuffle } });
+});
 
 export const pause = () => audioEl.pause();
 export const go = (offset: number) => {
-  const queue = state.queue || [];
+  const queue = queue$() || [];
   const nextTrackIndex = (currentTrackIndex$() || 0) + offset;
   if (nextTrackIndex < 0 || nextTrackIndex > queue.length) return;
   play(queue[nextTrackIndex]);
