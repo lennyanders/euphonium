@@ -11,7 +11,7 @@ import {
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/converters';
-import { activeTrackId$, libraryDirectories$, queue$, tracks$ } from './store';
+import { store } from './store';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 
 const getDbData = async () => {
@@ -44,7 +44,7 @@ export const getFEDirectories = async () => {
 export const removeDirectory = async (id: number) => {
   const database = await getDatabase();
   await database.delete('libraryDirectory', id);
-  libraryDirectories$(await getFEDirectories());
+  store.libraryDirectories = await getFEDirectories();
   await updateFiles();
 };
 
@@ -53,7 +53,7 @@ export const tryAddDirectory = async (handle: FileSystemDirectoryHandle) => {
   if (relation.type === DirectoryRelationType.DirectoryIsNew) {
     const database = await getDatabase();
     await database.add('libraryDirectory', { handle });
-    libraryDirectories$(await getFEDirectories());
+    store.libraryDirectories = await getFEDirectories();
     await updateFiles();
   }
   postMessage({ message: 'tryAddDirectoryToLibrary', relation });
@@ -71,7 +71,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
     await database.delete('libraryDirectory', oldId);
   }
   console.timeEnd('reparent directories');
-  libraryDirectories$(await getFEDirectories());
+  store.libraryDirectories = await getFEDirectories();
   await updateFiles();
 };
 
@@ -115,7 +115,7 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  tracks$(await getFETracks());
+  store.tracks = await getFETracks();
   console.timeEnd('update');
 };
 
@@ -131,12 +131,7 @@ export const setActiveTrack = async (activeTrackId: number) => {
 };
 
 Promise.all([getFEDirectories(), getFETracks(), getDbData()]).then(
-  ([directories, tracks, data]) => {
-    $.batch(() => {
-      libraryDirectories$(directories);
-      tracks$(tracks);
-      queue$(data.queue);
-      activeTrackId$(data.activeTrackId);
-    });
+  ([libraryDirectories, tracks, data]) => {
+    $.batch(() => Object.assign(store, { libraryDirectories, tracks }, data));
   },
 );
