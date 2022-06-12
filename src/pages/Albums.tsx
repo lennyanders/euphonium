@@ -1,9 +1,9 @@
 import { AlbumList } from '../components/AlbumList';
 import { RouterLink } from '../router';
-import { albums$ } from '../modules/library';
+import { state } from '../modules/library';
 
 export const Albums = () => {
-  const albums = albums$();
+  const { albums } = state;
   return (
     <>
       <h1>Albums</h1>

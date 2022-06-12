@@ -1,32 +1,31 @@
-import { $, useComputed, useEffect, useEventListener, useSample } from 'voby';
+import { $, store, useComputed, useEffect, useEventListener, useSample } from 'voby';
 import { requestFileAccess } from '../utils';
 import { postMessage } from '../utils/worker';
+import { state } from './library';
 
 const audioEl = new Audio();
 
 export const playing$ = $(false);
-export const queue$ = $<FETrack[]>();
-export const currentTrackId$ = $<number>();
 export const currentTime$ = $(0);
 export const currentTrack$ = useComputed(() => {
-  const id = currentTrackId$();
-  return queue$()?.find((track) => track.id === id);
+  const id = state.activeTrackId;
+  return state.queue?.find((track) => track.id === id);
 });
 const currentTrackIndex$ = useComputed(() => {
-  const id = currentTrackId$();
-  return queue$()?.findIndex((track) => track.id === id);
+  const id = state.activeTrackId;
+  return state.queue?.findIndex((track) => track.id === id);
 });
 export const isFirst$ = useComputed(() => currentTrackIndex$() === 0);
-export const isLast$ = useComputed(() => currentTrackIndex$() === (queue$()?.length || 0) - 1);
+export const isLast$ = useComputed(() => currentTrackIndex$() === (state.queue?.length || 0) - 1);
 
 export const play = async (track?: FETrack, queue?: FETrack[]) => {
   await requestFileAccess();
-  if (queue) queue$(queue);
+  if (queue) state.queue = queue;
   if (!audioEl.src && !track) track = useSample(currentTrack$);
   if (track) {
     try {
       const file = await track.fileHandle.getFile();
-      currentTrackId$(track.id);
+      state.activeTrackId = track.id;
       audioEl.src = URL.createObjectURL(file);
     } catch (_) {
       if ((await track.fileHandle.requestPermission()) === 'granted') play(track);
@@ -36,17 +35,19 @@ export const play = async (track?: FETrack, queue?: FETrack[]) => {
 };
 
 useEffect(() => {
-  const state = queue$();
-  if (state?.length) postMessage({ message: 'setQueue', state });
+  if (state.queue?.length) {
+    postMessage({ message: 'setQueue', state: store(state, { unwrap: true }).queue! });
+  }
 });
 useEffect(() => {
-  const state = currentTrackId$();
-  if (state !== undefined) postMessage({ message: 'setActiveTrack', state });
+  if (state.activeTrackId !== undefined) {
+    postMessage({ message: 'setActiveTrack', state: state.activeTrackId });
+  }
 });
 
 export const pause = () => audioEl.pause();
 export const go = (offset: number) => {
-  const queue = queue$() || [];
+  const queue = state.queue || [];
   const nextTrackIndex = (currentTrackIndex$() || 0) + offset;
   if (nextTrackIndex < 0 || nextTrackIndex > queue.length) return;
   play(queue[nextTrackIndex]);

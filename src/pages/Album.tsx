@@ -2,14 +2,14 @@ import { useComputed } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { params$, RouterLink } from '../router';
-import { albums$ } from '../modules/library';
+import { state } from '../modules/library';
 
 export const Album = () => {
   const { artist, albumTitle } = params$();
   if (!artist || !albumTitle) return 'Something went wrong';
 
   const album$ = useComputed(() => {
-    return albums$()?.find((a) => a.artist === artist && a.title === albumTitle);
+    return state.albums?.find((a) => a.artist === artist && a.title === albumTitle);
   });
 
   const album = album$();

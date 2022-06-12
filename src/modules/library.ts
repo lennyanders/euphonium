@@ -1,24 +1,26 @@
-import { $, useComputed, useSample } from 'voby';
+import { useBatch, store } from 'voby';
 import { onMessage } from '../utils/worker';
-import { currentTrackId$, queue$ } from './player';
 
-export const tracks$ = $<FETrack[]>();
-export const albums$ = $<FEAlbum[]>();
-export const artists$ = $<FEArtist[]>();
-export const libraryDirectories$ = $<FELibraryDirectory[]>();
-export const loading$ = useComputed(
-  () => !tracks$() || !albums$() || !artists$() || !libraryDirectories$(),
-);
+export type Store = Partial<
+  {
+    libraryDirectories: FELibraryDirectory[];
+    tracks: FETrack[];
+    albums: FEAlbum[];
+    artists: FEArtist[];
+    loading: boolean;
+  } & FEGeneralData
+>;
+
+export const state = store<Store>({
+  get loading() {
+    return !this.tracks || !this.albums || !this.artists || !this.libraryDirectories;
+  },
+});
 
 onMessage(({ data }) => {
-  if (data.message === 'setTracks') return tracks$(data.state);
-  if (data.message === 'setAlbums') return albums$(data.state);
-  if (data.message === 'setArtists') return artists$(data.state);
-  if (data.message === 'setLibraryDirectories') return libraryDirectories$(data.state);
-  if (data.message === 'setGeneralData') {
-    useSample(() => {
-      queue$(data.state.queue);
-      currentTrackId$(data.state.activeTrackId);
-    });
-  }
+  if (data.message === 'setTracks') return (state.tracks = data.state);
+  if (data.message === 'setAlbums') return (state.albums = data.state);
+  if (data.message === 'setArtists') return (state.artists = data.state);
+  if (data.message === 'setLibraryDirectories') return (state.libraryDirectories = data.state);
+  if (data.message === 'setGeneralData') return useBatch(() => Object.assign(state, data.state));
 });

@@ -1,5 +1,5 @@
 import { DirectoryRelationType } from '../shared/workerFeCommunicationTypes';
-import { libraryDirectories$ } from '../modules/library';
+import { state } from '../modules/library';
 import { requestFileAccess } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';
 
@@ -48,7 +48,7 @@ onMessage(async ({ data }) => {
 });
 
 export const Settings = () => {
-  const libraryDirectories = libraryDirectories$();
+  const { libraryDirectories } = state;
   return (
     <>
       <h1>Settings</h1>

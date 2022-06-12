@@ -1,6 +1,7 @@
 import { Virtualizer } from '@tanstack/virtual-core';
 import { If, useEffect } from 'voby';
-import { currentTrackId$, play } from '../modules/player';
+import { state } from '../modules/library';
+import { play } from '../modules/player';
 import { CoverImage } from './CoverImage';
 import { Virtual, VirtualProps } from './Virtual/Index';
 
@@ -22,8 +23,8 @@ export const TrackList = ({
   if (stickToActiveTrack) {
     props.ref = (virtualizer: Virtualizer<Window & typeof globalThis, any>) => {
       useEffect(() => {
-        const currentTrackId = currentTrackId$();
-        const index = tracks.findIndex((track) => track.id === currentTrackId);
+        const id = state.activeTrackId;
+        const index = tracks.findIndex((track) => track.id === id);
         if (index > -1) virtualizer.scrollToIndex(index, { align: 'start' });
       });
     };
@@ -37,7 +38,7 @@ export const TrackList = ({
           <button
             class={[
               'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
-              () => currentTrackId$() === track().id && 'bg-[#333]',
+              () => state.activeTrackId === track().id && 'bg-[#333]',
             ]}
             onClick={() => play(track(), tracks)}
           >

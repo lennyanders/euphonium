@@ -1,9 +1,9 @@
 import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
-import { artists$ } from '../modules/library';
+import { state } from '../modules/library';
 
 export const AlbumArtists = () => {
-  const artists = artists$();
+  const { artists } = state;
   const albumArtists = artists?.filter((artist) => artist.albums.length);
   return (
     <>

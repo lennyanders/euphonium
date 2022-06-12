@@ -12,7 +12,7 @@ import { Privacy } from './pages/Privacy';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { Router } from './router';
-import { loading$ } from './modules/library';
+import { state } from './modules/library';
 import { mainEl$, w1024$ } from './modules/layout';
 
 const baseRoutes = [
@@ -33,7 +33,7 @@ const mobileRoutes = [{ path: '/', component: Home }, ...baseRoutes];
 const desktopRoutes = [{ path: '/', component: Tracks }, ...baseRoutes];
 
 export const App = () => (
-  <Ternary when={loading$}>
+  <Ternary when={state.loading}>
     <div class='fixed inset-0 grid gap-4 justify-items-center content-center'>
       <div class='i-mdi-loading w-12 h-12 animate-spin'></div>
       loading

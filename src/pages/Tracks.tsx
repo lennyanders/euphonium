@@ -1,9 +1,9 @@
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
-import { tracks$ } from '../modules/library';
+import { state } from '../modules/library';
 
 export const Tracks = () => {
-  const tracks = tracks$();
+  const { tracks } = state;
   return (
     <>
       <h1>Tracks</h1>

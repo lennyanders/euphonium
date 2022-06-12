@@ -1,9 +1,9 @@
 import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
-import { artists$ } from '../modules/library';
+import { state } from '../modules/library';
 
 export const Artists = () => {
-  const artists = artists$();
+  const { artists } = state;
   return (
     <>
       <h1>Artists</h1>
