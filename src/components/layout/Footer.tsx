@@ -11,7 +11,7 @@ const Desktop = () => (
   <>
     <Progress css='p-x-4 p-t-2 p-b-1' />
     <div class='flex items-center'>
-      <div class='flex-1 flex gap-4 p-x-4'>
+      <div class='flex-1 flex gap-4 p-x-4 truncate'>
         <CoverImage
           src={() => currentTrack$()?.cover!}
           css='w-12 h-12 rd-1 shrink-0 background-size-125%'
@@ -26,7 +26,7 @@ const Desktop = () => (
         </div>
       </div>
       <MainControls />
-      <div class='flex-1 p-x-4 text-right'></div>
+      <div class='flex-1 p-x-4'></div>
     </div>
   </>
 );
