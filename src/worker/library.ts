@@ -119,22 +119,15 @@ export const updateFiles = async () => {
   console.timeEnd('update');
 };
 
-export const setQueue = async ({
-  tracks,
-  activeTrackId,
-}: {
-  tracks?: FETrack[];
-  activeTrackId?: number;
-}) => {
-  queue$((oldQueue) => tracks?.map((t) => t.id) || oldQueue);
-  activeTrackId$((oldActiveReackId) => {
-    return typeof activeTrackId === 'number' ? activeTrackId : oldActiveReackId;
-  });
+export const setQueue = async (queue: FETrack[]) => {
+  const newQueue = queue.map((track) => track.id);
   const database = await getDatabase();
-  await Promise.all([
-    database.put('data', $.sample(queue$), 'queue'),
-    database.put('data', $.sample(activeTrackId$), 'activeTrackId'),
-  ]);
+  await database.put('data', newQueue, 'queue');
+};
+
+export const setActiveTrack = async (activeTrackId: number) => {
+  const database = await getDatabase();
+  await database.put('data', activeTrackId, 'activeTrackId');
 };
 
 Promise.all([getFEDirectories(), getFETracks(), getDbData()]).then(

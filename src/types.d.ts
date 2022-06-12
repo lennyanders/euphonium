@@ -86,3 +86,11 @@ interface FEArtist {
   duration: number;
   durationFormatted: string;
 }
+
+type FEGeneralData = Partial<{
+  queue: FETrack[];
+  activeTrackId: number;
+  volume: number;
+  shuffle: boolean;
+  loop: 'none' | 'track' | 'queue';
+}>;

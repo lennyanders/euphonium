@@ -96,27 +96,9 @@ $.effect(() => {
   if (state) postMessage({ message: 'setLibraryDirectories', state });
 });
 
-let first = true;
 $.effect(() => {
   const tracks = tracks$();
-  if (tracks) {
-    if (first) {
-      postMessage({
-        message: 'setTracks',
-        state: {
-          tracks,
-          queue:
-            ($.sample(queue$)
-              ?.map((id) => tracks.find((track) => track.id === id))
-              .filter((track) => track) as FETrack[]) || [],
-          activeTrackId: $.sample(activeTrackId$),
-        },
-      });
-    } else {
-      postMessage({ message: 'setTracks', state: { tracks } });
-    }
-    first = false;
-  }
+  if (tracks) postMessage({ message: 'setTracks', state: tracks });
 });
 
 $.effect(() => {
@@ -127,4 +109,21 @@ $.effect(() => {
 $.effect(() => {
   const state = artists$();
   if (state) postMessage({ message: 'setArtists', state });
+});
+
+$.effect(() => {
+  const activeTrackId = activeTrackId$();
+  const queue = queue$();
+  const tracks = $.sample(tracks$);
+  if (typeof activeTrackId !== 'number' || !queue || !tracks) return;
+
+  postMessage({
+    message: 'setGeneralData',
+    state: {
+      queue: queue
+        .map((id) => tracks.find((track) => track.id === id))
+        .filter((track) => track) as FETrack[],
+      activeTrackId,
+    },
+  });
 });

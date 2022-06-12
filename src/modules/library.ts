@@ -1,4 +1,4 @@
-import { $, useComputed } from 'voby';
+import { $, useComputed, useSample } from 'voby';
 import { onMessage } from '../utils/worker';
 import { currentTrackId$, queue$ } from './player';
 
@@ -11,13 +11,14 @@ export const loading$ = useComputed(
 );
 
 onMessage(({ data }) => {
-  if (data.message === 'setTracks') {
-    tracks$(data.state.tracks);
-    queue$(data.state.queue || data.state.tracks);
-    currentTrackId$(data.state.activeTrackId || data.state.tracks[0]?.id);
-    return;
-  }
+  if (data.message === 'setTracks') return tracks$(data.state);
   if (data.message === 'setAlbums') return albums$(data.state);
   if (data.message === 'setArtists') return artists$(data.state);
   if (data.message === 'setLibraryDirectories') return libraryDirectories$(data.state);
+  if (data.message === 'setGeneralData') {
+    useSample(() => {
+      queue$(data.state.queue);
+      currentTrackId$(data.state.activeTrackId);
+    });
+  }
 });

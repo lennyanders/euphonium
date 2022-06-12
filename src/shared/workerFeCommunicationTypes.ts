@@ -17,10 +17,11 @@ export type Relation =
 export type WME<T extends string, U extends object = {}> = MessageEvent<U & { message: T }>;
 
 export type MWME =
-  | WME<'setTracks', { state: { tracks: FETrack[]; queue?: FETrack[]; activeTrackId?: number } }>
+  | WME<'setTracks', { state: FETrack[] }>
   | WME<'setAlbums', { state: FEAlbum[] }>
   | WME<'setArtists', { state: FEArtist[] }>
   | WME<'setLibraryDirectories', { state: FELibraryDirectory[] }>
+  | WME<'setGeneralData', { state: FEGeneralData }>
   | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
   | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
 

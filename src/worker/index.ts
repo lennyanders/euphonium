@@ -1,6 +1,7 @@
 import {
   forceAddDirectory,
   removeDirectory,
+  setActiveTrack,
   setQueue,
   tryAddDirectory,
   updateFiles,
@@ -21,9 +22,9 @@ onMessage(async ({ data }) => {
     return forceAddDirectory(data.relation, data.directoryHandle);
   }
   if (data.message === 'setQueue') {
-    return setQueue({ tracks: data.state });
+    return setQueue(data.state);
   }
-  if (data.message == 'setActiveTrack') {
-    return setQueue({ activeTrackId: data.state });
+  if (data.message === 'setActiveTrack') {
+    return setActiveTrack(data.state);
   }
 });
