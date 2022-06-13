@@ -11,7 +11,7 @@ import {
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/converters';
-import { partialUpdates$, state } from './store';
+import { partialUpdates$, state } from './state';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 
 const getDbData = async () => {

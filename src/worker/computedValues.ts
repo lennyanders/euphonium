@@ -1,5 +1,5 @@
 import { getFormattedTime } from '../shared/utils';
-import { BEState } from './store';
+import { BEState } from './state';
 
 export function albumsGetter(this: BEState) {
   const tracks = this.tracks;
