@@ -59,7 +59,6 @@ useEffect(() => {
 useEffect(() => {
   if (state.volume === undefined) return;
   audioEl.volume = state.volume;
-  if (uw(state).mute) state.mute = false;
   postMessage({ message: 'setGeneralData', state: { volume: state.volume } });
 });
 useEffect(() => {

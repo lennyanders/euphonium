@@ -45,7 +45,7 @@ const Desktop = () => (
             <Range
               max={1}
               val={() => (state.volume !== undefined ? state.volume : 1)}
-              seek={(newVal) => (state.volume = newVal)}
+              seek={(newVal) => ((state.volume = newVal), state.mute && (state.mute = false))}
               css='w-32'
             />
           </div>
