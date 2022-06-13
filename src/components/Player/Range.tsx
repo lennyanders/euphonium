@@ -9,7 +9,7 @@ interface Props {
 }
 export const Range = ({ max, val, seek, bg = 'bg-[#222]', css = 'flex-1' }: Props) => (
   <div
-    class={['relative h-2 hover:var-thumb-size-1.5 color-red', css]}
+    class={['relative h-2 hover:var-thumb-size-1.5 focus-within:var-thumb-size-1.5 color-red', css]}
     style={{ '--pos': () => `${(val() / ($$(max) || 1) - 1) * 100}%` }}
   >
     <div
