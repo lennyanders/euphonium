@@ -99,6 +99,7 @@ type FEGeneralData = Partial<{
 
 type FEState = Partial<
   {
+    trackData: Record<number, FETrack>;
     libraryDirectories: FELibraryDirectory[];
     tracks: FETrack[];
     albums: FEAlbum[];

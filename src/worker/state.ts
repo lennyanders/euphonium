@@ -5,6 +5,7 @@ import { postMessage, uw } from './utils';
 export type BEState = Partial<
   {
     libraryDirectories: FELibraryDirectory[];
+    trackData: Record<number, FETrack>;
     tracks: FETrack[];
     albums: FEAlbum[];
     artists: FEArtist[];
@@ -16,6 +17,11 @@ export const partialUpdates$ = $(false);
 
 export const state = $.store<BEState>({
   loading: false,
+  get tracks() {
+    return this.trackData
+      ? (Object.values(this.trackData) as FETrack[]).sort((a, b) => a.title.localeCompare(b.title))
+      : undefined;
+  },
   get albums() {
     return albumsGetter.apply(this);
   },

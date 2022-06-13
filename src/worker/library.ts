@@ -22,13 +22,13 @@ const getDbData = async () => {
   return data;
 };
 
-export const getFETracks = async () => {
+export const getFETrackData = async () => {
   const database = await getDatabase();
   const covers = await database.getAll('cover');
   const tracks = await database.getAll('track');
-  return tracks
-    .map((track) => beToFETrack(track, covers))
-    .sort((a, b) => a.title.localeCompare(b.title));
+  const fetracks: Record<number, FETrack> = {};
+  for (const track of tracks) fetracks[track.id!] = beToFETrack(track, covers);
+  return fetracks;
 };
 
 export const getFEDirectories = async () => {
@@ -115,7 +115,7 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  state.tracks = await getFETracks();
+  state.trackData = await getFETrackData();
   console.timeEnd('update');
 };
 
@@ -135,17 +135,17 @@ export const setGeneralData = async (data: FEGeneralData) => {
   await Promise.all([...txs, tx.done]);
 };
 
-Promise.all([getFEDirectories(), getFETracks(), getDbData()]).then(
-  ([libraryDirectories, tracks, data]) => {
-    $.batch(() => Object.assign(state, { libraryDirectories, tracks }, data));
+Promise.all([getFEDirectories(), getFETrackData(), getDbData()]).then(
+  ([libraryDirectories, trackData, data]) => {
+    $.batch(() => Object.assign(state, { libraryDirectories, trackData }, data));
 
     const rawState = uw(state);
     postMessage({
       message: 'setState',
       state: {
         ...rawState,
-        queue: rawState
-          .queue!.map((id) => tracks.find((track) => track.id === id))
+        queue: rawState.queue
+          ?.map((id) => Object.values(trackData).find((track) => track.id === id))
           .filter((track) => track) as FETrack[],
       },
     });
