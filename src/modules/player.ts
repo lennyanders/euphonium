@@ -56,6 +56,11 @@ useEffect(() => {
   if (state.loop === undefined) return;
   postMessage({ message: 'setGeneralData', state: { loop: state.loop } });
 });
+useEffect(() => {
+  if (state.volume === undefined) return;
+  audioEl.volume = state.volume;
+  postMessage({ message: 'setGeneralData', state: { volume: state.volume } });
+});
 
 export const pause = () => audioEl.pause();
 export const go = (offset: number) => {

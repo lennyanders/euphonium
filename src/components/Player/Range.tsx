@@ -1,9 +1,16 @@
-import { currentTime$, currentTrack$, seek } from '../../modules/player';
+import { $$, ObservableMaybe } from 'voby';
 
-export const ProgressBar = ({ bg = 'bg-[#222]' }: { bg?: string }) => (
+interface Props {
+  max: ObservableMaybe<number>;
+  val: () => number;
+  seek: (newVal: number) => void;
+  bg?: string;
+  css?: string;
+}
+export const Range = ({ max, val, seek, bg = 'bg-[#222]', css = 'flex-1' }: Props) => (
   <div
-    class='relative flex-1 h-2 hover:var-thumb-size-1.5 color-red'
-    style={{ '--pos': () => `${(currentTime$() / (currentTrack$()?.duration || 1) - 1) * 100}%` }}
+    class={['relative h-2 hover:var-thumb-size-1.5 color-red', css]}
+    style={{ '--pos': () => `${(val() / ($$(max) || 1) - 1) * 100}%` }}
   >
     <div
       class={[
@@ -17,8 +24,8 @@ export const ProgressBar = ({ bg = 'bg-[#222]' }: { bg?: string }) => (
       type='range'
       min='0'
       step='0.01'
-      max={() => currentTrack$()?.duration!}
-      onInput={(event) => seek((event.target as any).value)}
+      max={max}
+      onInput={(event) => seek(+(event.target as HTMLInputElement).value)}
     />
   </div>
 );

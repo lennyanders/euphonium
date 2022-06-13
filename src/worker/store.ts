@@ -52,6 +52,7 @@ $.effect(() => {
       activeTrackId,
       shuffle: store.shuffle,
       loop: store.loop,
+      volume: store.volume,
     },
   });
 });
