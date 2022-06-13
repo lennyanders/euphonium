@@ -37,6 +37,7 @@ type DbGeneralData = Partial<{
   queue: number[];
   activeTrackId: number;
   volume: number;
+  mute: boolean;
   shuffle: boolean;
   loop: 'none' | 'track' | 'queue';
 }>;
@@ -91,6 +92,7 @@ type FEGeneralData = Partial<{
   queue: FETrack[];
   activeTrackId: number;
   volume: number;
+  mute: boolean;
   shuffle: boolean;
   loop: 'none' | 'track' | 'queue';
 }>;

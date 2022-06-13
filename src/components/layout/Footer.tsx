@@ -10,6 +10,7 @@ import { Range } from '../Player/Range';
 import { state } from '../../modules/library';
 
 const volumeIcon$ = useComputed(() => {
+  if (state.mute) return 'i-mdi-volume-mute';
   if (state.volume === undefined || state.volume > 0.66) return 'i-mdi-volume';
   if (state.volume > 0.33) return 'i-mdi-volume-medium';
   return 'i-mdi-volume-low';
@@ -36,7 +37,10 @@ const Desktop = () => (
       <MainControls />
       <div class='flex-1 flex justify-end p-x-4'>
         <div class='flex flex-row-reverse items-center'>
-          <button class={['w-8 h-8 next:(hover:(opacity-100 pointer-events-auto))', volumeIcon$]} />
+          <button
+            onClick={() => (state.mute = !state.mute)}
+            class={['w-8 h-8 next:(hover:(opacity-100 pointer-events-auto))', volumeIcon$]}
+          />
           <div class='p-2 transition-opacity opacity-0 pointer-events-none hover:(opacity-100 pointer-events-auto)'>
             <Range
               max={1}
