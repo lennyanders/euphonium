@@ -96,3 +96,13 @@ type FEGeneralData = Partial<{
   shuffle: boolean;
   loop: 'none' | 'track' | 'queue';
 }>;
+
+type FEState = Partial<
+  {
+    libraryDirectories: FELibraryDirectory[];
+    tracks: FETrack[];
+    albums: FEAlbum[];
+    artists: FEArtist[];
+    loading: boolean;
+  } & FEGeneralData
+>;

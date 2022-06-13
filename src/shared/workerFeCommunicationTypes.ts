@@ -17,6 +17,7 @@ export type Relation =
 export type WME<T extends string, U extends object = {}> = MessageEvent<U & { message: T }>;
 
 export type MWME =
+  | WME<'setState', { state: FEState }>
   | WME<'setTracks', { state: FETrack[] }>
   | WME<'setAlbums', { state: FEAlbum[] }>
   | WME<'setArtists', { state: FEArtist[] }>

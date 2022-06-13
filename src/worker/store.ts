@@ -2,16 +2,20 @@ import $ from 'oby';
 import { albumsGetter, artistsGetter } from './computedValues';
 import { postMessage, uw } from './utils';
 
-export type Store = Partial<
+export type BEState = Partial<
   {
     libraryDirectories: FELibraryDirectory[];
     tracks: FETrack[];
     albums: FEAlbum[];
     artists: FEArtist[];
+    loading: boolean;
   } & DbGeneralData
 >;
 
-export const store = $.store<Store>({
+export const partialUpdates$ = $(false);
+
+export const state = $.store<BEState>({
+  loading: false,
   get albums() {
     return albumsGetter.apply(this);
   },
@@ -21,39 +25,21 @@ export const store = $.store<Store>({
 });
 
 $.effect(() => {
-  if (!store.libraryDirectories) return;
-  postMessage({ message: 'setLibraryDirectories', state: uw(store).libraryDirectories! });
+  if (!state.libraryDirectories || !$.sample(partialUpdates$)) return;
+  postMessage({ message: 'setLibraryDirectories', state: uw(state).libraryDirectories! });
 });
 
 $.effect(() => {
-  if (store.tracks) postMessage({ message: 'setTracks', state: uw(store).tracks! });
+  if (!state.tracks || !$.sample(partialUpdates$)) return;
+  postMessage({ message: 'setTracks', state: uw(state).tracks! });
 });
 
 $.effect(() => {
-  if (store.albums) postMessage({ message: 'setAlbums', state: uw(store).albums! });
+  if (!state.albums || !$.sample(partialUpdates$)) return;
+  postMessage({ message: 'setAlbums', state: uw(state).albums! });
 });
 
 $.effect(() => {
-  if (store.artists) postMessage({ message: 'setArtists', state: uw(store).artists! });
-});
-
-$.effect(() => {
-  const activeTrackId = store.activeTrackId;
-  const queue = store.queue;
-  const tracks = uw(store).tracks;
-  if (typeof activeTrackId !== 'number' || !queue || !tracks) return;
-
-  postMessage({
-    message: 'setGeneralData',
-    state: {
-      queue: uw(store)
-        .queue!.map((id) => tracks.find((track) => track.id === id))
-        .filter((track) => track) as FETrack[],
-      activeTrackId,
-      shuffle: store.shuffle,
-      loop: store.loop,
-      volume: store.volume,
-      mute: store.mute,
-    },
-  });
+  if (!state.artists || !$.sample(partialUpdates$)) return;
+  postMessage({ message: 'setArtists', state: uw(state).artists! });
 });

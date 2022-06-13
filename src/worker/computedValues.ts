@@ -1,7 +1,7 @@
 import { getFormattedTime } from '../shared/utils';
-import { Store } from './store';
+import { BEState } from './store';
 
-export function albumsGetter(this: Store) {
+export function albumsGetter(this: BEState) {
   const tracks = this.tracks;
   if (!tracks) return;
   if (!tracks.length) return [];
@@ -53,7 +53,7 @@ export function albumsGetter(this: Store) {
     });
 }
 
-export function artistsGetter(this: Store) {
+export function artistsGetter(this: BEState) {
   const tracks = this.tracks;
   const albums = this.albums;
   if (!tracks || !albums) return;

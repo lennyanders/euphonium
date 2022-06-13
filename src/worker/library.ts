@@ -1,5 +1,5 @@
 import $ from 'oby';
-import { postMessage } from './utils';
+import { postMessage, uw } from './utils';
 import { getDatabase } from './database';
 import {
   getFileHandlesFromRootDirectories,
@@ -11,7 +11,7 @@ import {
 import { fileHandleIsCover } from './files/utils';
 import { getCover } from './files/getCover';
 import { beToFETrack } from './files/converters';
-import { store } from './store';
+import { partialUpdates$, state } from './store';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 
 const getDbData = async () => {
@@ -44,7 +44,7 @@ export const getFEDirectories = async () => {
 export const removeDirectory = async (id: number) => {
   const database = await getDatabase();
   await database.delete('libraryDirectory', id);
-  store.libraryDirectories = await getFEDirectories();
+  state.libraryDirectories = await getFEDirectories();
   await updateFiles();
 };
 
@@ -53,7 +53,7 @@ export const tryAddDirectory = async (handle: FileSystemDirectoryHandle) => {
   if (relation.type === DirectoryRelationType.DirectoryIsNew) {
     const database = await getDatabase();
     await database.add('libraryDirectory', { handle });
-    store.libraryDirectories = await getFEDirectories();
+    state.libraryDirectories = await getFEDirectories();
     await updateFiles();
   }
   postMessage({ message: 'tryAddDirectoryToLibrary', relation });
@@ -71,7 +71,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
     await database.delete('libraryDirectory', oldId);
   }
   console.timeEnd('reparent directories');
-  store.libraryDirectories = await getFEDirectories();
+  state.libraryDirectories = await getFEDirectories();
   await updateFiles();
 };
 
@@ -115,7 +115,7 @@ export const updateFiles = async () => {
   ]);
   console.timeEnd('update database');
 
-  store.tracks = await getFETracks();
+  state.tracks = await getFETracks();
   console.timeEnd('update');
 };
 
@@ -137,6 +137,18 @@ export const setGeneralData = async (data: FEGeneralData) => {
 
 Promise.all([getFEDirectories(), getFETracks(), getDbData()]).then(
   ([libraryDirectories, tracks, data]) => {
-    $.batch(() => Object.assign(store, { libraryDirectories, tracks }, data));
+    $.batch(() => Object.assign(state, { libraryDirectories, tracks }, data));
+
+    const rawState = uw(state);
+    postMessage({
+      message: 'setState',
+      state: {
+        ...rawState,
+        queue: rawState
+          .queue!.map((id) => tracks.find((track) => track.id === id))
+          .filter((track) => track) as FETrack[],
+      },
+    });
+    partialUpdates$(true);
   },
 );
