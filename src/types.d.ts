@@ -72,7 +72,7 @@ interface FEAlbum {
   artist: string;
   year?: number;
   cover?: string;
-  tracks: FETrack[];
+  tracks: number[];
   diskCount: number;
   duration: number;
   durationFormatted: string;
@@ -82,14 +82,14 @@ interface FEArtist {
   name: string;
   image?: string;
   albums: FEAlbum[];
-  singles: FETrack[];
+  singles: number[];
   trackCount: number;
   duration: number;
   durationFormatted: string;
 }
 
-type FEGeneralData = Partial<{
-  queue: FETrack[];
+type GeneralData = Partial<{
+  queue: number[];
   activeTrackId: number;
   volume: number;
   mute: boolean;
@@ -97,13 +97,11 @@ type FEGeneralData = Partial<{
   loop: 'none' | 'track' | 'queue';
 }>;
 
-type FEState = Partial<
-  {
-    trackData: Record<number, FETrack>;
-    libraryDirectories: FELibraryDirectory[];
-    tracks: FETrack[];
-    albums: FEAlbum[];
-    artists: FEArtist[];
-    loading: boolean;
-  } & FEGeneralData
->;
+interface State extends GeneralData {
+  trackData: Record<number, FETrack>;
+  libraryDirectories?: FELibraryDirectory[];
+  tracks?: number[];
+  albums?: FEAlbum[];
+  artists?: FEArtist[];
+  loading?: boolean;
+}

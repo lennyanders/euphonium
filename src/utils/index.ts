@@ -27,8 +27,7 @@ export const getShuffledQueue = () => {
     [tracks[currentIndex], tracks[randomIndex]] = [tracks[randomIndex], tracks[currentIndex]];
   }
 
-  const { activeTrackId } = uw(state);
-  const activeTrackIndex = tracks.findIndex((track) => track.id === activeTrackId);
+  const activeTrackIndex = tracks.indexOf(state.activeTrackId || -1);
   if (activeTrackIndex) {
     [tracks[0], tracks[activeTrackIndex]] = [tracks[activeTrackIndex], tracks[0]];
   }

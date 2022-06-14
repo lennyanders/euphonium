@@ -16,7 +16,7 @@ export const Tracks = () => {
           and start listening to music!
         </p>
       ) : (
-        <TrackList tracks={tracks} />
+        <TrackList trackIds={tracks} />
       )}
     </>
   );

@@ -1,7 +1,7 @@
 import { useBatch, store } from 'voby';
 import { onMessage } from '../utils/worker';
 
-export const state = store<FEState>({ loading: true });
+export const state = store<State>({ trackData: {}, loading: true });
 
 onMessage(({ data }) => {
   if (data.message === 'setState') return useBatch(() => Object.assign(state, data.state));

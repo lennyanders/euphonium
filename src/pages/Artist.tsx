@@ -47,7 +47,7 @@ export const Artist = () => {
           {artist.singles.length > 0 && (
             <>
               <h2>Singles ({artist.singles.length})</h2>
-              <TrackList tracks={artist.singles} />
+              <TrackList trackIds={artist.singles} />
             </>
           )}
         </>

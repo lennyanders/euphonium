@@ -2,24 +2,16 @@ import $ from 'oby';
 import { albumsGetter, artistsGetter } from './computedValues';
 import { postMessage, uw } from './utils';
 
-export type BEState = Partial<
-  {
-    libraryDirectories: FELibraryDirectory[];
-    trackData: Record<number, FETrack>;
-    tracks: FETrack[];
-    albums: FEAlbum[];
-    artists: FEArtist[];
-    loading: boolean;
-  } & DbGeneralData
->;
-
 export const partialUpdates$ = $(false);
 
-export const state = $.store<BEState>({
+export const state = $.store<State>({
+  trackData: {},
   loading: false,
   get tracks() {
     return this.trackData
-      ? (Object.values(this.trackData) as FETrack[]).sort((a, b) => a.title.localeCompare(b.title))
+      ? (Object.values(this.trackData) as FETrack[])
+          .sort((a, b) => a.title.localeCompare(b.title))
+          .map((track) => track.id)
       : undefined;
   },
   get albums() {
@@ -33,6 +25,11 @@ export const state = $.store<BEState>({
 $.effect(() => {
   if (!state.libraryDirectories || !$.sample(partialUpdates$)) return;
   postMessage({ message: 'setLibraryDirectories', state: uw(state).libraryDirectories! });
+});
+
+$.effect(() => {
+  if (!state.trackData || !$.sample(partialUpdates$)) return;
+  postMessage({ message: 'setTrackData', state: uw(state).trackData! });
 });
 
 $.effect(() => {

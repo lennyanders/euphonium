@@ -1,4 +1,4 @@
-import { $, useComputed, useEffect, useEventListener, useSample } from 'voby';
+import { $, useComputed, useEffect, useEventListener } from 'voby';
 import { getShuffledQueue, requestFileAccess, uw } from '../utils';
 import { postMessage } from '../utils/worker';
 import { state } from './library';
@@ -12,29 +12,23 @@ export const queue$ = useComputed(() => {
 });
 export const playing$ = $(false);
 export const currentTime$ = $(0);
-export const currentTrack$ = useComputed(() => {
-  const id = state.activeTrackId;
-  return queue$()?.find((track) => track.id === id);
-});
+export const currentTrack$ = useComputed(() => state.trackData[state.activeTrackId || -1]);
 
-const currentTrackIndex$ = useComputed(() => {
-  const id = state.activeTrackId;
-  return queue$()?.findIndex((track) => track.id === id);
-});
+const currentTrackIndex$ = useComputed(() => queue$()?.indexOf(state.activeTrackId || -1));
 export const isFirst$ = useComputed(() => currentTrackIndex$() === 0);
 export const isLast$ = useComputed(() => currentTrackIndex$() === (queue$()?.length || 0) - 1);
 
-export const play = async (track?: FETrack, queue?: FETrack[]) => {
+export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();
   if (queue) state.queue = queue;
-  if (!audioEl.src && !track) track = useSample(currentTrack$);
+  const track = state.trackData[trackId || state.activeTrackId || -1];
   if (track) {
     try {
       const file = await track.fileHandle.getFile();
-      state.activeTrackId = track.id;
+      state.activeTrackId = trackId;
       audioEl.src = URL.createObjectURL(file);
     } catch (_) {
-      if ((await track.fileHandle.requestPermission()) === 'granted') play(track);
+      if ((await track.fileHandle.requestPermission()) === 'granted') play();
     }
   }
   if (audioEl.src) audioEl.play();

@@ -17,12 +17,13 @@ export type Relation =
 export type WME<T extends string, U extends object = {}> = MessageEvent<U & { message: T }>;
 
 export type MWME =
-  | WME<'setState', { state: FEState }>
-  | WME<'setTracks', { state: FETrack[] }>
+  | WME<'setState', { state: State }>
+  | WME<'setTrackData', { state: Record<number, FETrack> }>
+  | WME<'setTracks', { state: number[] }>
   | WME<'setAlbums', { state: FEAlbum[] }>
   | WME<'setArtists', { state: FEArtist[] }>
   | WME<'setLibraryDirectories', { state: FELibraryDirectory[] }>
-  | WME<'setGeneralData', { state: FEGeneralData }>
+  | WME<'setGeneralData', { state: GeneralData }>
   | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
   | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
 
@@ -34,4 +35,4 @@ export type WWME =
       'forceAddDirectoryToLibrary',
       { relation: Relation; directoryHandle: FileSystemDirectoryHandle }
     >
-  | WME<'setGeneralData', { state: FEGeneralData }>;
+  | WME<'setGeneralData', { state: GeneralData }>;

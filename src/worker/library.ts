@@ -119,18 +119,13 @@ export const updateFiles = async () => {
   console.timeEnd('update');
 };
 
-export const setGeneralData = async (data: FEGeneralData) => {
+export const setGeneralData = async (data: GeneralData) => {
   const database = await getDatabase();
   const tx = database.transaction('data', 'readwrite');
   const txs: Promise<any>[] = [];
   for (const _key in data) {
     const key = _key as keyof typeof data;
-    if (key === 'queue') {
-      const newQueue = data[key]!.map((track) => track.id);
-      txs.push(tx.store.put(newQueue, key));
-    } else {
-      txs.push(tx.store.put(data[key], key));
-    }
+    txs.push(tx.store.put(data[key], key));
   }
   await Promise.all([...txs, tx.done]);
 };
@@ -139,16 +134,7 @@ Promise.all([getFEDirectories(), getFETrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
     $.batch(() => Object.assign(state, { libraryDirectories, trackData }, data));
 
-    const rawState = uw(state);
-    postMessage({
-      message: 'setState',
-      state: {
-        ...rawState,
-        queue: rawState.queue
-          ?.map((id) => Object.values(trackData).find((track) => track.id === id))
-          .filter((track) => track) as FETrack[],
-      },
-    });
+    postMessage({ message: 'setState', state: uw(state) });
     partialUpdates$(true);
   },
 );

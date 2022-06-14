@@ -6,16 +6,26 @@ import { CoverImage } from './CoverImage';
 import { Virtual, VirtualProps } from './Virtual/Index';
 
 export const TrackList = ({
-  tracks,
+  trackIds,
   showNumber,
   stickToActiveTrack,
   showDiskNumber,
 }: {
-  tracks: FETrack[];
+  trackIds: number[];
   showNumber?: boolean;
   showDiskNumber?: boolean;
   stickToActiveTrack?: boolean;
 }) => {
+  const tracks = trackIds.map((id) => state.trackData[id]);
+  if (showDiskNumber) {
+    let prevDiskNumber = 0;
+    tracks.forEach((track, index) => {
+      if (track.diskNumber && prevDiskNumber !== track.diskNumber) {
+        tracks[index].showDiskNumber = true;
+        prevDiskNumber = track.diskNumber;
+      }
+    });
+  }
   const props: Omit<VirtualProps<FETrack>, 'children'> = {
     items: tracks,
     overscan: 25,
@@ -25,8 +35,7 @@ export const TrackList = ({
   if (stickToActiveTrack) {
     props.ref = (virtualizer: Virtualizer<Window & typeof globalThis, any>) => {
       useEffect(() => {
-        const id = state.activeTrackId;
-        const index = tracks.findIndex((track) => track.id === id);
+        const index = trackIds.indexOf(state.activeTrackId!);
         if (index > -1) virtualizer.scrollToIndex(index, { align: 'start' });
       });
     };
@@ -44,7 +53,7 @@ export const TrackList = ({
               'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
               () => state.activeTrackId === track().id && 'bg-[#333]',
             ]}
-            onClick={() => play(track(), tracks)}
+            onClick={() => play(track().id, trackIds)}
           >
             <If when={showNumber}>
               <span class='w-2ch text-center shrink-0'>{() => track().number || '-'}</span>

@@ -1,8 +1,7 @@
 import { getFormattedTime } from '../shared/utils';
-import { BEState } from './state';
 
-export function albumsGetter(this: BEState) {
-  const tracks = this.tracks;
+export function albumsGetter(this: State) {
+  const tracks = Object.values(this.trackData);
   if (!tracks) return;
   if (!tracks.length) return [];
 
@@ -14,7 +13,7 @@ export function albumsGetter(this: BEState) {
     const albumObject = albumsObject[key];
     if (albumObject) {
       albumObject.duration += track.duration;
-      albumObject.tracks.push(track);
+      albumObject.tracks.push(track.id);
       if (track.diskNumber && track.diskNumber > albumObject.diskCount) {
         albumObject.diskCount = track.diskNumber;
       }
@@ -24,7 +23,7 @@ export function albumsGetter(this: BEState) {
         artist: track.albumArtist || 'unknown artist',
         year: track.year,
         duration: track.duration,
-        tracks: [track],
+        tracks: [track.id],
         diskCount: 1,
       };
     }
@@ -33,28 +32,21 @@ export function albumsGetter(this: BEState) {
     .sort((a, b) => a.title.localeCompare(b.title))
     .map<FEAlbum>((album) => {
       const sortedTracks = album.tracks
+        .map((track) => this.trackData[track])
         .sort((a, b) => (a.number || 0) - (b.number || 0))
         .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
 
-      let prevDiskNumber = 0;
-      sortedTracks.forEach((track, index) => {
-        if (track.diskNumber && prevDiskNumber !== track.diskNumber) {
-          sortedTracks[index] = { ...track, showDiskNumber: true };
-          prevDiskNumber = track.diskNumber;
-        }
-      });
-
       return {
         ...album,
-        tracks: sortedTracks,
+        tracks: sortedTracks.map((track) => track.id),
         durationFormatted: getFormattedTime(album.duration),
         cover: sortedTracks.find((track) => track.cover)?.cover,
       };
     });
 }
 
-export function artistsGetter(this: BEState) {
-  const tracks = this.tracks;
+export function artistsGetter(this: State) {
+  const tracks = Object.values(this.trackData);
   const albums = this.albums;
   if (!tracks || !albums) return;
   if (!tracks.length) return [];
@@ -79,7 +71,7 @@ export function artistsGetter(this: BEState) {
         artistAlbums.find((album) => album.cover)?.cover ||
         singles.find((track) => track.cover)?.cover,
       albums: artistAlbums,
-      singles,
+      singles: singles.map((track) => track.id),
       trackCount: artistAlbums.reduce((res, album) => res + album.tracks.length, singles.length),
       duration,
       durationFormatted: getFormattedTime(duration),
