@@ -21,14 +21,12 @@ export const isLast$ = useComputed(() => currentTrackIndex$() === (queue$()?.len
 export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();
   if (queue) state.queue = queue;
-  const track = state.trackData[trackId || state.activeTrackId || -1];
-  if (track) {
-    try {
+  if ((trackId && trackId !== state.activeTrackId) || !audioEl.src) {
+    const track = state.trackData[trackId || state.activeTrackId || -1];
+    if (track) {
       const file = await track.fileHandle.getFile();
       if (trackId) state.activeTrackId = trackId;
       audioEl.src = URL.createObjectURL(file);
-    } catch (_) {
-      if ((await track.fileHandle.requestPermission()) === 'granted') play();
     }
   }
   if (audioEl.src) audioEl.play();
