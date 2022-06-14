@@ -16,7 +16,7 @@ export const Albums = () => {
           and start listening to music!
         </p>
       ) : (
-        <AlbumList albums={albums} />
+        <AlbumList albumIds={albums} />
       )}
     </>
   );

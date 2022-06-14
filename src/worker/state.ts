@@ -1,18 +1,17 @@
 import $ from 'oby';
-import { albumsGetter, artistsGetter } from './computedValues';
+import { albumDataGetter, albumsGetter, artistsGetter, tracksGetter } from './computedValues';
 import { postMessage, uw } from './utils';
 
 export const partialUpdates$ = $(false);
 
 export const state = $.store<State>({
-  trackData: {},
   loading: false,
+  trackData: {},
+  get albumData() {
+    return albumDataGetter.apply(this);
+  },
   get tracks() {
-    return this.trackData
-      ? (Object.values(this.trackData) as FETrack[])
-          .sort((a, b) => a.title.localeCompare(b.title))
-          .map((track) => track.id)
-      : undefined;
+    return tracksGetter.apply(this);
   },
   get albums() {
     return albumsGetter.apply(this);

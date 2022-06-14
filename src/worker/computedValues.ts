@@ -1,9 +1,8 @@
 import { getFormattedTime } from '../shared/utils';
 
-export function albumsGetter(this: State) {
+export function albumDataGetter(this: State) {
   const tracks = Object.values(this.trackData);
-  if (!tracks) return;
-  if (!tracks.length) return [];
+  if (!tracks.length) return {};
 
   const albumsObject: Record<string, Omit<FEAlbum, 'durationFormatted'>> = {};
   for (const track of tracks) {
@@ -28,34 +27,46 @@ export function albumsGetter(this: State) {
       };
     }
   }
-  return Object.values(albumsObject)
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map<FEAlbum>((album) => {
-      const sortedTracks = album.tracks
-        .map((track) => this.trackData[track])
-        .sort((a, b) => (a.number || 0) - (b.number || 0))
-        .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+  const finalAlbumsObject: Record<string, FEAlbum> = {};
+  for (const key in albumsObject) {
+    const album = albumsObject[key];
+    const sortedTracks = album.tracks
+      .map((track) => this.trackData[track])
+      .sort((a, b) => (a.number || 0) - (b.number || 0))
+      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+    finalAlbumsObject[key] = {
+      ...album,
+      tracks: sortedTracks.map((track) => track.id),
+      durationFormatted: getFormattedTime(album.duration),
+      cover: sortedTracks.find((track) => track.cover)?.cover,
+    };
+  }
+  return finalAlbumsObject;
+}
 
-      return {
-        ...album,
-        tracks: sortedTracks.map((track) => track.id),
-        durationFormatted: getFormattedTime(album.duration),
-        cover: sortedTracks.find((track) => track.cover)?.cover,
-      };
-    });
+export function tracksGetter(this: State) {
+  if (!this.trackData) return;
+  return Object.values(this.trackData)
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((track) => track.id);
+}
+
+export function albumsGetter(this: State) {
+  return Object.values(this.albumData)
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((album) => `${album.artist}${album.title}`);
 }
 
 export function artistsGetter(this: State) {
   const tracks = Object.values(this.trackData);
-  const albums = this.albums;
-  if (!tracks || !albums) return;
+  if (!tracks) return;
   if (!tracks.length) return [];
 
   const artists = [...new Set(tracks.map((track) => track.artist))].sort(
     (a, b) => (b && a?.localeCompare(b)) || 0,
   );
   return artists.map<FEArtist>((artist) => {
-    const artistAlbums = albums
+    const artistAlbums = Object.values(this.albumData)
       .filter((album) => album.artist === artist)
       .sort((a, b) => (a.year || 0) - (b.year || 0));
     const singles = tracks.filter(
@@ -70,7 +81,7 @@ export function artistsGetter(this: State) {
       image:
         artistAlbums.find((album) => album.cover)?.cover ||
         singles.find((track) => track.cover)?.cover,
-      albums: artistAlbums,
+      albums: artistAlbums.map((album) => `${album.artist}${album.title}`),
       singles: singles.map((track) => track.id),
       trackCount: artistAlbums.reduce((res, album) => res + album.tracks.length, singles.length),
       duration,

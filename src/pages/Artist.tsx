@@ -41,7 +41,7 @@ export const Artist = () => {
           {artist.albums.length > 0 && (
             <>
               <h2>Albums ({artist.albums.length})</h2>
-              <AlbumList albums={artist.albums} />
+              <AlbumList albumIds={artist.albums} />
             </>
           )}
           {artist.singles.length > 0 && (

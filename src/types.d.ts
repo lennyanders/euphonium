@@ -81,7 +81,7 @@ interface FEAlbum {
 interface FEArtist {
   name: string;
   image?: string;
-  albums: FEAlbum[];
+  albums: string[];
   singles: number[];
   trackCount: number;
   duration: number;
@@ -99,9 +99,10 @@ type GeneralData = Partial<{
 
 interface State extends GeneralData {
   trackData: Record<number, FETrack>;
+  albumData: Record<string, FEAlbum>;
   libraryDirectories?: FELibraryDirectory[];
   tracks?: number[];
-  albums?: FEAlbum[];
+  albums?: string[];
   artists?: FEArtist[];
   loading?: boolean;
 }
