@@ -56,13 +56,14 @@ export function albumsGetter(this: State) {
 
 export function artistsGetter(this: State) {
   const tracks = Object.values(this.trackData);
+  const albums = Object.values(this.albumData);
   if (!tracks.length) return [];
 
   const artists = [...new Set(tracks.map((track) => track.artist))].sort(
     (a, b) => (b && a?.localeCompare(b)) || 0,
   );
   return artists.map<FEArtist>((artist) => {
-    const artistAlbums = Object.values(this.albumData)
+    const artistAlbums = albums
       .filter((album) => album.artist === artist)
       .sort((a, b) => (a.year || 0) - (b.year || 0));
     const singles = tracks.filter(
