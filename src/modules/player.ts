@@ -25,7 +25,7 @@ export const play = async (trackId?: number, queue?: number[]) => {
   if (track) {
     try {
       const file = await track.fileHandle.getFile();
-      state.activeTrackId = trackId;
+      if (trackId) state.activeTrackId = trackId;
       audioEl.src = URL.createObjectURL(file);
     } catch (_) {
       if ((await track.fileHandle.requestPermission()) === 'granted') play();
