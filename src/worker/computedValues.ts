@@ -1,11 +1,9 @@
 import { getFormattedTime } from '../shared/utils';
 
 export function albumDataGetter(this: State) {
-  const tracks = Object.values(this.trackData);
-  if (!tracks.length) return {};
-
   const albumsObject: Record<string, Omit<FEAlbum, 'durationFormatted'>> = {};
-  for (const track of tracks) {
+  for (const trackId in this.trackData) {
+    const track = this.trackData[trackId];
     if (!track.albumTitle) continue;
 
     const key = `${track.albumArtist}${track.albumTitle}`;
@@ -45,7 +43,6 @@ export function albumDataGetter(this: State) {
 }
 
 export function tracksGetter(this: State) {
-  if (!this.trackData) return;
   return Object.values(this.trackData)
     .sort((a, b) => a.title.localeCompare(b.title))
     .map((track) => track.id);
@@ -59,7 +56,6 @@ export function albumsGetter(this: State) {
 
 export function artistsGetter(this: State) {
   const tracks = Object.values(this.trackData);
-  if (!tracks) return;
   if (!tracks.length) return [];
 
   const artists = [...new Set(tracks.map((track) => track.artist))].sort(
