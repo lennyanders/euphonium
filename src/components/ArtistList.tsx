@@ -1,9 +1,10 @@
+import { ObservableMaybe } from 'voby';
 import { mainElWidth$ } from '../modules/layout';
 import { RouterLink } from '../router';
 import { CoverImage } from './CoverImage';
 import { VirtualGrid } from './Virtual/Grid';
 
-export const ArtistList = ({ artists }: { artists: FEArtist[] }) => (
+export const ArtistList = ({ artists }: { artists: ObservableMaybe<FEArtist[]> }) => (
   <VirtualGrid
     items={artists}
     overscan={5}
