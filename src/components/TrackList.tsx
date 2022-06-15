@@ -9,27 +9,18 @@ export const TrackList = ({
   trackIds,
   showNumber,
   stickToActiveTrack,
-  showDiskNumber,
+  showDiskOnTracks,
 }: {
   trackIds: number[];
   showNumber?: boolean;
-  showDiskNumber?: boolean;
+  showDiskOnTracks?: number[];
   stickToActiveTrack?: boolean;
 }) => {
   const tracks = trackIds.map((id) => state.trackData[id]);
-  if (showDiskNumber) {
-    let prevDiskNumber = 0;
-    tracks.forEach((track, index) => {
-      if (track.diskNumber && prevDiskNumber !== track.diskNumber) {
-        tracks[index].showDiskNumber = true;
-        prevDiskNumber = track.diskNumber;
-      }
-    });
-  }
   const props: Omit<VirtualProps<FETrack>, 'children'> = {
     items: tracks,
     overscan: 25,
-    size: (track) => (showDiskNumber && track.showDiskNumber ? 80 : 56),
+    size: (track) => (showDiskOnTracks?.includes(track.id) ? 80 : 56),
     ulClass: 'm--1',
   };
   if (stickToActiveTrack) {
@@ -45,7 +36,7 @@ export const TrackList = ({
     <Virtual {...props}>
       {(track) => (
         <>
-          <If when={() => showDiskNumber && track().showDiskNumber}>
+          <If when={() => showDiskOnTracks?.includes(track().id)}>
             Disk: {() => track().diskNumber}
           </If>
           <button

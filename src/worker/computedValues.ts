@@ -1,7 +1,7 @@
 import { getFormattedTime } from '../shared/utils';
 
 export function albumDataGetter(this: State) {
-  const albumsObject: Record<string, Omit<FEAlbum, 'durationFormatted'>> = {};
+  const albumsObject: Record<string, Omit<FEAlbum, 'durationFormatted' | 'showDiskOnTracks'>> = {};
   for (const trackId in this.trackData) {
     const track = this.trackData[trackId];
     if (!track.albumTitle) continue;
@@ -32,9 +32,20 @@ export function albumDataGetter(this: State) {
       .map((track) => this.trackData[track])
       .sort((a, b) => (a.number || 0) - (b.number || 0))
       .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+
+    const showDiskOnTracks: number[] = [];
+    let prevDiskNumber = 0;
+    for (const track of sortedTracks) {
+      if (track.diskNumber && prevDiskNumber !== track.diskNumber) {
+        showDiskOnTracks.push(track.id);
+        prevDiskNumber = track.diskNumber;
+      }
+    }
+
     finalAlbumsObject[key] = {
       ...album,
       tracks: sortedTracks.map((track) => track.id),
+      showDiskOnTracks,
       durationFormatted: getFormattedTime(album.duration),
       cover: sortedTracks.find((track) => track.cover)?.cover,
     };
