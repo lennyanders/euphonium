@@ -1,4 +1,4 @@
-import { If, Ternary } from 'voby';
+import { $, If } from 'voby';
 import { Footer } from './components/layout/Footer';
 import { About } from './pages/About';
 import { Album } from './pages/Album';
@@ -32,13 +32,9 @@ const baseRoutes = [
 const mobileRoutes = [{ path: '/', component: Home }, ...baseRoutes];
 const desktopRoutes = [{ path: '/', component: Tracks }, ...baseRoutes];
 
-export const App = () => (
-  <Ternary when={state.loading}>
-    <div class='fixed inset-0 grid gap-4 justify-items-center content-center'>
-      <div class='i-mdi-loading w-12 h-12 animate-spin'></div>
-      loading
-    </div>
-    {/* loaded */}
+export const App = () => {
+  const showLoadingSpinner$ = $(true);
+  return (
     <>
       <If
         when={w1024$}
@@ -52,6 +48,18 @@ export const App = () => (
         </main>
       </If>
       <Footer />
+      <If when={showLoadingSpinner$}>
+        <div
+          class={[
+            'fixed bg-inherit inset-0 grid gap-4 justify-items-center content-center transition-delay-100 transition-opacity',
+            () => !state.loading && 'opacity-0',
+          ]}
+          onTransitionEnd={() => showLoadingSpinner$(false)}
+        >
+          <div class='i-mdi-loading w-12 h-12 animate-spin' />
+          loading
+        </div>
+      </If>
     </>
-  </Ternary>
-);
+  );
+};
