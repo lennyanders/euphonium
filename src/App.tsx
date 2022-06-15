@@ -11,12 +11,12 @@ import { Player } from './pages/Player';
 import { Privacy } from './pages/Privacy';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
+import { Queue } from './pages/Queue';
 import { Router } from './router';
 import { state } from './modules/library';
 import { mainEl$, w1024$ } from './modules/layout';
 
 const baseRoutes = [
-  { path: '/player', component: Player },
   { path: '/tracks', component: Tracks },
   { path: '/albums', component: Albums },
   { path: '/artists', component: Artists },
@@ -28,8 +28,16 @@ const baseRoutes = [
   { path: '/privacy', component: Privacy },
 ];
 
-const mobileRoutes = [...baseRoutes, { path: '*', component: Home }];
-const desktopRoutes = [...baseRoutes, { path: '*', component: Tracks }];
+const mobileRoutes = [
+  ...baseRoutes,
+  { path: '/player', component: Player },
+  { path: '*', component: Home },
+];
+const desktopRoutes = [
+  ...baseRoutes,
+  { path: 'queue', component: Queue },
+  { path: '*', component: Tracks },
+];
 
 export const App = () => {
   const showLoadingSpinner$ = $(true);

@@ -27,8 +27,15 @@ const Desktop = () => (
         </div>
       </div>
       <MainControls />
-      <div class='flex-1 flex justify-end p-x-4'>
+      <div class='flex-1 flex gap-4 p-x-4 justify-end'>
         <VolumeDesktop />
+        <Ternary when={() => path$() === '/queue' && history.length > 2}>
+          <button class='w-8 h-8 i-mdi-playlist-music-outline' onClick={() => history.back()} />
+          <RouterLink
+            class='w-8 h-8 i-mdi-playlist-music-outline'
+            href={() => (path$() === '/queue' ? '../' : '/queue')}
+          />
+        </Ternary>
       </div>
     </div>
   </>
