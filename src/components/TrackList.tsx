@@ -41,7 +41,7 @@ export const TrackList = ({
           <button
             class={[
               'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
-              () => state.activeTrackId === track().id && 'bg-[#333]',
+              () => state.activeTrackId === track().id && 'bg-dark-200',
             ]}
             onClick={() => play(track().id, $$(trackIds))}
           >

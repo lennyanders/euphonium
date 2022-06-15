@@ -17,7 +17,7 @@ export const Player = () => {
 
   return (
     <If when={currentTrack$}>
-      <div class='sticky top-0 m-x--4 m-t--4 p-4 p-b-0 bg-[#222] z-1 after:(content-none block absolute top-100% left-0 right-0 h-4 bgi-[linear-gradient(#222,transparent)])'>
+      <div class='sticky top-0 m-x--4 m-t--4 p-4 p-b-0 bg-dark-400 z-1 after:(content-none block absolute top-100% left-0 right-0 h-4 c-dark-400 bgi-[linear-gradient(currentColor,transparent)])'>
         <HeroImage
           image={() => currentTrack$()?.cover!}
           title={() => currentTrack$()?.title}
@@ -28,7 +28,7 @@ export const Player = () => {
           ]}
           mobileComp={HeroImageMobilePlayer}
         />
-        <Progress bg='bg-[#191919]' css='m-t-2' />
+        <Progress bg='bg-dark-800' css='m-t-2' />
         <div class='flex items-center'>
           <div class='flex-1'>
             <button
@@ -40,11 +40,11 @@ export const Player = () => {
             <MainControls />
             <div
               class={[
-                'absolute inset-0 p-x-4 flex items-center bg-[#222] transition',
+                'absolute inset-0 p-x-4 flex items-center bg-dark-400 transition',
                 volumeControlsClasses$,
               ]}
             >
-              <Slider bg='bg-[#191919]' />
+              <Slider bg='bg-dark-800' />
             </div>
           </div>
           <div class='flex-1 flex justify-end'>

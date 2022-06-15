@@ -52,7 +52,7 @@ const Mobile = () => (
 );
 
 export const Footer = () => (
-  <div class='fixed right-2 max-w-[calc(100%-1rem)] lg:left-2 rd-2 flex items-center lg:block bottom-4 bg-[#111]'>
+  <div class='fixed right-2 max-w-[calc(100%-1rem)] lg:left-2 rd-2 flex items-center lg:block bottom-4 bg-dark-900'>
     <Ternary when={w1024$}>
       <Desktop />
       <Mobile />
