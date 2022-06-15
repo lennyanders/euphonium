@@ -26,11 +26,10 @@ const baseRoutes = [
   { path: '/settings', component: Settings },
   { path: '/about', component: About },
   { path: '/privacy', component: Privacy },
-  { path: '*', component: '404' },
 ];
 
-const mobileRoutes = [{ path: '/', component: Home }, ...baseRoutes];
-const desktopRoutes = [{ path: '/', component: Tracks }, ...baseRoutes];
+const mobileRoutes = [...baseRoutes, { path: '*', component: Home }];
+const desktopRoutes = [...baseRoutes, { path: '*', component: Tracks }];
 
 export const App = () => {
   const showLoadingSpinner$ = $(true);
