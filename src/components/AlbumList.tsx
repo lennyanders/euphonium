@@ -1,14 +1,15 @@
+import { $$, ObservableMaybe, useComputed } from 'voby';
 import { mainElWidth$ } from '../modules/layout';
 import { state } from '../modules/library';
 import { RouterLink } from '../router';
 import { CoverImage } from './CoverImage';
 import { VirtualGrid } from './Virtual/Grid';
 
-export const AlbumList = ({ albumIds }: { albumIds: string[] }) => {
-  const albums = albumIds.map((id) => state.albumData[id]);
+export const AlbumList = ({ albumIds }: { albumIds: ObservableMaybe<string[]> }) => {
+  const albums$ = useComputed(() => $$(albumIds).map((id) => state.albumData[id]));
   return (
     <VirtualGrid
-      items={albums}
+      items={albums$}
       overscan={5}
       parentWidth={mainElWidth$}
       selfWidthDifference={16}

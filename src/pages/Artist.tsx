@@ -27,7 +27,7 @@ export const Artist = () => {
         />
         <If when={() => artist$()?.albums.length}>
           <h2>Albums ({() => artist$()?.albums.length})</h2>
-          {() => <AlbumList albumIds={artist$()?.albums!} />}
+          <AlbumList albumIds={useComputed(() => artist$()?.albums!)} />
         </If>
         <If when={() => artist$()?.singles.length}>
           <h2>Singles ({() => artist$()?.singles.length})</h2>
