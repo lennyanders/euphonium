@@ -26,13 +26,11 @@ export const Album = () => {
             </>,
           ]}
         />
-        {() => (
-          <TrackList
-            trackIds={album$().tracks}
-            showNumber
-            showDiskOnTracks={album$().showDiskOnTracks}
-          />
-        )}
+        <TrackList
+          trackIds={useComputed(() => album$().tracks)}
+          showNumber
+          showDiskOnTracks={useComputed(() => album$().showDiskOnTracks)}
+        />
       </>
       {/* no album */}
       <p>

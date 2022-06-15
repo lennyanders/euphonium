@@ -1,5 +1,5 @@
 import { Virtualizer } from '@tanstack/virtual-core';
-import { If, useEffect } from 'voby';
+import { $, $$, If, useComputed, useEffect, ObservableMaybe } from 'voby';
 import { state } from '../modules/library';
 import { play } from '../modules/player';
 import { CoverImage } from './CoverImage';
@@ -11,32 +11,31 @@ export const TrackList = ({
   stickToActiveTrack,
   showDiskOnTracks,
 }: {
-  trackIds: number[];
+  trackIds: ObservableMaybe<number[]>;
   showNumber?: boolean;
-  showDiskOnTracks?: number[];
+  showDiskOnTracks?: ObservableMaybe<number[]>;
   stickToActiveTrack?: boolean;
 }) => {
-  const tracks = trackIds.map((id) => state.trackData[id]);
   const props: Omit<VirtualProps<FETrack>, 'children'> = {
-    items: tracks,
+    items: useComputed(() => $$(trackIds).map((id) => state.trackData[id])),
     overscan: 25,
-    size: (track) => (showDiskOnTracks?.includes(track.id) ? 80 : 56),
+    size: (track) => ($$(showDiskOnTracks)?.includes(track.id) ? 80 : 56),
     ulClass: 'm--1',
   };
   if (stickToActiveTrack) {
-    props.ref = (virtualizer: Virtualizer<Window & typeof globalThis, any>) => {
-      useEffect(() => {
-        const index = trackIds.indexOf(state.activeTrackId!);
-        if (index > -1) virtualizer.scrollToIndex(index, { align: 'start' });
-      });
-    };
+    const virtualizer$ = $<Virtualizer<Window & typeof globalThis, any>>();
+    props.ref = virtualizer$;
+    useEffect(() => {
+      const index = $$(trackIds).indexOf(state.activeTrackId!);
+      if (index > -1) virtualizer$()?.scrollToIndex(index, { align: 'start' });
+    });
   }
 
   return (
     <Virtual {...props}>
       {(track) => (
         <>
-          <If when={() => showDiskOnTracks?.includes(track().id)}>
+          <If when={() => $$(showDiskOnTracks)?.includes(track().id)}>
             Disk: {() => track().diskNumber}
           </If>
           <button
@@ -44,7 +43,7 @@ export const TrackList = ({
               'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
               () => state.activeTrackId === track().id && 'bg-[#333]',
             ]}
-            onClick={() => play(track().id, trackIds)}
+            onClick={() => play(track().id, $$(trackIds))}
           >
             <If when={showNumber}>
               <span class='w-2ch text-center shrink-0'>{() => track().number || '-'}</span>

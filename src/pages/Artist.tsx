@@ -1,4 +1,4 @@
-import { useComputed } from 'voby';
+import { If, Ternary, useComputed } from 'voby';
 import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
@@ -6,52 +6,42 @@ import { params$, RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const Artist = () => {
-  const { artistName } = params$();
-  if (!artistName) return 'Something went wrong';
-
-  const artist$ = useComputed(() => state.artists?.find((artist) => artist.name === artistName));
-  const artist = artist$();
+  const artist$ = useComputed(() =>
+    state.artists?.find((artist) => artist.name === params$().artistName),
+  );
   return (
-    <>
-      {!artist?.trackCount ? (
-        <p>
-          You don't have any music for this artist, add directories in the{' '}
-          <RouterLink href='/settings' class='underline'>
-            settings
-          </RouterLink>{' '}
-          and start listening to music!
-        </p>
-      ) : (
-        <>
-          <HeroImage
-            image={artist.image}
-            title={artist.name}
-            sublines={[
-              <>
-                {artist.trackCount} <div class='i-mdi-music-note m-l-.5 m-r-2' />
-                {artist.albums.length > 0 && (
-                  <>
-                    {artist.albums.length} <div class='i-mdi-disk m-l-.5 m-r-2' />
-                  </>
-                )}
-                {artist.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
-              </>,
-            ]}
-          />
-          {artist.albums.length > 0 && (
+    <Ternary when={artist$}>
+      <>
+        <HeroImage
+          image={() => artist$()?.image!}
+          title={() => artist$()?.name}
+          sublines={[
             <>
-              <h2>Albums ({artist.albums.length})</h2>
-              <AlbumList albumIds={artist.albums} />
-            </>
-          )}
-          {artist.singles.length > 0 && (
-            <>
-              <h2>Singles ({artist.singles.length})</h2>
-              <TrackList trackIds={artist.singles} />
-            </>
-          )}
-        </>
-      )}
-    </>
+              {() => artist$()?.trackCount} <div class='i-mdi-music-note m-l-.5 m-r-2' />
+              <If when={() => artist$()?.albums.length}>
+                {() => artist$()?.albums.length} <div class='i-mdi-disk m-l-.5 m-r-2' />
+              </If>
+              {() => artist$()?.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
+            </>,
+          ]}
+        />
+        <If when={() => artist$()?.albums.length}>
+          <h2>Albums ({() => artist$()?.albums.length})</h2>
+          {() => <AlbumList albumIds={artist$()?.albums!} />}
+        </If>
+        <If when={() => artist$()?.singles.length}>
+          <h2>Singles ({() => artist$()?.singles.length})</h2>
+          <TrackList trackIds={useComputed(() => artist$()?.singles!)} />
+        </If>
+      </>
+      {/* no artist */}
+      <p>
+        You don't have any music for this artist, add directories in the{' '}
+        <RouterLink href='/settings' class='underline'>
+          settings
+        </RouterLink>{' '}
+        and start listening to music!
+      </p>
+    </Ternary>
   );
 };

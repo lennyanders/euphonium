@@ -4,10 +4,10 @@ import {
   VirtualItem,
   windowScroll,
 } from '@tanstack/virtual-core';
-import { FunctionMaybe } from 'voby';
+import { FunctionMaybe, ObservableMaybe } from 'voby';
 
 export interface SharedProps<T> {
-  items: T[];
+  items: ObservableMaybe<T[]>;
   overscan: number;
   size: (item: T) => number;
   children: (item: () => T) => JSX.Child;

@@ -56,7 +56,7 @@ export const Player = () => {
         </div>
         Queue
       </div>
-      {() => <TrackList trackIds={queue$() || []} stickToActiveTrack />}
+      <TrackList trackIds={queue$} stickToActiveTrack />
     </If>
   );
 };

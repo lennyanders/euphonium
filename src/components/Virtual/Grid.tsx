@@ -1,4 +1,4 @@
-import { $, For, Observable, If, useBatch, useCleanup, useEffect, useSample } from 'voby';
+import { $, For, Observable, If, useBatch, useCleanup, useEffect, useSample, $$ } from 'voby';
 import { Virtualizer } from '@tanstack/virtual-core';
 import { baseOptions, getVirtualItems, getVirtualItemToStart, SharedProps } from './shared';
 
@@ -28,7 +28,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
       const virtualizer = virtualizer$(
         new Virtualizer<Window, any>({
           ...baseOptions,
-          count: Math.ceil(options.items.length / itemsPerRow),
+          count: Math.ceil($$(options.items).length / itemsPerRow),
           overscan: options.overscan,
           estimateSize: () => itemHeight,
           onChange: (virtualizer) => {
@@ -62,7 +62,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
         {(index) => (
           <For values={() => Array.from({ length: itemsPerRow$() }).map((_, i) => i)}>
             {(colIndex) => (
-              <If when={() => options.items[index * itemsPerRow$() + colIndex]}>
+              <If when={() => $$(options.items)[index * itemsPerRow$() + colIndex]}>
                 <li
                   class={options.liClass}
                   style={{
@@ -74,7 +74,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
                     position: 'absolute',
                   }}
                 >
-                  {options.children(() => options.items[index * itemsPerRow$() + colIndex])}
+                  {options.children(() => $$(options.items)[index * itemsPerRow$() + colIndex])}
                 </li>
               </If>
             )}
