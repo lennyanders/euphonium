@@ -1,3 +1,4 @@
+import { For, Ternary } from 'voby';
 import { DirectoryRelationType } from '../shared/workerFeCommunicationTypes';
 import { state } from '../modules/library';
 import { requestFileAccess } from '../utils';
@@ -47,36 +48,35 @@ onMessage(async ({ data }) => {
   }
 });
 
-export const Settings = () => {
-  const { libraryDirectories } = state;
-  return (
-    <>
-      <h1>Settings</h1>
-      <h2>Library</h2>
-      <div class='flex justify-between'>
-        <button onClick={() => addDirectoryToLibrary(libraryDirectories)}>
-          Add directory to library
-        </button>
-        <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
-      </div>
-      {!libraryDirectories?.length ? (
-        <p>Add directories and start listening to music!</p>
-      ) : (
-        <ul class='grid gap-2'>
-          {libraryDirectories.map(({ name, id }) => (
+export const Settings = () => (
+  <>
+    <h1>Settings</h1>
+    <h2>Library</h2>
+    <div class='flex justify-between'>
+      <button onClick={() => addDirectoryToLibrary(state.libraryDirectories)}>
+        Add directory to library
+      </button>
+      <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
+    </div>
+    <Ternary when={state.libraryDirectories?.length}>
+      <ul class='grid gap-2'>
+        <For values={state.libraryDirectories!}>
+          {({ name, id }) => (
             <li class='flex gap-1'>
               {name}
               <button onClick={() => postMessage({ message: 'removeLibraryDirectory', id })}>
                 ×
               </button>
             </li>
-          ))}
-        </ul>
-      )}
-      <small class='w-80% op-50'>
-        You need to give permission again for each folder after reloading/revisiting the player so
-        it's good to use as few folders as possible
-      </small>
-    </>
-  );
-};
+          )}
+        </For>
+      </ul>
+      {/* no library directories */}
+      <p>Add directories and start listening to music!</p>
+    </Ternary>
+    <small class='w-80% op-50'>
+      You need to give permission again for each folder after reloading/revisiting the player so
+      it's good to use as few folders as possible
+    </small>
+  </>
+);
