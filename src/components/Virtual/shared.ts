@@ -10,7 +10,7 @@ export interface SharedProps<T> {
   items: ObservableMaybe<T[]>;
   overscan: number;
   size: (item: T) => number;
-  children: (item: () => T) => JSX.Child;
+  children: (item: () => T, index: number) => JSX.Child;
   ulClass?: FunctionMaybe<string>;
   liClass?: FunctionMaybe<string>;
 }

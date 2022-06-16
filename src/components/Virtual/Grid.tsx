@@ -74,7 +74,10 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
                     position: 'absolute',
                   }}
                 >
-                  {options.children(() => $$(options.items)[index * itemsPerRow$() + colIndex])}
+                  {options.children(
+                    () => $$(options.items)[index * itemsPerRow$() + colIndex],
+                    index * itemsPerRow$() + colIndex,
+                  )}
                 </li>
               </If>
             )}

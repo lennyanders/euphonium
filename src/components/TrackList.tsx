@@ -8,11 +8,13 @@ import { Virtual, VirtualProps } from './Virtual/Index';
 export const TrackList = ({
   trackIds,
   showNumber,
+  showIndex,
   stickToActiveTrack,
   showDiskOnTracks,
 }: {
   trackIds: ObservableMaybe<number[]>;
   showNumber?: boolean;
+  showIndex?: boolean;
   showDiskOnTracks?: ObservableMaybe<number[]>;
   stickToActiveTrack?: boolean;
 }) => {
@@ -33,7 +35,7 @@ export const TrackList = ({
 
   return (
     <Virtual {...props}>
-      {(track) => (
+      {(track, index) => (
         <>
           <If when={() => $$(showDiskOnTracks)?.includes(track().id)}>
             Disk: {() => track().diskNumber}
@@ -46,7 +48,25 @@ export const TrackList = ({
             onClick={() => play(track().id, $$(trackIds))}
           >
             <If when={showNumber}>
-              <span class='w-2ch text-center shrink-0'>{() => track().number || '-'}</span>
+              <span
+                class='shrink-0'
+                style={{
+                  width: `${
+                    Math.floor($$(trackIds).length / ($$(showDiskOnTracks)?.length || 1)).toString()
+                      .length
+                  }ch`,
+                }}
+              >
+                {() => track().number || '-'}
+              </span>
+            </If>
+            <If when={!showNumber && showIndex}>
+              <span
+                class='shrink-0'
+                style={{ width: `${$$(trackIds).length.toString().length}ch` }}
+              >
+                {index + 1}
+              </span>
             </If>
             <CoverImage
               src={() => track().cover!}

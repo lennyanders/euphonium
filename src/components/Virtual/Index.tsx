@@ -50,7 +50,7 @@ export const Virtual = <T,>(options: VirtualProps<T>) => {
               width: '100%',
             }}
           >
-            {options.children(() => $$(options.items)[index])}
+            {options.children(() => $$(options.items)[index], index)}
           </li>
         )}
       </For>
