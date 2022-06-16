@@ -15,13 +15,20 @@ export const isLast$ = useComputed(() => currentTrackIndex$() === (state.queue?.
 
 export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();
-  if (queue) state.queue = queue;
   if ((trackId && trackId !== state.activeTrackId) || !audioEl.src) {
     const track = state.trackData[trackId || state.activeTrackId || -1];
     if (track) {
       const file = await track.fileHandle.getFile();
       if (trackId) state.activeTrackId = trackId;
       audioEl.src = URL.createObjectURL(file);
+    }
+  }
+  if (queue) {
+    if (!state.shuffle) {
+      state.queue = queue;
+    } else if (!state.originalQueue || queue.toString() !== state.originalQueue.toString()) {
+      state.originalQueue = queue;
+      state.queue = getShuffledQueue();
     }
   }
   if (audioEl.src) audioEl.play();
@@ -77,7 +84,7 @@ export const seek = (time: number) => currentTime$((audioEl.currentTime = time))
 export const shuffle = (shuffle: boolean) => {
   if (!shuffle) {
     state.queue = state.originalQueue;
-    state.originalQueue = undefined;
+    delete state.originalQueue;
   } else {
     state.originalQueue = uw(state).queue;
     state.queue = getShuffledQueue();
