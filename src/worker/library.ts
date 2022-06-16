@@ -17,7 +17,7 @@ import { DirectoryRelationType, Relation } from '../shared/workerFeCommunication
 const getDbData = async () => {
   const database = await getDatabase();
   const { store } = database.transaction('data');
-  const data: DbGeneralData = {};
+  const data: GeneralData = {};
   for await (const { key, value } of store.iterate()) data[key] = value as any;
   return data;
 };
@@ -124,7 +124,7 @@ export const setGeneralData = async (data: GeneralData) => {
   const tx = database.transaction('data', 'readwrite');
   const txs: Promise<any>[] = [];
   for (const _key in data) {
-    const key = _key as keyof typeof data;
+    const key = _key as keyof GeneralData;
     txs.push(tx.store.put(data[key], key));
   }
   await Promise.all([...txs, tx.done]);

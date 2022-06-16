@@ -33,15 +33,6 @@ interface DbCover extends FileHandle {
   image: Blob;
 }
 
-type DbGeneralData = Partial<{
-  queue: number[];
-  activeTrackId: number;
-  volume: number;
-  mute: boolean;
-  shuffle: boolean;
-  loop: 'none' | 'track' | 'queue';
-}>;
-
 interface FELibraryDirectory {
   id: number;
   name: string;
@@ -90,6 +81,7 @@ interface FEArtist {
 
 type GeneralData = Partial<{
   queue: number[];
+  shuffledQueue: number[];
   activeTrackId: number;
   volume: number;
   mute: boolean;

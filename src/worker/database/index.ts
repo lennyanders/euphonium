@@ -16,8 +16,8 @@ export interface AppDataDb extends DBSchema {
     indexes: { libraryDirectory: number };
   };
   data: {
-    key: keyof DbGeneralData;
-    value: DbGeneralData[keyof DbGeneralData];
+    key: keyof GeneralData;
+    value: GeneralData[keyof GeneralData];
   };
 }
 
