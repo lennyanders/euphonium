@@ -1,6 +1,6 @@
 import { useComputed } from 'voby';
 import { state } from '../../modules/library';
-import { go, isFirst$, isLast$ } from '../../modules/player';
+import { go, isFirst$, isLast$, shuffle } from '../../modules/player';
 import { PlayPause } from './PlayPause';
 
 const loopIcon$ = useComputed(() => {
@@ -35,7 +35,7 @@ export const MainControls = () => (
       disabled={() => !isLoop$() && isLast$()}
     />
     <button
-      onClick={() => (state.shuffle = !state.shuffle)}
+      onClick={() => shuffle(!state.shuffle)}
       class={['w-6 h-6 i-mdi-shuffle transition-opacity', () => !state.shuffle && 'op-50']}
     />
   </div>

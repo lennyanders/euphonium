@@ -81,7 +81,7 @@ interface FEArtist {
 
 type GeneralData = Partial<{
   queue: number[];
-  shuffledQueue: number[];
+  originalQueue: number[];
   activeTrackId: number;
   volume: number;
   mute: boolean;

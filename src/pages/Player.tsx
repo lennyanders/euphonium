@@ -1,7 +1,7 @@
 import { $, If, useComputed } from 'voby';
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
-import { currentTrack$, queue$ } from '../modules/player';
+import { currentTrack$ } from '../modules/player';
 import { HeroImage } from '../components/HeroImage';
 import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
 import { MainControls } from '../components/Player/MainControls';
@@ -56,7 +56,7 @@ export const Player = () => {
         </div>
         Queue
       </div>
-      <TrackList trackIds={queue$} stickToActiveTrack />
+      <TrackList trackIds={useComputed(() => state.queue || [])} stickToActiveTrack />
     </If>
   );
 };

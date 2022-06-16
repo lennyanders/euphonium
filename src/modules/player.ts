@@ -5,18 +5,13 @@ import { state } from './library';
 
 const audioEl = new Audio();
 
-export const queue$ = useComputed(() => {
-  if (!state.queue) return [];
-  if (!state.shuffle) return state.queue;
-  return getShuffledQueue();
-});
 export const playing$ = $(false);
 export const currentTime$ = $(0);
 export const currentTrack$ = useComputed(() => state.trackData[state.activeTrackId || -1]);
 
-const currentTrackIndex$ = useComputed(() => queue$()?.indexOf(state.activeTrackId || -1));
+const currentTrackIndex$ = useComputed(() => state.queue?.indexOf(state.activeTrackId || -1));
 export const isFirst$ = useComputed(() => currentTrackIndex$() === 0);
-export const isLast$ = useComputed(() => currentTrackIndex$() === (queue$()?.length || 0) - 1);
+export const isLast$ = useComputed(() => currentTrackIndex$() === (state.queue?.length || 0) - 1);
 
 export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();
@@ -34,7 +29,11 @@ export const play = async (trackId?: number, queue?: number[]) => {
 
 useEffect(() => {
   if (!state.queue?.length) return;
-  postMessage({ message: 'setGeneralData', state: { queue: uw(state).queue! } });
+  postMessage({ message: 'setGeneralData', state: { queue: uw(state).queue } });
+});
+useEffect(() => {
+  if (!state.originalQueue?.length) return;
+  postMessage({ message: 'setGeneralData', state: { originalQueue: uw(state).originalQueue } });
 });
 useEffect(() => {
   if (state.activeTrackId === undefined) return;
@@ -42,7 +41,10 @@ useEffect(() => {
 });
 useEffect(() => {
   if (state.shuffle === undefined) return;
-  postMessage({ message: 'setGeneralData', state: { shuffle: state.shuffle } });
+  postMessage({
+    message: 'setGeneralData',
+    state: { shuffle: state.shuffle, ...(!state.shuffle && { originalQueue: undefined }) },
+  });
 });
 useEffect(() => {
   if (state.loop === undefined) return;
@@ -62,7 +64,7 @@ useEffect(() => {
 export const pause = () => audioEl.pause();
 export const go = (offset: number) => {
   if (state.loop === 'track') offset = 0;
-  const queue = queue$() || [];
+  const queue = state.queue || [];
   let nextTrackIndex = (currentTrackIndex$() || 0) + offset;
   if (state.loop === 'queue') {
     if (nextTrackIndex > queue.length - 1) nextTrackIndex = queue.length % nextTrackIndex;
@@ -72,6 +74,16 @@ export const go = (offset: number) => {
   play(queue[nextTrackIndex]);
 };
 export const seek = (time: number) => currentTime$((audioEl.currentTime = time));
+export const shuffle = (shuffle: boolean) => {
+  if (!shuffle) {
+    state.queue = state.originalQueue;
+    state.originalQueue = undefined;
+  } else {
+    state.originalQueue = uw(state).queue;
+    state.queue = getShuffledQueue();
+  }
+  state.shuffle = shuffle;
+};
 
 useEventListener(audioEl, 'play', () => playing$(true));
 useEventListener(audioEl, 'pause', () => playing$(false));

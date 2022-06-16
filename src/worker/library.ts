@@ -125,7 +125,8 @@ export const setGeneralData = async (data: GeneralData) => {
   const txs: Promise<any>[] = [];
   for (const _key in data) {
     const key = _key as keyof GeneralData;
-    txs.push(tx.store.put(data[key], key));
+    if (data[key] === undefined) txs.push(tx.store.delete(key));
+    else txs.push(tx.store.put(data[key], key));
   }
   await Promise.all([...txs, tx.done]);
 };
