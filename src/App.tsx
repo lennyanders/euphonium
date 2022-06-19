@@ -15,6 +15,7 @@ import { Queue } from './pages/Queue';
 import { Router } from './router';
 import { state } from './modules/library';
 import { mainEl$, w1024$ } from './modules/layout';
+import { ContextMenu } from './components/layout/ContextMenu';
 
 const baseRoutes = [
   { path: '/tracks', component: Tracks },
@@ -56,6 +57,7 @@ export const App = () => {
           </main>
         </If>
         <Footer />
+        <ContextMenu />
       </If>
       <If when={showLoadingSpinner$}>
         <div

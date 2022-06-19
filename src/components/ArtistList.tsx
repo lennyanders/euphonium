@@ -16,7 +16,10 @@ export const ArtistList = ({ artists }: { artists: ObservableMaybe<FEArtist[]> }
     liClass='p-4'
   >
     {(artist) => (
-      <RouterLink href={() => `/artist/${artist().name}`} class='block truncate text-center'>
+      <RouterLink
+        href={() => `/artist/${encodeURIComponent(artist().name)}`}
+        class='block truncate text-center'
+      >
         <CoverImage src={() => artist().image!} css='w-100% rd-50% m-b-4 background-size-125%' />
         {() => artist().name}
       </RouterLink>

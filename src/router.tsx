@@ -41,6 +41,11 @@ const updatePage = (path: string) => {
   });
 };
 
+export const go = (path: string) => {
+  updateUrl = true;
+  updatePage(path);
+};
+
 addEventListener('popstate', ({ state }) => {
   scrollY = typeof state?.scrollY === 'number' ? state.scrollY : 0;
   updatePage(location.pathname);
@@ -66,8 +71,7 @@ export const Router = ({
     }
     if (!route) return;
     if ('redirect' in route) {
-      updateUrl = true;
-      updatePage(route.redirect);
+      go(route.redirect);
       return;
     }
 
@@ -83,8 +87,7 @@ export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) =
     if (!anchor || anchor.origin !== location.origin) return;
 
     event.preventDefault();
-    updateUrl = true;
-    updatePage(anchor.pathname);
+    go(anchor.pathname);
   };
   return <a ref={el$} {...props}></a>;
 };

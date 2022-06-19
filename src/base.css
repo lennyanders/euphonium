@@ -101,6 +101,13 @@ img {
   height: auto;
 }
 
+hr {
+  border: 0;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
 .transition-warming-up::page-transition-container(*),
 .transition-warming-up::page-transition-incoming-image(*),
 .transition-warming-up::page-transition-outgoing-image(*) {

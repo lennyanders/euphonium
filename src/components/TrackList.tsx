@@ -2,8 +2,64 @@ import { Virtualizer } from '@tanstack/virtual-core';
 import { $, $$, If, useComputed, useEffect, ObservableMaybe } from 'voby';
 import { state } from '../modules/library';
 import { play } from '../modules/player';
+import { go } from '../router';
 import { CoverImage } from './CoverImage';
+import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 import { Virtual, VirtualProps } from './Virtual/Index';
+
+const onContextMenu = (event: MouseEvent, track: FETrack, trackIds: number[]) => {
+  const items: ContextMenuItem[] = [
+    { title: 'play', action: () => play(track.id, trackIds) },
+    'spacer',
+  ];
+
+  const { artist, albumArtist, albumTitle } = track;
+  let newSpacer = false;
+  if (artist) {
+    newSpacer = true;
+    items.push({
+      title: 'Go to artist',
+      action: () => go(`/artist/${encodeURIComponent(artist)}`),
+    });
+  }
+  if (albumArtist && albumArtist !== artist) {
+    newSpacer = true;
+    items.push({
+      title: 'Go to album artist',
+      action: () => go(`/artist/${encodeURIComponent(albumArtist)}`),
+    });
+  }
+  if (albumArtist && albumTitle) {
+    newSpacer = true;
+    items.push({
+      title: 'Go to album',
+      action: () => {
+        go(`/artist/${encodeURIComponent(albumArtist)}/${encodeURIComponent(albumTitle)}`);
+      },
+    });
+  }
+  if (newSpacer) items.push('spacer');
+  if (artist) {
+    items.push({
+      title: 'Copy artist name',
+      action: () => navigator.clipboard.writeText(artist),
+    });
+  }
+  if (albumArtist && albumArtist !== artist) {
+    items.push({
+      title: 'Copy album artist name',
+      action: () => navigator.clipboard.writeText(albumArtist),
+    });
+  }
+  if (albumArtist && albumTitle) {
+    items.push({
+      title: 'Copy album name',
+      action: () => navigator.clipboard.writeText(albumTitle),
+    });
+  }
+
+  showContextMenu(event, items);
+};
 
 export const TrackList = ({
   trackIds,
@@ -46,6 +102,7 @@ export const TrackList = ({
               () => state.activeTrackId === track().id && 'bg-dark-200',
             ]}
             onClick={() => play(track().id, $$(trackIds))}
+            onContextMenu={(event) => onContextMenu(event, track(), $$(trackIds))}
           >
             <If when={showNumber}>
               <span
