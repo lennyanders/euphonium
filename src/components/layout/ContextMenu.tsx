@@ -30,6 +30,9 @@ export const ContextMenu = () => {
   const transformTransition$ = $(false);
   const ul$ = $<HTMLUListElement>();
   useEffect(() => {
+    if (ul$()) transformTransition$(false);
+  });
+  useEffect(() => {
     const ul = ul$();
     if (!ul) return;
 
