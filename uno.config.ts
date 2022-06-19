@@ -30,6 +30,10 @@ export default defineConfig({
   ],
   transformers: [transformerVariantGroup()],
   rules: [
+    [
+      /^p-(\d+)-(\d+)-(\d+)-(\d+)$/,
+      ([_, t, r, b, l]) => ({ padding: `${+t / 4}rem ${+r / 4}rem ${+b / 4}rem ${+l / 4}rem` }),
+    ],
     [/^background-size-(.*)$/, ([, d]) => ({ 'background-size': d })],
     [/^var-(.*)-(.*)$/, ([, name, val]) => ({ [`--${name}`]: val })],
     [/^shadow-\[(.*)\]$/, ([, val]) => ({ 'box-shadow': val.replace(/_/g, ' ') })],

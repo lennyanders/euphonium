@@ -48,7 +48,7 @@ export const App = () => {
           when={w1024$}
           fallback={() => (mainEl$(document.body), (<Router routes={mobileRoutes} />))}
         >
-          <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-4 p-b-33 overflow-y-auto bg-dark-800'>
+          <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-6-6-33-4 overflow-y-auto bg-dark-800'>
             <Home />
           </aside>
           <main class='flex flex-col gap-4 flex-1 p-4 p-b-33' ref={mainEl$}>
