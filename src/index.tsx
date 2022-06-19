@@ -8,8 +8,9 @@ import { Router } from './router';
 import { About } from './pages/About';
 import { Privacy } from './pages/Privacy';
 import { NoSupport } from './pages/NoSupport';
+import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from './consts';
 
-if (!window.OffscreenCanvas || !window.showDirectoryPicker || !window.Worker) {
+if (!workerSupport || !fileSystemApiSupport || !offscreenCanvasSupport) {
   render(
     <div class='m-a m-t-20 w-100% max-w-2xl flex flex-col gap-4'>
       <Router

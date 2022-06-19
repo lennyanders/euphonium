@@ -1,4 +1,5 @@
 import { RouterLink } from '../router';
+import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from '../consts';
 
 export const NoSupport = () => (
   <>
@@ -7,19 +8,19 @@ export const NoSupport = () => (
     <ul class='grid gap-2'>
       <li>
         <a class='flex items-center gap-2' href='https://caniuse.com/webworkers'>
-          <div class='i-mdi-link' />
+          <div class={workerSupport ? 'i-mdi-check c-green' : 'i-mdi-close c-red'} />
           Web Workers
         </a>
       </li>
       <li>
         <a class='flex items-center gap-2' href='https://caniuse.com/native-filesystem-api'>
-          <div class='i-mdi-link' />
+          <div class={fileSystemApiSupport ? 'i-mdi-check c-green' : 'i-mdi-close c-red'} />
           File System Access API
         </a>
       </li>
       <li>
         <a class='flex items-center gap-2' href='https://caniuse.com/offscreencanvas'>
-          <div class='i-mdi-link' />
+          <div class={offscreenCanvasSupport ? 'i-mdi-check c-green' : 'i-mdi-close c-red'} />
           OffscreenCanvas
         </a>
       </li>
