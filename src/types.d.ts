@@ -74,7 +74,7 @@ interface FEArtist {
   image?: string;
   albums: string[];
   singles: number[];
-  trackCount: number;
+  tracks: number[];
   duration: number;
   durationFormatted: string;
 }

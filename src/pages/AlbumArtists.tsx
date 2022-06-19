@@ -13,10 +13,10 @@ export const AlbumArtists = () => {
       </>
       {/* no album artists */}
       <p>
-        Add directories in the{' '}
+        Add directories in the
         <RouterLink href='/settings' class='underline'>
           settings
-        </RouterLink>{' '}
+        </RouterLink>
         and start listening to music!
       </p>
     </Ternary>

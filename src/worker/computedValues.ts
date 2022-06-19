@@ -77,21 +77,26 @@ export function artistsGetter(this: State) {
     const artistAlbums = albums
       .filter((album) => album.artist === artist)
       .sort((a, b) => (a.year || 0) - (b.year || 0));
-    const singles = tracks.filter(
-      (track) => track.albumArtist !== artist && track.artist === artist,
-    );
+    const sortedSingles = tracks
+      .filter((track) => track.albumArtist !== artist && track.artist === artist)
+      .sort((a, b) => (a.number || 0) - (b.number || 0))
+      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+    const singles = sortedSingles.map((track) => track.id);
+
     const duration = artistAlbums.reduce(
       (res, album) => res + album.duration,
-      singles.reduce((res, track) => res + track.duration, 0),
+      sortedSingles.reduce((res, track) => res + track.duration, 0),
     );
     return {
       name: artist || 'unknown artist',
       image:
         artistAlbums.find((album) => album.cover)?.cover ||
-        singles.find((track) => track.cover)?.cover,
+        sortedSingles.find((track) => track.cover)?.cover,
       albums: artistAlbums.map((album) => `${album.artist}${album.title}`),
-      singles: singles.map((track) => track.id),
-      trackCount: artistAlbums.reduce((res, album) => res + album.tracks.length, singles.length),
+      singles,
+      tracks: artistAlbums
+        .reduce<number[]>((res, album) => res.concat(album.tracks), [])
+        .concat(singles),
       duration,
       durationFormatted: getFormattedTime(duration),
     };

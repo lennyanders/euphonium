@@ -11,6 +11,7 @@ import { Player } from './pages/Player';
 import { Privacy } from './pages/Privacy';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
+import { TracksArtist } from './pages/TracksArtist';
 import { Queue } from './pages/Queue';
 import { Router } from './router';
 import { state } from './modules/library';
@@ -19,6 +20,7 @@ import { ContextMenu } from './components/layout/ContextMenu';
 
 const baseRoutes = [
   { path: '/tracks', component: Tracks },
+  { path: '/tracks/:artistName', component: TracksArtist },
   { path: '/albums', component: Albums },
   { path: '/artists', component: Artists },
   { path: '/album-artists', component: AlbumArtists },

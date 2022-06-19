@@ -26,7 +26,7 @@ export const Privacy = () => (
       Germany
     </p>
     <p>
-      If you have any questions or concerns about this, please contact me at{' '}
+      If you have any questions or concerns about this, please contact me at
       <a href='mailto:hey@lenny.fyi'>hey@lenny.fyi</a>
     </p>
   </>
