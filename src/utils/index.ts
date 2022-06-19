@@ -34,3 +34,17 @@ export const getShuffledQueue = () => {
 
   return tracks;
 };
+
+export const insertAfterValInArr = (arr: number[], val: number, reference: number) => {
+  const newArr = arr.slice().filter((v) => v !== val);
+  const index = newArr.indexOf(reference);
+  if (index > -1) newArr.splice(index + 1, 0, val);
+  else newArr.push(val);
+  return newArr;
+};
+
+export const appendToArrayUnique = (arr: number[], val: number) => {
+  const newArr = arr.slice().filter((v) => v !== val);
+  newArr.push(val);
+  return newArr;
+};

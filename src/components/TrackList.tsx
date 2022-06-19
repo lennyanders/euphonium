@@ -1,17 +1,23 @@
 import { Virtualizer } from '@tanstack/virtual-core';
 import { $, $$, If, useComputed, useEffect, ObservableMaybe } from 'voby';
 import { state } from '../modules/library';
-import { play } from '../modules/player';
+import { play, pause, playing$, appendToQueue, playNext } from '../modules/player';
 import { go } from '../router';
 import { CoverImage } from './CoverImage';
 import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 import { Virtual, VirtualProps } from './Virtual/Index';
 
 const onContextMenu = (event: MouseEvent, track: FETrack, trackIds: number[]) => {
-  const items: ContextMenuItem[] = [
-    { title: 'play', action: () => play(track.id, trackIds) },
-    'spacer',
-  ];
+  const isActiveTrack = track.id === state.activeTrackId;
+  const items: ContextMenuItem[] = [];
+  if (isActiveTrack && playing$()) items.push({ title: 'Pause', action: pause });
+  else items.push({ title: 'Play', action: () => play(track.id, trackIds) });
+
+  if (!isActiveTrack) {
+    items.push({ title: 'Play next', action: () => playNext(track.id) });
+    items.push({ title: 'Play last', action: () => appendToQueue(track.id) });
+  }
+  items.push('spacer');
 
   const { artist, albumArtist, albumTitle } = track;
   let newSpacer = false;

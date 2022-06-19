@@ -1,5 +1,11 @@
 import { $, useComputed, useEffect, useEventListener } from 'voby';
-import { getShuffledQueue, requestFileAccess, uw } from '../utils';
+import {
+  appendToArrayUnique,
+  getShuffledQueue,
+  insertAfterValInArr,
+  requestFileAccess,
+  uw,
+} from '../utils';
 import { postMessage } from '../utils/worker';
 import { state } from './library';
 
@@ -90,6 +96,19 @@ export const shuffle = (shuffle: boolean) => {
     state.queue = getShuffledQueue();
   }
   state.shuffle = shuffle;
+};
+
+export const appendToQueue = (trackId: number) => {
+  if (state.queue) state.queue = appendToArrayUnique(state.queue, trackId);
+  if (state.originalQueue) state.originalQueue = appendToArrayUnique(state.originalQueue, trackId);
+};
+
+export const playNext = (trackId: number) => {
+  if (!state.activeTrackId) return appendToQueue(trackId);
+  if (state.queue) state.queue = insertAfterValInArr(state.queue, trackId, state.activeTrackId);
+  if (state.originalQueue) {
+    state.originalQueue = insertAfterValInArr(state.originalQueue, trackId, state.activeTrackId);
+  }
 };
 
 useEventListener(audioEl, 'play', () => playing$(true));

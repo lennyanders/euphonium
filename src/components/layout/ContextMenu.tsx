@@ -81,7 +81,7 @@ export const ContextMenu = () => {
             if (item === 'spacer') {
               return (
                 <li>
-                  <hr class='m-y-1 m-x-.5' />
+                  <hr class='m-y-1 m-x-.5 op-25' />
                 </li>
               );
             }
