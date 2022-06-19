@@ -49,7 +49,10 @@ addEventListener('popstate', ({ state }) => {
 export const Router = ({
   routes,
 }: {
-  routes: { path: string; component: JSX.Child; title?: string }[];
+  routes: (
+    | { path: string; component: JSX.Child; title?: string }
+    | { path: string; redirect: string }
+  )[];
 }) => {
   const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
   return () => {
@@ -62,6 +65,11 @@ export const Router = ({
       updateUrl = false;
     }
     if (!route) return;
+    if ('redirect' in route) {
+      updateUrl = true;
+      updatePage(route.redirect);
+      return;
+    }
 
     _params$(exec(p, route.regex));
     return route.component;

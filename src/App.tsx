@@ -36,7 +36,7 @@ const mobileRoutes = [
 const desktopRoutes = [
   ...baseRoutes,
   { path: 'queue', component: Queue },
-  { path: '*', component: Tracks },
+  { path: '*', redirect: '/tracks' },
 ];
 
 export const App = () => {
