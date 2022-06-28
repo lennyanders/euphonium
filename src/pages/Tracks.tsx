@@ -4,10 +4,16 @@ import { state } from '../modules/library';
 import { Ternary, useComputed } from 'voby';
 
 export const Tracks = () => (
-  <Ternary when={state.tracks}>
+  <Ternary when={state.trackData}>
     <>
       <h1>Tracks</h1>
-      <TrackList trackIds={useComputed(() => state.tracks!)} />
+      <TrackList
+        trackIds={useComputed(() =>
+          Object.values(state.trackData)
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .map((track) => track.id),
+        )}
+      />
     </>
     {/* no tracks */}
     <p>
