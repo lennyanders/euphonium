@@ -92,7 +92,7 @@ type GeneralData = Partial<{
 interface State extends GeneralData {
   trackData: Record<number, FETrack>;
   albumData: Record<string, FEAlbum>;
+  artistData: Record<string, FEArtist>;
   libraryDirectories?: FELibraryDirectory[];
-  artists?: FEArtist[];
   loading?: boolean;
 }

@@ -20,7 +20,7 @@ export type MWME =
   | WME<'setState', { state: State }>
   | WME<'setTrackData', { state: Record<number, FETrack> }>
   | WME<'setAlbumData', { state: Record<string, FEAlbum> }>
-  | WME<'setArtists', { state: FEArtist[] }>
+  | WME<'setArtistData', { state: Record<string, FEArtist> }>
   | WME<'setLibraryDirectories', { state: FELibraryDirectory[] }>
   | WME<'setGeneralData', { state: GeneralData }>
   | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>

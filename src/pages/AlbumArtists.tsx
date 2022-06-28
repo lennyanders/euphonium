@@ -4,12 +4,17 @@ import { RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const AlbumArtists = () => {
-  const albumArtists$ = useComputed(() => state.artists?.filter((artist) => artist.albums.length)!);
+  const albumArtists$ = useComputed(() =>
+    Object.values(state.artistData)
+      .filter((artist) => artist.albums.length)
+      .sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0)
+      .map((artist) => artist.name),
+  );
   return (
     <Ternary when={() => albumArtists$()?.length}>
       <>
         <h1>Album Artists</h1>
-        <ArtistList artists={albumArtists$} />
+        <ArtistList artistIds={albumArtists$} />
       </>
       {/* no album artists */}
       <p>

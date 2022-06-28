@@ -53,15 +53,14 @@ export function albumDataGetter(this: State) {
   return finalAlbumsObject;
 }
 
-export function artistsGetter(this: State) {
+export function artistDataGetter(this: State) {
   const tracks = Object.values(this.trackData);
   const albums = Object.values(this.albumData);
-  if (!tracks.length) return [];
+  if (!tracks.length) return {};
 
-  const artists = [...new Set(tracks.map((track) => track.artist))].sort(
-    (a, b) => (b && a?.localeCompare(b)) || 0,
-  );
-  return artists.map<FEArtist>((artist) => {
+  const artists = [...new Set(tracks.map((track) => track.artist || 'unknown artist'))];
+  const artistObject: Record<string, FEArtist> = {};
+  for (const artist of artists) {
     const artistAlbums = albums
       .filter((album) => album.artist === artist)
       .sort((a, b) => (a.year || 0) - (b.year || 0));
@@ -75,8 +74,8 @@ export function artistsGetter(this: State) {
       (res, album) => res + album.duration,
       sortedSingles.reduce((res, track) => res + track.duration, 0),
     );
-    return {
-      name: artist || 'unknown artist',
+    artistObject[artist] = {
+      name: artist,
       image:
         artistAlbums.find((album) => album.cover)?.cover ||
         sortedSingles.find((track) => track.cover)?.cover,
@@ -88,5 +87,6 @@ export function artistsGetter(this: State) {
       duration,
       durationFormatted: getFormattedTime(duration),
     };
-  });
+  }
+  return artistObject;
 }

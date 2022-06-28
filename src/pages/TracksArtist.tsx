@@ -5,9 +5,7 @@ import { params$, RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const TracksArtist = () => {
-  const artist$ = useComputed(() =>
-    state.artists?.find((artist) => artist.name === params$().artistName),
-  );
+  const artist$ = useComputed(() => state.artistData[params$().artistName!]);
   return (
     <Ternary when={artist$}>
       <>

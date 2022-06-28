@@ -4,10 +4,16 @@ import { state } from '../modules/library';
 import { Ternary, useComputed } from 'voby';
 
 export const Artists = () => (
-  <Ternary when={() => state.artists?.length}>
+  <Ternary when={state.artistData}>
     <>
       <h1>Artists</h1>
-      <ArtistList artists={useComputed(() => state.artists!)} />
+      <ArtistList
+        artistIds={useComputed(() =>
+          Object.values(state.artistData)
+            .sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0)
+            .map((artist) => artist.name),
+        )}
+      />
     </>
     {/* no artists */}
     <p>

@@ -1,5 +1,5 @@
 import $ from 'oby';
-import { albumDataGetter, artistsGetter } from './computedValues';
+import { albumDataGetter, artistDataGetter } from './computedValues';
 import { postMessage, uw } from './utils';
 
 export const partialUpdates$ = $(false);
@@ -10,8 +10,8 @@ export const state = $.store<State>({
   get albumData() {
     return albumDataGetter.apply(this);
   },
-  get artists() {
-    return artistsGetter.apply(this);
+  get artistData() {
+    return artistDataGetter.apply(this);
   },
 });
 
@@ -31,6 +31,6 @@ $.effect(() => {
 });
 
 $.effect(() => {
-  if (!state.artists || !$.sample(partialUpdates$)) return;
-  postMessage({ message: 'setArtists', state: uw(state).artists! });
+  if (!state.artistData || !$.sample(partialUpdates$)) return;
+  postMessage({ message: 'setArtistData', state: uw(state).artistData! });
 });
