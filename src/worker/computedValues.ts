@@ -53,12 +53,6 @@ export function albumDataGetter(this: State) {
   return finalAlbumsObject;
 }
 
-export function albumsGetter(this: State) {
-  return Object.values(this.albumData)
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((album) => `${album.artist}${album.title}`);
-}
-
 export function artistsGetter(this: State) {
   const tracks = Object.values(this.trackData);
   const albums = Object.values(this.albumData);

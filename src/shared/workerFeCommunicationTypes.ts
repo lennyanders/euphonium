@@ -19,7 +19,7 @@ export type WME<T extends string, U extends object = {}> = MessageEvent<U & { me
 export type MWME =
   | WME<'setState', { state: State }>
   | WME<'setTrackData', { state: Record<number, FETrack> }>
-  | WME<'setAlbums', { state: string[] }>
+  | WME<'setAlbumData', { state: Record<string, FEAlbum> }>
   | WME<'setArtists', { state: FEArtist[] }>
   | WME<'setLibraryDirectories', { state: FELibraryDirectory[] }>
   | WME<'setGeneralData', { state: GeneralData }>
