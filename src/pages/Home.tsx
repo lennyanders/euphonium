@@ -4,6 +4,7 @@ import { path$, RouterLink } from '../router';
 type IconLink = { href: string; icon: string; title: string };
 
 const mainLinks: IconLink[] = [
+  { href: '/search', icon: 'i-mdi-search', title: 'Search' },
   { href: '/tracks', icon: 'i-mdi-music-note', title: 'Tracks' },
   { href: '/albums', icon: 'i-mdi-disk', title: 'Albums' },
   { href: '/artists', icon: 'i-mdi-account-multiple-outline', title: 'Artists' },

@@ -17,8 +17,10 @@ import { Router } from './router';
 import { state } from './modules/library';
 import { mainEl$, w1024$ } from './modules/layout';
 import { ContextMenu } from './components/layout/ContextMenu';
+import { Search } from './pages/Search';
 
 const baseRoutes = [
+  { path: '/search', component: Search },
   { path: '/tracks', component: Tracks },
   { path: '/tracks/:artistName', component: TracksArtist },
   { path: '/albums', component: Albums },

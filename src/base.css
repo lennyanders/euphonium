@@ -80,13 +80,18 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input {
   background-color: transparent;
   border: 0;
   padding: 0;
   font: inherit;
   cursor: pointer;
   text-align: inherit;
+}
+
+::-webkit-search-cancel-button {
+  display: none;
 }
 
 ul:where([class]) {
