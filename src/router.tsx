@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useSample, useReadonly } from 'voby';
+import { $, useSample, useReadonly, store } from 'voby';
 
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
@@ -9,8 +9,7 @@ const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   }, {});
 };
 
-const _params$ = $<Record<string, string | null>>({});
-export const params$ = useReadonly(_params$);
+export const params = store<Record<string, string | null>>({});
 const _path$ = $(location.pathname);
 export const path$ = useReadonly(_path$);
 let updateUrl = false;
@@ -75,7 +74,7 @@ export const Router = ({
       return;
     }
 
-    _params$(exec(p, route.regex));
+    Object.assign(params, {}, exec(p, route.regex));
     return route.component;
   };
 };

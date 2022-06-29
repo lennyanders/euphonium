@@ -1,11 +1,11 @@
 import { Ternary, useComputed } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
-import { params$, RouterLink } from '../router';
+import { params, RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const TracksArtist = () => {
-  const artist$ = useComputed(() => state.artistData[params$().artistName!]);
+  const artist$ = useComputed(() => state.artistData[params.artistName!]);
   return (
     <Ternary when={artist$}>
       <>
