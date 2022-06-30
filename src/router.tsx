@@ -1,5 +1,6 @@
 import { parse } from 'regexparam';
-import { $, useSample, useReadonly, store } from 'voby';
+import { $, useSample, useReadonly, store, useBatch, useEffect } from 'voby';
+import { uw } from './utils';
 
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
@@ -8,6 +9,26 @@ const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
     return res;
   }, {});
 };
+
+const getQueryParams = () => {
+  const newQueryParams: Record<string, string> = {};
+  const params = new URLSearchParams(location.search);
+  params.forEach((val, key) => (newQueryParams[key] = val));
+  return newQueryParams;
+};
+export const queryParams = store<Record<string, string>>(getQueryParams());
+const updateQueryParams = () => {
+  useBatch(() => {
+    for (const key in uw(queryParams)) delete queryParams[key];
+    Object.assign(queryParams, getQueryParams());
+  });
+};
+useEffect(() => {
+  const url = new URL(location.href);
+  url.searchParams.forEach((_val, key) => url.searchParams.delete(key));
+  for (const key in queryParams) url.searchParams.set(key, queryParams[key]);
+  if (url.href !== location.href) history.pushState(null, '', url);
+});
 
 export const params = store<Record<string, string | null>>({});
 const _path$ = $(location.pathname);
@@ -48,6 +69,7 @@ export const go = (path: string) => {
 addEventListener('popstate', ({ state }) => {
   scrollY = typeof state?.scrollY === 'number' ? state.scrollY : 0;
   updatePage(location.pathname);
+  updateQueryParams();
 });
 
 export const Router = ({
@@ -64,8 +86,7 @@ export const Router = ({
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
       const url = new URL(location.href);
-      url.pathname = p;
-      history.pushState(null, '', url);
+      history.pushState(null, '', Object.assign(url, { pathname: p, search: '' }));
       updateUrl = false;
     }
     if (!route) return;
@@ -74,7 +95,12 @@ export const Router = ({
       return;
     }
 
-    Object.assign(params, {}, exec(p, route.regex));
+    useBatch(() => {
+      for (const key in uw(params)) delete params[key];
+      Object.assign(params, exec(p, route.regex));
+      updateQueryParams();
+    });
+
     return route.component;
   };
 };

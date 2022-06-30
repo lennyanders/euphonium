@@ -1,9 +1,10 @@
-import { $, If, useComputed, Observable } from 'voby';
+import { $, If, useComputed, Observable, useEffect } from 'voby';
 import { AlbumList } from '../components/AlbumList';
 import { ArtistList } from '../components/ArtistList';
 import { Input } from '../components/Form/Inputs';
 import { TrackList } from '../components/TrackList';
 import { state } from '../modules/library';
+import { queryParams } from '../router';
 
 const Checkbox = ({ label, model }: { label: string; model: Observable<boolean> }) => {
   const id = crypto.randomUUID();
@@ -24,6 +25,12 @@ const Checkbox = ({ label, model }: { label: string; model: Observable<boolean> 
 
 export const Search = () => {
   const query$ = $('');
+  useEffect(() => {
+    query$(queryParams.search || '');
+  });
+  useEffect(() => {
+    queryParams.search = query$();
+  });
   const queryTracks$ = $(true);
   const queryAlbums$ = $(true);
   const queryArtists$ = $(true);
