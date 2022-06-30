@@ -10,12 +10,12 @@ import { VolumeDesktop } from '../Player/Volume';
 
 const Desktop = () => (
   <>
-    <Progress css='p-x-4 p-t-2 p-b-1' />
+    <Progress class='p-x-4 p-t-2 p-b-1' />
     <div class='flex items-center'>
       <div class='flex-1 flex gap-4 p-x-4 truncate'>
         <CoverImage
           src={() => currentTrack$()?.cover!}
-          css='w-12 h-12 rd-1 shrink-0 background-size-125%'
+          class='w-12 h-12 rd-1 shrink-0 background-size-125%'
         />
         <div class='truncate'>
           {() => currentTrack$()?.title}
@@ -45,7 +45,7 @@ const Mobile = () => (
   <>
     <If when={() => path$() !== '/player' && currentTrack$()}>
       <div class='w-64 flex items-center'>
-        <PlayPause css='m-4' />
+        <PlayPause class='m-4' />
         <RouterLink href='/player' class='flex-1 grid'>
           <span class='truncate'>{() => currentTrack$()?.title}</span>
           <small class='truncate block'>{() => currentTrack$()?.artist}</small>

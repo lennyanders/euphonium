@@ -28,7 +28,7 @@ export const Player = () => {
           ]}
           mobileComp={HeroImageMobilePlayer}
         />
-        <Progress bg='bg-dark-800' css='m-t-2' />
+        <Progress bg='bg-dark-800' class='m-t-2' />
         <div class='flex items-center'>
           <div class='flex-1'>
             <button

@@ -14,16 +14,15 @@ export const HeroImageMobile = (props: HeroImageProps) => {
     >
       <CoverImage
         src={props.image}
-        css={() =>
-          `w-100% transition-transform duration-250 ${
-            fullImage$() ? 'translate-y--8' : 'translate-y-15vw'
-          }`
-        }
+        class={[
+          'w-100% transition-transform duration-250',
+          () => (fullImage$() ? 'translate-y--8' : 'translate-y-15vw'),
+        ]}
       />
       <div
         class={[
           'transition-opacity duration-250 absolute left-3 right-3 bottom-3 flex flex-col items-start gap-1',
-          () => fullImage$() && 'opacity-0',
+          { 'opacity-0': fullImage$ },
         ]}
       >
         <span class='p-x-1 bg-black:90 rd-1 max-w-100% truncate'>{props.title}</span>

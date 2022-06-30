@@ -5,9 +5,9 @@ interface Props {
   val: () => number;
   seek: (newVal: number) => void;
   bg?: string;
-  css?: string;
+  class?: JSX.Class;
 }
-export const Range = ({ max, val, seek, bg = 'bg-dark-400', css = 'flex-1' }: Props) => (
+export const Range = ({ max, val, seek, bg = 'bg-dark-400', class: css = 'flex-1' }: Props) => (
   <div
     class={[
       'relative h-2 hover:var-thumb-size-1.5 focus-within:var-thumb-size-1.5 color-amber-300',

@@ -133,7 +133,7 @@ export const TrackList = ({
             </If>
             <CoverImage
               src={() => track().cover!}
-              css='w-12 h-12 rd-1 shrink-0 background-size-125%'
+              class='w-12 h-12 rd-1 shrink-0 background-size-125%'
             />
             <div class='break-all truncate'>
               {() => track().title}

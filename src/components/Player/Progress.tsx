@@ -3,7 +3,7 @@ import { currentTime$, currentTrack$, seek } from '../../modules/player';
 import { getFormattedTime } from '../../shared/utils';
 import { useComputed } from 'voby';
 
-export const Progress = ({ bg, css }: { bg?: string; css?: string }) => (
+export const Progress = ({ bg, class: css }: { bg?: string; class?: JSX.Class }) => (
   <div class={['flex items-center gap-4', css]}>
     {() => getFormattedTime(currentTime$())}
     <Range

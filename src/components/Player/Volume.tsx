@@ -15,7 +15,7 @@ export const Slider = ({ css, bg }: { css?: string; bg?: string }) => (
     val={() => (state.volume !== undefined ? state.volume : 1)}
     seek={(newVal) => ((state.volume = newVal), (state.mute = false))}
     bg={bg}
-    css={css}
+    class={css}
   />
 );
 
