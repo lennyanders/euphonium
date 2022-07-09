@@ -1,7 +1,7 @@
-import { $$, ObservableMaybe } from 'voby';
+import { $$, FunctionMaybe } from 'voby';
 
 interface Props {
-  max: ObservableMaybe<number>;
+  max: FunctionMaybe<number>;
   val: () => number;
   seek: (newVal: number) => void;
   bg?: string;

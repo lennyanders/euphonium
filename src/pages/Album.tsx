@@ -27,9 +27,9 @@ export const Album = () => {
           ]}
         />
         <TrackList
-          trackIds={useComputed(() => album$()?.tracks)}
+          trackIds={() => album$()?.tracks}
           showNumber
-          showDiskOnTracks={useComputed(() => album$()?.showDiskOnTracks)}
+          showDiskOnTracks={() => album$()?.showDiskOnTracks}
         />
       </>
       {/* no album */}

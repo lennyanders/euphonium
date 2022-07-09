@@ -71,21 +71,21 @@ export const Search = () => {
       <If when={queryTracks$}>
         <h2>Tracks</h2>
         <TrackList
-          trackIds={useComputed(() =>
+          trackIds={() =>
             tracks$()
               .filter(
                 (track) =>
                   track.title.toLowerCase().includes(lowerQuery$()) ||
                   track.artist?.toLowerCase().includes(lowerQuery$()),
               )
-              .map((track) => track.id),
-          )}
+              .map((track) => track.id)
+          }
         />
       </If>
       <If when={queryAlbums$}>
         <h2>Albums</h2>
         <AlbumList
-          albumIds={useComputed(() =>
+          albumIds={() =>
             albums$()
               .filter(
                 (album) =>
@@ -93,18 +93,18 @@ export const Search = () => {
                   album.artist.toLowerCase().includes(lowerQuery$()) ||
                   album.year?.toString() === lowerQuery$(),
               )
-              .map((album) => `${album.artist}${album.title}`),
-          )}
+              .map((album) => `${album.artist}${album.title}`)
+          }
         />
       </If>
       <If when={queryArtists$}>
         <h2>Artists</h2>
         <ArtistList
-          artistIds={useComputed(() =>
+          artistIds={() =>
             artists$()
               .filter((artist) => artist.name.toLowerCase().includes(lowerQuery$()))
-              .map((artist) => artist.name),
-          )}
+              .map((artist) => artist.name)
+          }
         />
       </If>
     </>
