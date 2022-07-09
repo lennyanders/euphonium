@@ -1,18 +1,18 @@
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
 import { state } from '../modules/library';
-import { Ternary } from 'voby';
+import { Ternary, useComputed } from 'voby';
 
 export const Tracks = () => (
   <Ternary when={state.trackData}>
     <>
       <h1>Tracks</h1>
       <TrackList
-        trackIds={() =>
+        trackIds={useComputed(() =>
           Object.values(state.trackData)
             .sort((a, b) => a.title.localeCompare(b.title))
-            .map((track) => track.id)
-        }
+            .map((track) => track.id),
+        )}
       />
     </>
     {/* no tracks */}

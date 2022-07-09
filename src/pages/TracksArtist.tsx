@@ -26,7 +26,7 @@ export const TracksArtist = () => {
             </>,
           ]}
         />
-        <TrackList trackIds={() => artist$()?.tracks!} />
+        <TrackList trackIds={useComputed(() => artist$()?.tracks!)} />
       </>
       {/* no artist */}
       <p>

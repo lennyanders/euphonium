@@ -1,18 +1,18 @@
 import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
 import { state } from '../modules/library';
-import { Ternary } from 'voby';
+import { Ternary, useComputed } from 'voby';
 
 export const Artists = () => (
   <Ternary when={state.artistData}>
     <>
       <h1>Artists</h1>
       <ArtistList
-        artistIds={() =>
+        artistIds={useComputed(() =>
           Object.values(state.artistData)
             .sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0)
-            .map((artist) => artist.name)
-        }
+            .map((artist) => artist.name),
+        )}
       />
     </>
     {/* no artists */}

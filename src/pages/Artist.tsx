@@ -35,11 +35,11 @@ export const Artist = () => {
             </div>
           </RouterLink>
           <h2>Albums ({() => artist$()?.albums.length})</h2>
-          <AlbumList albumIds={() => artist$()?.albums!} />
+          <AlbumList albumIds={useComputed(() => artist$()?.albums!)} />
         </If>
         <If when={() => artist$()?.singles.length}>
           <h2>Singles ({() => artist$()?.singles.length})</h2>
-          <TrackList trackIds={() => artist$()?.singles!} />
+          <TrackList trackIds={useComputed(() => artist$()?.singles!)} />
         </If>
       </>
       {/* no artist */}
