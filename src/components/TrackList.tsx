@@ -128,7 +128,7 @@ export const TrackList = ({
                 class='shrink-0'
                 style={{ width: `${$$(trackIds).length.toString().length}ch` }}
               >
-                {index + 1}
+                {() => index() + 1}
               </span>
             </If>
             <CoverImage

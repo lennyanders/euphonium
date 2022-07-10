@@ -1,4 +1,4 @@
-import { $, $$, useBatch, useEffect, useCleanup, For, useSample } from 'voby';
+import { $, $$, useBatch, useEffect, useCleanup, useSample, ForValue } from 'voby';
 import { Virtualizer } from '@tanstack/virtual-core';
 import { baseOptions, getVirtualItemToStart, getVirtualItems, SharedProps } from './shared';
 
@@ -40,20 +40,20 @@ export const Virtual = <T,>(options: VirtualProps<T>) => {
 
   return (
     <ul class={options.ulClass} style={{ height: height$, position: 'relative' }}>
-      <For values={items$}>
+      <ForValue values={items$}>
         {(index) => (
           <li
             class={options.liClass}
             style={{
-              transform: () => `translateY(${itemToStart$()[index]}px) `,
+              transform: () => `translateY(${itemToStart$()[index()]}px) `,
               position: 'absolute',
               width: '100%',
             }}
           >
-            {options.children(() => $$(options.items)[index], index)}
+            {options.children(() => $$(options.items)[index()], index)}
           </li>
         )}
-      </For>
+      </ForValue>
     </ul>
   );
 };

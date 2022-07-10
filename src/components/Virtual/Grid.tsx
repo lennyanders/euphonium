@@ -1,4 +1,15 @@
-import { $, For, Observable, If, useBatch, useCleanup, useEffect, useSample, $$ } from 'voby';
+import {
+  $,
+  Observable,
+  If,
+  useBatch,
+  useCleanup,
+  useEffect,
+  useSample,
+  $$,
+  ForValue,
+  useComputed,
+} from 'voby';
 import { Virtualizer } from '@tanstack/virtual-core';
 import { baseOptions, getVirtualItems, getVirtualItemToStart, SharedProps } from './shared';
 
@@ -58,32 +69,33 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
 
   return (
     <ul class={options.ulClass} style={{ height: height$, position: 'relative' }}>
-      <For values={items$}>
+      <ForValue values={items$}>
         {(index) => (
-          <For values={() => Array.from({ length: itemsPerRow$() }).map((_, i) => i)}>
-            {(colIndex) => (
-              <If when={() => $$(options.items)[index * itemsPerRow$() + colIndex]}>
-                <li
-                  class={options.liClass}
-                  style={{
-                    width: itemWidth$,
-                    transform: () =>
-                      `translateY(${itemsToStart$()[index]}px) translateX(${
-                        itemWidth$() * colIndex
-                      }px)`,
-                    position: 'absolute',
-                  }}
-                >
-                  {options.children(
-                    () => $$(options.items)[index * itemsPerRow$() + colIndex],
-                    index * itemsPerRow$() + colIndex,
-                  )}
-                </li>
-              </If>
-            )}
-          </For>
+          <ForValue values={() => Array.from({ length: itemsPerRow$() }).map((_, i) => i)}>
+            {(colIndex) => {
+              const index$ = useComputed(() => index() * itemsPerRow$() + colIndex());
+              const item$ = useComputed(() => $$(options.items)[index$()]);
+              return (
+                <If when={item$}>
+                  <li
+                    class={options.liClass}
+                    style={{
+                      width: itemWidth$,
+                      transform: () =>
+                        `translateY(${itemsToStart$()[index()]}px) translateX(${
+                          itemWidth$() * colIndex()
+                        }px)`,
+                      position: 'absolute',
+                    }}
+                  >
+                    {options.children(item$, index$)}
+                  </li>
+                </If>
+              );
+            }}
+          </ForValue>
         )}
-      </For>
+      </ForValue>
     </ul>
   );
 };
