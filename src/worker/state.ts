@@ -16,21 +16,21 @@ export const state = $.store<State>({
 });
 
 $.effect(() => {
-  if (!state.libraryDirectories || !$.sample(partialUpdates$)) return;
+  if (!state.libraryDirectories || !$.untrack(partialUpdates$)) return;
   postMessage({ message: 'setLibraryDirectories', state: uw(state).libraryDirectories! });
 });
 
 $.effect(() => {
-  if (!state.trackData || !$.sample(partialUpdates$)) return;
+  if (!state.trackData || !$.untrack(partialUpdates$)) return;
   postMessage({ message: 'setTrackData', state: uw(state).trackData! });
 });
 
 $.effect(() => {
-  if (!state.albumData || !$.sample(partialUpdates$)) return;
+  if (!state.albumData || !$.untrack(partialUpdates$)) return;
   postMessage({ message: 'setAlbumData', state: uw(state).albumData! });
 });
 
 $.effect(() => {
-  if (!state.artistData || !$.sample(partialUpdates$)) return;
+  if (!state.artistData || !$.untrack(partialUpdates$)) return;
   postMessage({ message: 'setArtistData', state: uw(state).artistData! });
 });
