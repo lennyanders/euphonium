@@ -1,4 +1,4 @@
-import { $$, ObservableMaybe, useComputed } from 'voby';
+import { $$, ObservableMaybe, useMemo } from 'voby';
 import { mainElWidth$ } from '../modules/layout';
 import { state } from '../modules/library';
 import { RouterLink } from '../router';
@@ -6,7 +6,7 @@ import { CoverImage } from './CoverImage';
 import { VirtualGrid } from './Virtual/Grid';
 
 export const ArtistList = ({ artistIds }: { artistIds: ObservableMaybe<string[]> }) => {
-  const artists$ = useComputed(() => $$(artistIds).map((id) => state.artistData[id]));
+  const artists$ = useMemo(() => $$(artistIds).map((id) => state.artistData[id]));
   return (
     <VirtualGrid
       items={artists$}

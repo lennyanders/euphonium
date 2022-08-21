@@ -1,4 +1,4 @@
-import { $, $$, useBatch, useEffect, useCleanup, useSample, ForValue } from 'voby';
+import { $, $$, batch, useEffect, useCleanup, untrack, ForValue } from 'voby';
 import { Virtualizer } from '@tanstack/virtual-core';
 import { baseOptions, getVirtualItemToStart, getVirtualItems, SharedProps } from './shared';
 
@@ -19,7 +19,7 @@ export const Virtual = <T,>(options: VirtualProps<T>) => {
         estimateSize: (index) => options.size($$(options.items)[index]),
         onChange: () => {
           const vItems = virtualizer.getVirtualItems();
-          useBatch(() => {
+          batch(() => {
             items$(getVirtualItems(vItems));
             itemToStart$(getVirtualItemToStart(vItems));
           });
@@ -35,7 +35,7 @@ export const Virtual = <T,>(options: VirtualProps<T>) => {
   });
   useEffect(() => {
     items$();
-    useSample(virtualizer$)?._willUpdate();
+    untrack(virtualizer$)?._willUpdate();
   });
 
   return (

@@ -1,4 +1,4 @@
-import { If, Ternary, useComputed } from 'voby';
+import { If, Ternary, useMemo } from 'voby';
 import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
@@ -6,7 +6,7 @@ import { params, RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const Artist = () => {
-  const artist$ = useComputed(() => state.artistData[params.artistName!]);
+  const artist$ = useMemo(() => state.artistData[params.artistName!]);
   return (
     <Ternary when={artist$}>
       <>
@@ -35,11 +35,11 @@ export const Artist = () => {
             </div>
           </RouterLink>
           <h2>Albums ({() => artist$()?.albums.length})</h2>
-          <AlbumList albumIds={useComputed(() => artist$()?.albums!)} />
+          <AlbumList albumIds={useMemo(() => artist$()?.albums!)} />
         </If>
         <If when={() => artist$()?.singles.length}>
           <h2>Singles ({() => artist$()?.singles.length})</h2>
-          <TrackList trackIds={useComputed(() => artist$()?.singles!)} />
+          <TrackList trackIds={useMemo(() => artist$()?.singles!)} />
         </If>
       </>
       {/* no artist */}

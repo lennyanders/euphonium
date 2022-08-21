@@ -1,4 +1,4 @@
-import { $, If, useComputed } from 'voby';
+import { $, If, useMemo } from 'voby';
 import { TrackList } from '../components/TrackList';
 import { RouterLink } from '../router';
 import { currentTrack$ } from '../modules/player';
@@ -11,9 +11,7 @@ import { state } from '../modules/library';
 
 export const Player = () => {
   const editVolume$ = $(false);
-  const volumeControlsClasses$ = useComputed(
-    () => !editVolume$() && 'opacity-0 pointer-events-none',
-  );
+  const volumeControlsClasses$ = useMemo(() => !editVolume$() && 'opacity-0 pointer-events-none');
 
   return (
     <If when={currentTrack$}>
@@ -56,7 +54,7 @@ export const Player = () => {
         </div>
         Queue
       </div>
-      <TrackList trackIds={useComputed(() => state.queue || [])} stickToActiveTrack showIndex />
+      <TrackList trackIds={useMemo(() => state.queue || [])} stickToActiveTrack showIndex />
     </If>
   );
 };

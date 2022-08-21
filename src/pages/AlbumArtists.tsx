@@ -1,10 +1,10 @@
-import { Ternary, useComputed } from 'voby';
+import { Ternary, useMemo } from 'voby';
 import { ArtistList } from '../components/ArtistList';
 import { RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const AlbumArtists = () => {
-  const albumArtists$ = useComputed(() =>
+  const albumArtists$ = useMemo(() =>
     Object.values(state.artistData)
       .filter((artist) => artist.albums.length)
       .sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0)

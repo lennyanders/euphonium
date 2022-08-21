@@ -2,13 +2,13 @@ import {
   $,
   Observable,
   If,
-  useBatch,
+  batch,
   useCleanup,
   useEffect,
-  useSample,
+  untrack,
   $$,
   ForValue,
-  useComputed,
+  useMemo,
 } from 'voby';
 import { Virtualizer } from '@tanstack/virtual-core';
 import { baseOptions, getVirtualItems, getVirtualItemToStart, SharedProps } from './shared';
@@ -35,7 +35,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
     const itemWidth = contentWidth / itemsPerRow;
     const itemHeight = options.size(itemWidth);
 
-    useBatch(() => {
+    batch(() => {
       const virtualizer = virtualizer$(
         new Virtualizer<Window, any>({
           ...baseOptions,
@@ -44,7 +44,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
           estimateSize: () => itemHeight,
           onChange: (virtualizer) => {
             const vItems = virtualizer.getVirtualItems();
-            useBatch(() => {
+            batch(() => {
               items$(getVirtualItems(vItems));
               itemsToStart$(getVirtualItemToStart(vItems));
             });
@@ -52,7 +52,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
         }),
       )!;
       const vItems = virtualizer.getVirtualItems();
-      useBatch(() => {
+      batch(() => {
         itemWidth$(itemWidth);
         itemsPerRow$(itemsPerRow);
         height$(virtualizer.getTotalSize());
@@ -64,7 +64,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
   });
   useEffect(() => {
     items$();
-    useSample(virtualizer$)?._willUpdate();
+    untrack(virtualizer$)?._willUpdate();
   });
 
   return (
@@ -73,8 +73,8 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
         {(index) => (
           <ForValue values={() => Array.from({ length: itemsPerRow$() }).map((_, i) => i)}>
             {(colIndex) => {
-              const index$ = useComputed(() => index() * itemsPerRow$() + colIndex());
-              const item$ = useComputed(() => $$(options.items)[index$()]);
+              const index$ = useMemo(() => index() * itemsPerRow$() + colIndex());
+              const item$ = useMemo(() => $$(options.items)[index$()]);
               return (
                 <If when={item$}>
                   <li

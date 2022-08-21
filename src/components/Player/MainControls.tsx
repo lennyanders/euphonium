@@ -1,9 +1,9 @@
-import { useComputed } from 'voby';
+import { useMemo } from 'voby';
 import { state } from '../../modules/library';
 import { go, isFirst$, isLast$, shuffle } from '../../modules/player';
 import { PlayPause } from './PlayPause';
 
-const loopIcon$ = useComputed(() => {
+const loopIcon$ = useMemo(() => {
   if (state.loop === 'track') return 'i-mdi-repeat-once';
   if (state.loop === 'queue') return 'i-mdi-repeat';
   return 'i-mdi-repeat-off op-50';
@@ -15,7 +15,7 @@ const getNextLoopMode = (): typeof state.loop => {
   return 'queue';
 };
 
-const isLoop$ = useComputed(() => !!state.loop && state.loop !== 'none');
+const isLoop$ = useMemo(() => !!state.loop && state.loop !== 'none');
 
 export const MainControls = () => (
   <div class='p-4 flex gap-4 justify-center items-center'>

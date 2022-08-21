@@ -1,5 +1,5 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
-import { $, For, If, useBatch, useEffect, useEventListener } from 'voby';
+import { $, For, If, batch, useEffect, useEventListener } from 'voby';
 
 export type ContextMenuItem = 'spacer' | { title: string; action: () => void };
 
@@ -13,7 +13,7 @@ export const showContextMenu = (event: MouseEvent, items: ContextMenuItem[]) => 
   if (!items.length) return;
   event.preventDefault();
   event.stopPropagation();
-  useBatch(() => {
+  batch(() => {
     visibleTransition$(true);
     mousePosX$(event.x);
     mousePosY$(event.y);
@@ -54,7 +54,7 @@ export const ContextMenu = () => {
       placement: 'right-start',
       middleware: [offset(5), flip(), shift()],
     }).then(({ x, y }) => {
-      useBatch(() => {
+      batch(() => {
         menuPosX$(x);
         menuPosY$(y);
       });

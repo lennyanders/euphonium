@@ -1,5 +1,5 @@
 import { Virtualizer } from '@tanstack/virtual-core';
-import { $, $$, If, useComputed, useEffect, ObservableMaybe } from 'voby';
+import { $, $$, If, useMemo, useEffect, ObservableMaybe } from 'voby';
 import { state } from '../modules/library';
 import { play, pause, playing$, appendToQueue, playNext } from '../modules/player';
 import { go } from '../router';
@@ -81,7 +81,7 @@ export const TrackList = ({
   stickToActiveTrack?: boolean;
 }) => {
   const props: Omit<VirtualProps<FETrack>, 'children'> = {
-    items: useComputed(() => $$(trackIds).map((id) => state.trackData[id])),
+    items: useMemo(() => $$(trackIds).map((id) => state.trackData[id])),
     overscan: 25,
     size: (track) => ($$(showDiskOnTracks)?.includes(track.id) ? 80 : 56),
     ulClass: 'm--1',

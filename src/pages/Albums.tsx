@@ -1,14 +1,14 @@
 import { AlbumList } from '../components/AlbumList';
 import { RouterLink } from '../router';
 import { state } from '../modules/library';
-import { Ternary, useComputed } from 'voby';
+import { Ternary, useMemo } from 'voby';
 
 export const Albums = () => (
   <Ternary when={state.albumData}>
     <>
       <h1>Albums</h1>
       <AlbumList
-        albumIds={useComputed(() =>
+        albumIds={useMemo(() =>
           Object.values(state.albumData)
             .sort((a, b) => a.title.localeCompare(b.title))
             .map((album) => `${album.artist}${album.title}`),

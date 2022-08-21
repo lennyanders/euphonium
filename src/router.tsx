@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useSample, useReadonly, store, useBatch, useEffect } from 'voby';
+import { $, useReadonly, store, batch, useEffect } from 'voby';
 import { uw } from './utils';
 
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
@@ -18,7 +18,7 @@ const getQueryParams = () => {
 };
 export const queryParams = store<Record<string, string>>(getQueryParams());
 const updateQueryParams = () => {
-  useBatch(() => {
+  batch(() => {
     for (const key in uw(queryParams)) delete queryParams[key];
     Object.assign(queryParams, getQueryParams());
   });
@@ -95,7 +95,7 @@ export const Router = ({
       return;
     }
 
-    useBatch(() => {
+    batch(() => {
       for (const key in uw(params)) delete params[key];
       Object.assign(params, exec(p, route.regex));
       updateQueryParams();
@@ -108,7 +108,7 @@ export const Router = ({
 export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   const el$ = $<HTMLAnchorElement>();
   props.onClick = (event: MouseEvent) => {
-    const anchor = useSample(el$);
+    const anchor = el$();
     if (!anchor || anchor.origin !== location.origin) return;
 
     event.preventDefault();

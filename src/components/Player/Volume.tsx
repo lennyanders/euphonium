@@ -1,8 +1,8 @@
-import { useComputed } from 'voby';
+import { useMemo } from 'voby';
 import { state } from '../../modules/library';
 import { Range } from '../Player/Range';
 
-export const volumeIcon$ = useComputed(() => {
+export const volumeIcon$ = useMemo(() => {
   if (state.mute) return 'i-mdi-volume-mute';
   if (state.volume === undefined || state.volume > 0.66) return 'i-mdi-volume';
   if (state.volume > 0.33) return 'i-mdi-volume-medium';

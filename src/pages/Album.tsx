@@ -1,11 +1,11 @@
-import { If, Ternary, useComputed } from 'voby';
+import { If, Ternary, useMemo } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { params, RouterLink } from '../router';
 import { state } from '../modules/library';
 
 export const Album = () => {
-  const album$ = useComputed(() => state.albumData[`${params.artist}${params.albumTitle}`]);
+  const album$ = useMemo(() => state.albumData[`${params.artist}${params.albumTitle}`]);
   return (
     <Ternary when={album$}>
       <>
@@ -27,9 +27,9 @@ export const Album = () => {
           ]}
         />
         <TrackList
-          trackIds={useComputed(() => album$()?.tracks)}
+          trackIds={useMemo(() => album$()?.tracks)}
           showNumber
-          showDiskOnTracks={useComputed(() => album$()?.showDiskOnTracks)}
+          showDiskOnTracks={useMemo(() => album$()?.showDiskOnTracks)}
         />
       </>
       {/* no album */}

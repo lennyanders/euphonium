@@ -1,4 +1,4 @@
-import { $, If, useComputed, Observable, useEffect } from 'voby';
+import { $, If, useMemo, Observable, useEffect } from 'voby';
 import { AlbumList } from '../components/AlbumList';
 import { ArtistList } from '../components/ArtistList';
 import { Input } from '../components/Form/Inputs';
@@ -34,15 +34,15 @@ export const Search = () => {
   const queryTracks$ = $(true);
   const queryAlbums$ = $(true);
   const queryArtists$ = $(true);
-  const lowerQuery$ = useComputed(() => query$().toLowerCase());
+  const lowerQuery$ = useMemo(() => query$().toLowerCase());
 
-  const tracks$ = useComputed(() =>
+  const tracks$ = useMemo(() =>
     Object.values(state.trackData).sort((a, b) => a.title.localeCompare(b.title)),
   );
-  const albums$ = useComputed(() =>
+  const albums$ = useMemo(() =>
     Object.values(state.albumData).sort((a, b) => a.title.localeCompare(b.title)),
   );
-  const artists$ = useComputed(() =>
+  const artists$ = useMemo(() =>
     Object.values(state.artistData).sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
   );
 
@@ -71,7 +71,7 @@ export const Search = () => {
       <If when={queryTracks$}>
         <h2>Tracks</h2>
         <TrackList
-          trackIds={useComputed(() =>
+          trackIds={useMemo(() =>
             tracks$()
               .filter(
                 (track) =>
@@ -85,7 +85,7 @@ export const Search = () => {
       <If when={queryAlbums$}>
         <h2>Albums</h2>
         <AlbumList
-          albumIds={useComputed(() =>
+          albumIds={useMemo(() =>
             albums$()
               .filter(
                 (album) =>
@@ -100,7 +100,7 @@ export const Search = () => {
       <If when={queryArtists$}>
         <h2>Artists</h2>
         <ArtistList
-          artistIds={useComputed(() =>
+          artistIds={useMemo(() =>
             artists$()
               .filter((artist) => artist.name.toLowerCase().includes(lowerQuery$()))
               .map((artist) => artist.name),
