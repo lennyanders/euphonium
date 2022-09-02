@@ -1,6 +1,6 @@
 import { AlbumList } from '../components/AlbumList';
 import { RouterLink } from '../router';
-import { state } from '../modules/library';
+import { albumsSortedByTitle$, state } from '../modules/library';
 import { Ternary, useMemo } from 'voby';
 
 export const Albums = () => (
@@ -9,9 +9,7 @@ export const Albums = () => (
       <h1>Albums</h1>
       <AlbumList
         albumIds={useMemo(() =>
-          Object.values(state.albumData)
-            .sort((a, b) => a.title.localeCompare(b.title))
-            .map((album) => `${album.artist}${album.title}`),
+          albumsSortedByTitle$().map((album) => `${album.artist}${album.title}`),
         )}
       />
     </>

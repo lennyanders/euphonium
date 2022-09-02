@@ -3,7 +3,11 @@ import { AlbumList } from '../components/AlbumList';
 import { ArtistList } from '../components/ArtistList';
 import { Input } from '../components/Form/Inputs';
 import { TrackList } from '../components/TrackList';
-import { state } from '../modules/library';
+import {
+  albumsSortedByTitle$,
+  artistsSortedByName$,
+  tracksSortedByTitle$,
+} from '../modules/library';
 import { queryParams } from '../router';
 
 const Checkbox = ({ label, model }: { label: string; model: Observable<boolean> }) => {
@@ -36,16 +40,6 @@ export const Search = () => {
   const queryArtists$ = $(true);
   const lowerQuery$ = useMemo(() => query$().toLowerCase());
 
-  const tracks$ = useMemo(() =>
-    Object.values(state.trackData).sort((a, b) => a.title.localeCompare(b.title)),
-  );
-  const albums$ = useMemo(() =>
-    Object.values(state.albumData).sort((a, b) => a.title.localeCompare(b.title)),
-  );
-  const artists$ = useMemo(() =>
-    Object.values(state.artistData).sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
-  );
-
   return (
     <>
       <h1>Search</h1>
@@ -72,7 +66,7 @@ export const Search = () => {
         <h2>Tracks</h2>
         <TrackList
           trackIds={useMemo(() =>
-            tracks$()
+            tracksSortedByTitle$()
               .filter(
                 (track) =>
                   track.title.toLowerCase().includes(lowerQuery$()) ||
@@ -86,7 +80,7 @@ export const Search = () => {
         <h2>Albums</h2>
         <AlbumList
           albumIds={useMemo(() =>
-            albums$()
+            albumsSortedByTitle$()
               .filter(
                 (album) =>
                   album.title.toLowerCase().includes(lowerQuery$()) ||
@@ -101,7 +95,7 @@ export const Search = () => {
         <h2>Artists</h2>
         <ArtistList
           artistIds={useMemo(() =>
-            artists$()
+            artistsSortedByName$()
               .filter((artist) => artist.name.toLowerCase().includes(lowerQuery$()))
               .map((artist) => artist.name),
           )}
