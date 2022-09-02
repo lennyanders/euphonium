@@ -113,10 +113,10 @@ export const Search = () => {
         <ArtistList
           artistIds={useMemo(() =>
             artistsSortedByName$()
-              .filter((artist) =>
-                artist.name.toLowerCase().includes(lowerQuery$()) && queryOnlyAlbumArtists$()
-                  ? artist.albums.length
-                  : true,
+              .filter(
+                (artist) =>
+                  artist.name.toLowerCase().includes(lowerQuery$()) &&
+                  (queryOnlyAlbumArtists$() ? artist.albums.length : true),
               )
               .map((artist) => artist.name),
           )}
