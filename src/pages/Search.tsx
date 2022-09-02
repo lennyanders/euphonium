@@ -50,6 +50,7 @@ export const Search = () => {
   const queryTracks$ = syncQueryParamBool('tracks', true);
   const queryAlbums$ = syncQueryParamBool('albums', true);
   const queryArtists$ = syncQueryParamBool('artists', true);
+  const queryOnlyAlbumArtists$ = syncQueryParamBool('onlyAlbumArtists', false);
   const lowerQuery$ = useMemo(() => query$().toLowerCase());
 
   return (
@@ -73,6 +74,7 @@ export const Search = () => {
         <Checkbox label='Tracks' model={queryTracks$} />
         <Checkbox label='Albums' model={queryAlbums$} />
         <Checkbox label='Artists' model={queryArtists$} />
+        <Checkbox label='Only album artists' model={queryOnlyAlbumArtists$} />
       </div>
       <If when={queryTracks$}>
         <h2>Tracks</h2>
@@ -108,7 +110,11 @@ export const Search = () => {
         <ArtistList
           artistIds={useMemo(() =>
             artistsSortedByName$()
-              .filter((artist) => artist.name.toLowerCase().includes(lowerQuery$()))
+              .filter((artist) =>
+                artist.name.toLowerCase().includes(lowerQuery$()) && queryOnlyAlbumArtists$()
+                  ? artist.albums.length
+                  : true,
+              )
               .map((artist) => artist.name),
           )}
         />
