@@ -1,5 +1,6 @@
 import $ from 'oby';
-import { postMessage, uw } from './utils';
+
+import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 import { getDatabase } from './database';
 import {
   getFileHandlesFromRootDirectories,
@@ -8,11 +9,11 @@ import {
   getDirectoryRelation,
   getTrack,
 } from './files';
-import { fileHandleIsCover } from './files/utils';
-import { getCover } from './files/getCover';
 import { beToFETrack } from './files/converters';
+import { getCover } from './files/getCover';
+import { fileHandleIsCover } from './files/utils';
 import { partialUpdates$, state } from './state';
-import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
+import { postMessage, uw } from './utils';
 
 const getDbData = async () => {
   const database = await getDatabase();

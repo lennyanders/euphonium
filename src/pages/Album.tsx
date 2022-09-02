@@ -1,8 +1,9 @@
 import { If, Ternary, useMemo } from 'voby';
+
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
-import { params, RouterLink } from '../router';
 import { state } from '../modules/library';
+import { params, RouterLink } from '../router';
 
 export const Album = () => {
   const album$ = useMemo(() => state.albumData[`${params.artist}${params.albumTitle}`]);

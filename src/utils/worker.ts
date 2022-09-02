@@ -1,5 +1,5 @@
-import MyWorker from '../worker?worker';
 import { MWME, WWME } from '../shared/workerFeCommunicationTypes';
+import MyWorker from '../worker?worker';
 
 export const worker = new MyWorker();
 

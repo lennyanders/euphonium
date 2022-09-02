@@ -1,8 +1,8 @@
-import { defineConfig } from 'unocss';
+import presetIcons from '@unocss/preset-icons';
 import presetUno from '@unocss/preset-uno';
 import presetFonts from '@unocss/preset-web-fonts';
-import presetIcons from '@unocss/preset-icons';
 import transformerVariantGroup from '@unocss/transformer-variant-group';
+import { defineConfig } from 'unocss';
 
 export default defineConfig({
   presets: [

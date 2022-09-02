@@ -1,5 +1,6 @@
-import { $, $$, batch, useEffect, useCleanup, untrack, ForValue } from 'voby';
 import { Virtualizer } from '@tanstack/virtual-core';
+import { $, $$, batch, useEffect, useCleanup, untrack, ForValue } from 'voby';
+
 import { baseOptions, getVirtualItemToStart, getVirtualItems, SharedProps } from './shared';
 
 export interface VirtualProps<T> extends SharedProps<T> {

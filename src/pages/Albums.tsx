@@ -1,7 +1,8 @@
-import { AlbumList } from '../components/AlbumList';
-import { RouterLink } from '../router';
-import { albumsSortedByTitle$, state } from '../modules/library';
 import { Ternary, useMemo } from 'voby';
+
+import { AlbumList } from '../components/AlbumList';
+import { albumsSortedByTitle$, state } from '../modules/library';
+import { RouterLink } from '../router';
 
 export const Albums = () => (
   <Ternary when={state.albumData}>

@@ -1,7 +1,8 @@
-import { TrackList } from '../components/TrackList';
-import { RouterLink } from '../router';
-import { state, tracksSortedByTitle$ } from '../modules/library';
 import { Ternary, useMemo } from 'voby';
+
+import { TrackList } from '../components/TrackList';
+import { state, tracksSortedByTitle$ } from '../modules/library';
+import { RouterLink } from '../router';
 
 export const Tracks = () => (
   <Ternary when={state.trackData}>

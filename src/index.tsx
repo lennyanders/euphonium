@@ -3,12 +3,13 @@ import './base.css';
 import 'uno.css';
 
 import { render } from 'voby';
+
 import { App } from './App';
-import { Router } from './router';
-import { About } from './pages/About';
-import { Privacy } from './pages/Privacy';
-import { NoSupport } from './pages/NoSupport';
 import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from './consts';
+import { About } from './pages/About';
+import { NoSupport } from './pages/NoSupport';
+import { Privacy } from './pages/Privacy';
+import { Router } from './router';
 
 if (!workerSupport || !fileSystemApiSupport || !offscreenCanvasSupport) {
   render(

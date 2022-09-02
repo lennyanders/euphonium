@@ -1,3 +1,4 @@
+import { Virtualizer } from '@tanstack/virtual-core';
 import {
   $,
   Observable,
@@ -10,7 +11,7 @@ import {
   ForValue,
   useMemo,
 } from 'voby';
-import { Virtualizer } from '@tanstack/virtual-core';
+
 import { baseOptions, getVirtualItems, getVirtualItemToStart, SharedProps } from './shared';
 
 interface VirtualGridProps<T> extends Omit<SharedProps<T>, 'size'> {

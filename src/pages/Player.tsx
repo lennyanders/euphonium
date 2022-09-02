@@ -1,13 +1,14 @@
 import { $, If, useMemo } from 'voby';
-import { TrackList } from '../components/TrackList';
-import { RouterLink } from '../router';
-import { currentTrack$ } from '../modules/player';
+
 import { HeroImage } from '../components/HeroImage';
 import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
 import { MainControls } from '../components/Player/MainControls';
 import { Progress } from '../components/Player/Progress';
 import { Slider, volumeIcon$ } from '../components/Player/Volume';
+import { TrackList } from '../components/TrackList';
 import { state } from '../modules/library';
+import { currentTrack$ } from '../modules/player';
+import { RouterLink } from '../router';
 
 export const Player = () => {
   const editVolume$ = $(false);

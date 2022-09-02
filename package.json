@@ -11,6 +11,7 @@
   "type": "module",
   "devDependencies": {
     "@iconify-json/mdi": "^1.1.16",
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
     "@types/node": "^18.0.0",
     "@types/offscreencanvas": "^2019.6.4",
     "@types/wicg-file-system-access": "^2020.9.5",

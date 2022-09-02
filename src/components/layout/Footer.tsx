@@ -1,11 +1,12 @@
 import { If, Ternary } from 'voby';
-import { path$, RouterLink } from '../../router';
-import { currentTrack$ } from '../../modules/player';
+
 import { w1024$ } from '../../modules/layout';
+import { currentTrack$ } from '../../modules/player';
+import { path$, RouterLink } from '../../router';
 import { CoverImage } from '../CoverImage';
 import { MainControls } from '../Player/MainControls';
-import { Progress } from '../Player/Progress';
 import { PlayPause } from '../Player/PlayPause';
+import { Progress } from '../Player/Progress';
 import { VolumeDesktop } from '../Player/Volume';
 
 const Desktop = () => (

@@ -1,10 +1,11 @@
 import { Buffer } from 'buffer';
-// @ts-ignore
-globalThis.Buffer = Buffer;
-
 import { parseBuffer } from 'music-metadata';
+
 import { FileHandle } from './FileHandle';
 import { getOptimizedImage } from './getOptimizedImage';
+
+// @ts-ignore
+globalThis.Buffer = Buffer;
 
 export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> => {
   try {

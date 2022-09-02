@@ -1,7 +1,8 @@
 import { Ternary, useMemo } from 'voby';
+
 import { ArtistList } from '../components/ArtistList';
-import { RouterLink } from '../router';
 import { artistsSortedByName$ } from '../modules/library';
+import { RouterLink } from '../router';
 
 export const AlbumArtists = () => {
   const albumArtists$ = useMemo(() =>

@@ -1,4 +1,5 @@
 import { batch, store, useMemo } from 'voby';
+
 import { onMessage } from '../utils/worker';
 
 export const state = store<State>({ trackData: {}, albumData: {}, artistData: {}, loading: true });

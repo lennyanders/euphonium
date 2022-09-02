@@ -1,7 +1,8 @@
-import { ArtistList } from '../components/ArtistList';
-import { RouterLink } from '../router';
-import { artistsSortedByName$, state } from '../modules/library';
 import { Ternary, useMemo } from 'voby';
+
+import { ArtistList } from '../components/ArtistList';
+import { artistsSortedByName$, state } from '../modules/library';
+import { RouterLink } from '../router';
 
 export const Artists = () => (
   <Ternary when={state.artistData}>

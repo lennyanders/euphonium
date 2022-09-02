@@ -1,4 +1,5 @@
 import { For } from 'voby';
+
 import { path$, RouterLink } from '../router';
 
 type IconLink = { href: string; icon: string; title: string };

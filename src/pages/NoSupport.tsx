@@ -1,5 +1,5 @@
-import { RouterLink } from '../router';
 import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from '../consts';
+import { RouterLink } from '../router';
 
 export const NoSupport = () => (
   <>

@@ -1,7 +1,8 @@
-import { Range } from './Range';
+import { useMemo } from 'voby';
+
 import { currentTime$, currentTrack$, seek } from '../../modules/player';
 import { getFormattedTime } from '../../shared/utils';
-import { useMemo } from 'voby';
+import { Range } from './Range';
 
 export const Progress = ({ bg, class: css }: { bg?: string; class?: JSX.Class }) => (
   <div class={['flex items-center gap-4', css]}>

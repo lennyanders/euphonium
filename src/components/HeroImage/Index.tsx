@@ -1,4 +1,5 @@
 import { FunctionMaybe, Ternary } from 'voby';
+
 import { w640$ } from '../../modules/layout';
 import { HeroImageDesktop } from './Desktop';
 import { HeroImageMobile } from './Mobile';

@@ -1,4 +1,5 @@
 import { $, For } from 'voby';
+
 import { HeroImageProps } from '.';
 import { CoverImage } from '../CoverImage';
 

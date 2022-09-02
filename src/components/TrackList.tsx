@@ -1,11 +1,12 @@
 import { Virtualizer } from '@tanstack/virtual-core';
 import { $, $$, If, useMemo, useEffect, ObservableMaybe } from 'voby';
+
 import { state } from '../modules/library';
 import { play, pause, playing$, appendToQueue, playNext } from '../modules/player';
 import { go } from '../router';
 import { CoverImage } from './CoverImage';
-import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 import { Virtual, VirtualProps } from './Virtual/Index';
+import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 
 const onContextMenu = (event: MouseEvent, track: FETrack, trackIds: number[]) => {
   const isActiveTrack = track.id === state.activeTrackId;

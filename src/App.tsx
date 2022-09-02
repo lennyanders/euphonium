@@ -1,5 +1,9 @@
 import { $, If } from 'voby';
+
+import { ContextMenu } from './components/layout/ContextMenu';
 import { Footer } from './components/layout/Footer';
+import { mainEl$, w1024$ } from './modules/layout';
+import { state } from './modules/library';
 import { About } from './pages/About';
 import { Album } from './pages/Album';
 import { AlbumArtists } from './pages/AlbumArtists';
@@ -9,15 +13,12 @@ import { Artists } from './pages/Artists';
 import { Home } from './pages/Home';
 import { Player } from './pages/Player';
 import { Privacy } from './pages/Privacy';
+import { Queue } from './pages/Queue';
+import { Search } from './pages/Search';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { TracksArtist } from './pages/TracksArtist';
-import { Queue } from './pages/Queue';
 import { Router } from './router';
-import { state } from './modules/library';
-import { mainEl$, w1024$ } from './modules/layout';
-import { ContextMenu } from './components/layout/ContextMenu';
-import { Search } from './pages/Search';
 
 const baseRoutes = [
   { path: '/search', component: Search },

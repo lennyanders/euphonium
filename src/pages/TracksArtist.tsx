@@ -1,8 +1,9 @@
 import { Ternary, useMemo } from 'voby';
+
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
-import { params, RouterLink } from '../router';
 import { state } from '../modules/library';
+import { params, RouterLink } from '../router';
 
 export const TracksArtist = () => {
   const artist$ = useMemo(() => state.artistData[params.artistName!]);
