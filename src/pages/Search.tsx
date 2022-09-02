@@ -28,6 +28,17 @@ const Checkbox = ({ label, model }: { label: string; model: Observable<boolean> 
   );
 };
 
+const syncQueryParamBool = (prop: string, fallback: boolean) => {
+  const val$ = $(fallback);
+  useEffect(() => {
+    val$(!queryParams[prop] ? fallback : queryParams[prop] === '1');
+  });
+  useEffect(() => {
+    queryParams[prop] = val$() ? '1' : '0';
+  });
+  return val$;
+};
+
 export const Search = () => {
   const query$ = $('');
   useEffect(() => {
@@ -36,9 +47,9 @@ export const Search = () => {
   useEffect(() => {
     queryParams.search = query$();
   });
-  const queryTracks$ = $(true);
-  const queryAlbums$ = $(true);
-  const queryArtists$ = $(true);
+  const queryTracks$ = syncQueryParamBool('tracks', true);
+  const queryAlbums$ = syncQueryParamBool('albums', true);
+  const queryArtists$ = syncQueryParamBool('artists', true);
   const lowerQuery$ = useMemo(() => query$().toLowerCase());
 
   return (
