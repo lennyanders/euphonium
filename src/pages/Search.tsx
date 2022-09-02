@@ -11,7 +11,7 @@ import {
 } from '../modules/library';
 import { queryParams } from '../router';
 
-const Checkbox = ({ label, model }: { label: string; model: Observable<boolean> }) => {
+const Filter = ({ label, model }: { label: string; model: Observable<boolean> }) => {
   const id = crypto.randomUUID();
   return (
     <>
@@ -71,10 +71,13 @@ export const Search = () => {
         />
       </div>
       <div class='flex flex-wrap gap-2 text-sm'>
-        <Checkbox label='Tracks' model={queryTracks$} />
-        <Checkbox label='Albums' model={queryAlbums$} />
-        <Checkbox label='Artists' model={queryArtists$} />
-        <Checkbox label='Only album artists' model={queryOnlyAlbumArtists$} />
+        <Filter label='Tracks' model={queryTracks$} />
+        <Filter label='Albums' model={queryAlbums$} />
+        <Filter label='Artists' model={queryArtists$} />
+        <label class='m-is-a p-1-2 flex gap-1'>
+          <Input type='checkbox' model={queryOnlyAlbumArtists$} />
+          Only album artists
+        </label>
       </div>
       <If when={queryTracks$}>
         <h2>Tracks</h2>
