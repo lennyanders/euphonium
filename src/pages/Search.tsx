@@ -51,7 +51,7 @@ export const Search = () => {
   const queryAlbums$ = syncQueryParamBool('albums', true);
   const queryArtists$ = syncQueryParamBool('artists', true);
   const queryOnlyAlbumArtists$ = syncQueryParamBool('onlyAlbumArtists', false);
-  const lowerQuery$ = useMemo(() => query$().toLowerCase());
+  const matchRegex$ = useMemo(() => new RegExp(query$(), 'i'));
 
   return (
     <>
@@ -86,8 +86,9 @@ export const Search = () => {
             tracksSortedByTitle$()
               .filter(
                 (track) =>
-                  track.title.toLowerCase().includes(lowerQuery$()) ||
-                  track.artist?.toLowerCase().includes(lowerQuery$()),
+                  matchRegex$().test(track.title) ||
+                  matchRegex$().test(track.artist || '') ||
+                  matchRegex$()?.test(track.year?.toString() || ''),
               )
               .map((track) => track.id),
           )}
@@ -100,9 +101,9 @@ export const Search = () => {
             albumsSortedByTitle$()
               .filter(
                 (album) =>
-                  album.title.toLowerCase().includes(lowerQuery$()) ||
-                  album.artist.toLowerCase().includes(lowerQuery$()) ||
-                  album.year?.toString() === lowerQuery$(),
+                  matchRegex$().test(album.title) ||
+                  matchRegex$().test(album.artist) ||
+                  matchRegex$()?.test(album.year?.toString() || ''),
               )
               .map((album) => `${album.artist}${album.title}`),
           )}
@@ -115,7 +116,7 @@ export const Search = () => {
             artistsSortedByName$()
               .filter(
                 (artist) =>
-                  artist.name.toLowerCase().includes(lowerQuery$()) &&
+                  matchRegex$().test(artist.name) &&
                   (queryOnlyAlbumArtists$() ? artist.albums.length : true),
               )
               .map((artist) => artist.name),
