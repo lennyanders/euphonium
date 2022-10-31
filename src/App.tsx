@@ -46,7 +46,7 @@ const desktopRoutes = [
 ];
 
 export const App = () => {
-  const showLoadingSpinner$ = $(true);
+  const showLoadingSpinner$ = $(state.loading);
   return (
     <>
       <If when={() => !state.loading}>
