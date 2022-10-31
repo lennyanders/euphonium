@@ -5,4 +5,13 @@ import voby from 'voby-vite';
 
 export default defineConfig({
   plugins: [voby(), unocss(), rewriteAll()],
+  define: {
+    'global.Uint8Array': 'Uint8Array',
+    'process.env.NODE_DEBUG': false,
+  },
+  resolve: {
+    alias: {
+      'node:buffer': 'buffer',
+    },
+  },
 });
