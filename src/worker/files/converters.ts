@@ -1,19 +1,23 @@
 import { getFormattedTime } from '../../shared/utils';
 
-const coverCache: Record<string, string> = {};
+const coverCache: Record<string, { cover: string; coverPreview: string }> = {};
 
 export const beToFETrack = (track: DbTrack, covers: DbCover[]): FETrack => {
   let cover: string | undefined;
-  if (track.cover) {
+  let coverPreview: string | undefined;
+  if (track.cover && track.coverPreview) {
     cover = URL.createObjectURL(track.cover);
+    coverPreview = URL.createObjectURL(track.coverPreview);
   } else {
     if (coverCache[track.folderPath]) {
-      cover = coverCache[track.folderPath];
+      cover = coverCache[track.folderPath].cover;
+      coverPreview = coverCache[track.folderPath].coverPreview;
     } else {
       const dbCover = covers.find((cover) => cover.folderPath === track.folderPath);
       if (dbCover) {
         cover = URL.createObjectURL(dbCover.image);
-        coverCache[track.folderPath] = cover;
+        coverPreview = URL.createObjectURL(dbCover.imagePreview);
+        coverCache[track.folderPath] = { cover, coverPreview };
       }
     }
   }
@@ -33,5 +37,6 @@ export const beToFETrack = (track: DbTrack, covers: DbCover[]): FETrack => {
     albumArtist: track.albumArtist,
     albumTitle: track.albumTitle,
     cover,
+    coverPreview,
   };
 };

@@ -15,7 +15,7 @@ const Desktop = () => (
     <div class='flex items-center'>
       <div class='flex-1 flex gap-4 p-x-4 truncate'>
         <CoverImage
-          src={() => currentTrack$()?.cover!}
+          src={() => currentTrack$()?.coverPreview!}
           class='w-12 h-12 rd-1 shrink-0 background-size-125%'
         />
         <div class='truncate'>

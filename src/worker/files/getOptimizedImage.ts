@@ -1,7 +1,15 @@
-export const getOptimizedImage = async (image: Blob) => {
-  const imageBitmap = await createImageBitmap(image, { resizeHeight: 1080, resizeWidth: 1080 });
-  const canvas = new OffscreenCanvas(1080, 1080);
+export const getOptimizedImage = async (image: Blob, resolution: number) => {
+  const imageBitmap = await createImageBitmap(image, {
+    resizeHeight: resolution,
+    resizeWidth: resolution,
+  });
+  const canvas = new OffscreenCanvas(resolution, resolution);
+
   const context = canvas.getContext('2d')!;
+  // @ts-ignore
+  context.imageSmoothingEnabled = true;
+  // @ts-ignore
+  context.imageSmoothingQuality = 'high';
   context.drawImage(imageBitmap, 0, 0);
-  return await canvas.convertToBlob({ type: 'image/webp', quality: 0.8 });
+  return await canvas.convertToBlob({ type: 'image/webp', quality: 1 });
 };

@@ -26,11 +26,13 @@ interface DbTrack extends FileHandle {
   albumArtist?: string;
   albumTitle?: string;
   cover?: Blob;
+  coverPreview?: Blob;
 }
 
 interface DbCover extends FileHandle {
   id?: number;
   image: Blob;
+  imagePreview: Blob;
 }
 
 interface FELibraryDirectory {
@@ -43,6 +45,7 @@ type FETrack = Omit<
   DbTrack,
   | 'id'
   | 'cover'
+  | 'coverPreview'
   | 'filePath'
   | 'folderPath'
   | 'fileName'
@@ -54,6 +57,7 @@ type FETrack = Omit<
   id: number;
   title: string;
   cover?: string;
+  coverPreview?: string;
   durationFormatted: string;
 };
 
