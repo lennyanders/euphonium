@@ -1,11 +1,10 @@
-import { $, useMemo, useEffect, useEventListener } from 'voby';
+import { $, useMemo, useEffect, useEventListener, store } from 'voby';
 
 import {
   appendToArrayUnique,
   getShuffledQueue,
   insertAfterValInArr,
   requestFileAccess,
-  uw,
 } from '../utils';
 import { postMessage } from '../utils/worker';
 import { state } from './library';
@@ -43,11 +42,14 @@ export const play = async (trackId?: number, queue?: number[]) => {
 
 useEffect(() => {
   if (!state.queue?.length) return;
-  postMessage({ message: 'setGeneralData', state: { queue: uw(state).queue } });
+  postMessage({ message: 'setGeneralData', state: { queue: store.unwrap(state).queue } });
 });
 useEffect(() => {
   if (!state.originalQueue?.length) return;
-  postMessage({ message: 'setGeneralData', state: { originalQueue: uw(state).originalQueue } });
+  postMessage({
+    message: 'setGeneralData',
+    state: { originalQueue: store.unwrap(state).originalQueue },
+  });
 });
 useEffect(() => {
   if (state.activeTrackId === undefined) return;
@@ -93,7 +95,7 @@ export const shuffle = (shuffle: boolean) => {
     state.queue = state.originalQueue;
     delete state.originalQueue;
   } else {
-    state.originalQueue = uw(state).queue;
+    state.originalQueue = store.unwrap(state).queue;
     state.queue = getShuffledQueue();
   }
   state.shuffle = shuffle;

@@ -1,8 +1,6 @@
 import { parse } from 'regexparam';
 import { $, useReadonly, store, batch, useEffect } from 'voby';
 
-import { uw } from './utils';
-
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
   return matches.slice(1).reduce<Record<string, string | null>>((res, val, index) => {
@@ -20,7 +18,7 @@ const getQueryParams = () => {
 export const queryParams = store<Record<string, string>>(getQueryParams());
 const updateQueryParams = () => {
   batch(() => {
-    for (const key in uw(queryParams)) delete queryParams[key];
+    for (const key in store.unwrap(queryParams)) delete queryParams[key];
     Object.assign(queryParams, getQueryParams());
   });
 };
@@ -97,7 +95,7 @@ export const Router = ({
     }
 
     batch(() => {
-      for (const key in uw(params)) delete params[key];
+      for (const key in store.unwrap(params)) delete params[key];
       Object.assign(params, exec(p, route.regex));
       updateQueryParams();
     });

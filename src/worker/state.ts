@@ -1,7 +1,7 @@
 import $ from 'oby';
 
 import { albumDataGetter, artistDataGetter } from './computedValues';
-import { postMessage, uw } from './utils';
+import { postMessage } from './utils';
 
 export const partialUpdates$ = $(false);
 
@@ -18,20 +18,23 @@ export const state = $.store<State>({
 
 $.effect(() => {
   if (!state.libraryDirectories || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setLibraryDirectories', state: uw(state).libraryDirectories! });
+  postMessage({
+    message: 'setLibraryDirectories',
+    state: $.store.unwrap(state).libraryDirectories!,
+  });
 });
 
 $.effect(() => {
   if (!state.trackData || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setTrackData', state: uw(state).trackData! });
+  postMessage({ message: 'setTrackData', state: $.store.unwrap(state).trackData! });
 });
 
 $.effect(() => {
   if (!state.albumData || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setAlbumData', state: uw(state).albumData! });
+  postMessage({ message: 'setAlbumData', state: $.store.unwrap(state).albumData! });
 });
 
 $.effect(() => {
   if (!state.artistData || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setArtistData', state: uw(state).artistData! });
+  postMessage({ message: 'setArtistData', state: $.store.unwrap(state).artistData! });
 });

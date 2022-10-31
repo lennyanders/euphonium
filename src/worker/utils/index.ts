@@ -11,5 +11,3 @@ export const onMessage = (cb: (message: WWME) => void) => {
   globalThis.addEventListener('message', cb);
   return () => globalThis.removeEventListener('message', cb);
 };
-
-export const uw = <T>(v: T) => $.store(v, { unwrap: true });

@@ -13,7 +13,7 @@ import { beToFETrack } from './files/converters';
 import { getCover } from './files/getCover';
 import { fileHandleIsCover } from './files/utils';
 import { partialUpdates$, state } from './state';
-import { postMessage, uw } from './utils';
+import { postMessage } from './utils';
 
 const getDbData = async () => {
   const database = await getDatabase();
@@ -136,7 +136,7 @@ Promise.all([getFEDirectories(), getFETrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
     $.batch(() => Object.assign(state, { libraryDirectories, trackData }, data));
 
-    postMessage({ message: 'setState', state: uw(state) });
+    postMessage({ message: 'setState', state: $.store.unwrap(state) });
     partialUpdates$(true);
   },
 );
