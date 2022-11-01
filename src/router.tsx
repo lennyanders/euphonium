@@ -1,9 +1,11 @@
 import { parse } from 'regexparam';
 import { $, useReadonly, store, batch, useEffect } from 'voby';
 
+export type Params = Record<string, string | null>;
+
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
-  return matches.slice(1).reduce<Record<string, string | null>>((res, val, index) => {
+  return matches.slice(1).reduce<Params>((res, val, index) => {
     res[result.keys[index]] = val ? decodeURIComponent(val) : null;
     return res;
   }, {});
@@ -29,7 +31,7 @@ useEffect(() => {
   if (url.href !== location.href) history.pushState(null, '', url);
 });
 
-export const params = store<Record<string, string | null>>({});
+export const params = store<Params>({});
 const _path$ = $(location.pathname);
 export const path$ = useReadonly(_path$);
 let updateUrl = false;
@@ -75,7 +77,11 @@ export const Router = ({
   routes,
 }: {
   routes: (
-    | { path: string; component: JSX.Child; title?: string }
+    | {
+        path: string;
+        component: JSX.Child;
+        title?: string | ((params: Params) => string);
+      }
     | { path: string; redirect: string }
   )[];
 }) => {
@@ -94,11 +100,16 @@ export const Router = ({
       return;
     }
 
-    if (route.title) document.title = route.title;
+    const newParams = exec(p, route.regex);
+    if (typeof route.title === 'string') {
+      document.title = route.title;
+    } else if (typeof route.title === 'function') {
+      document.title = route.title(newParams);
+    }
 
     batch(() => {
       for (const key in store.unwrap(params)) delete params[key];
-      Object.assign(params, exec(p, route.regex));
+      Object.assign(params, newParams);
       updateQueryParams();
     });
 

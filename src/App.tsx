@@ -18,7 +18,7 @@ import { Search } from './pages/Search';
 import { Settings } from './pages/Settings';
 import { Tracks } from './pages/Tracks';
 import { TracksArtist } from './pages/TracksArtist';
-import { Router } from './router';
+import { Params, Router } from './router';
 
 const baseTitle = 'Euphonium';
 
@@ -27,12 +27,24 @@ const getTitle = (title: string) => `${title} | ${baseTitle}`;
 const baseRoutes = [
   { path: '/search', component: Search, title: getTitle('Search') },
   { path: '/tracks', component: Tracks, title: getTitle('Tracks') },
-  { path: '/tracks/:artistName', component: TracksArtist, title: getTitle('Artist') },
+  {
+    path: '/tracks/:artistName',
+    component: TracksArtist,
+    title: (params: Params) => getTitle(`${params.artistName}'s tracks`),
+  },
   { path: '/albums', component: Albums, title: getTitle('Albums') },
   { path: '/artists', component: Artists, title: getTitle('Artists') },
   { path: '/album-artists', component: AlbumArtists, title: getTitle('Album artists') },
-  { path: '/artist/:artistName', component: Artist, title: getTitle('Artist') },
-  { path: '/artist/:artist/:albumTitle', component: Album, title: getTitle('Album') },
+  {
+    path: '/artist/:artistName',
+    component: Artist,
+    title: (params: Params) => getTitle(params.artistName!),
+  },
+  {
+    path: '/artist/:artist/:albumTitle',
+    component: Album,
+    title: (params: Params) => getTitle(`${params.albumTitle} by ${params.artist}`),
+  },
   { path: '/settings', component: Settings, title: getTitle('Settings') },
   { path: '/about', component: About, title: getTitle('About') },
   { path: '/privacy', component: Privacy, title: getTitle('Privacy') },
