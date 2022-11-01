@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, next]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+
+      - name: Install node_modules and run build
+        run: npm i && npm run build
+
+      - name: Get server folder
+        id: serverDir
+        run: |
+          if [ $IS_MAIN ]
+          then
+            echo "::set-output name=serverDir::./public_html/euphonium.lenny.fyi/"
+          else
+            echo "::set-output name=serverDir::./public_html/qa.euphonium.lenny.fyi/"
+          fi
+        env:
+          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Deploy build to server
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 21
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ steps.serverDir.outputs.serverDir }}
