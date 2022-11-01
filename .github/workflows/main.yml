@@ -24,9 +24,9 @@ jobs:
         run: |
           if [ $IS_MAIN ]
           then
-            echo "::set-output name=serverDir::./public_html/euphonium.lenny.fyi/"
+            echo "SERVER_DIR=./public_html/euphonium.lenny.fyi/" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=serverDir::./public_html/qa.euphonium.lenny.fyi/"
+            echo "SERVER_DIR=./public_html/qa.euphonium.lenny.fyi/" >> $GITHUB_OUTPUT
           fi
         env:
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
@@ -40,4 +40,4 @@ jobs:
           port: 21
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ${{ steps.serverDir.outputs.serverDir }}
+          server-dir: ${{ $GITHUB_OUTPUT.SERVER_DIR }}
