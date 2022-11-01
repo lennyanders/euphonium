@@ -20,28 +20,32 @@ import { Tracks } from './pages/Tracks';
 import { TracksArtist } from './pages/TracksArtist';
 import { Router } from './router';
 
+const baseTitle = 'Euphonium';
+
+const getTitle = (title: string) => `${title} | ${baseTitle}`;
+
 const baseRoutes = [
-  { path: '/search', component: Search },
-  { path: '/tracks', component: Tracks },
-  { path: '/tracks/:artistName', component: TracksArtist },
-  { path: '/albums', component: Albums },
-  { path: '/artists', component: Artists },
-  { path: '/album-artists', component: AlbumArtists },
-  { path: '/artist/:artistName', component: Artist },
-  { path: '/artist/:artist/:albumTitle', component: Album },
-  { path: '/settings', component: Settings },
-  { path: '/about', component: About },
-  { path: '/privacy', component: Privacy },
+  { path: '/search', component: Search, title: getTitle('Search') },
+  { path: '/tracks', component: Tracks, title: getTitle('Tracks') },
+  { path: '/tracks/:artistName', component: TracksArtist, title: getTitle('Artist') },
+  { path: '/albums', component: Albums, title: getTitle('Albums') },
+  { path: '/artists', component: Artists, title: getTitle('Artists') },
+  { path: '/album-artists', component: AlbumArtists, title: getTitle('Album artists') },
+  { path: '/artist/:artistName', component: Artist, title: getTitle('Artist') },
+  { path: '/artist/:artist/:albumTitle', component: Album, title: getTitle('Album') },
+  { path: '/settings', component: Settings, title: getTitle('Settings') },
+  { path: '/about', component: About, title: getTitle('About') },
+  { path: '/privacy', component: Privacy, title: getTitle('Privacy') },
 ];
 
 const mobileRoutes = [
   ...baseRoutes,
-  { path: '/player', component: Player },
-  { path: '*', component: Home },
+  { path: '/player', component: Player, title: getTitle('Player') },
+  { path: '*', component: Home, title: baseTitle },
 ];
 const desktopRoutes = [
   ...baseRoutes,
-  { path: 'queue', component: Queue },
+  { path: 'queue', component: Queue, title: getTitle('Queue') },
   { path: '*', redirect: '/tracks' },
 ];
 

@@ -94,6 +94,8 @@ export const Router = ({
       return;
     }
 
+    if (route.title) document.title = route.title;
+
     batch(() => {
       for (const key in store.unwrap(params)) delete params[key];
       Object.assign(params, exec(p, route.regex));
