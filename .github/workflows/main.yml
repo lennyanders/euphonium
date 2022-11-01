@@ -32,7 +32,7 @@ jobs:
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Deploy build to server
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USER }}
@@ -40,4 +40,4 @@ jobs:
           port: 21
           protocol: ftps
           local-dir: ./dist/
-          server-dir: $GITHUB_OUTPUT.SERVER_DIR
+          server-dir: ${{ steps.serverDir.outputs.SERVER_DIR }}
