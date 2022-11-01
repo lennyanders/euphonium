@@ -40,4 +40,4 @@ jobs:
           port: 21
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ${{ $GITHUB_OUTPUT.SERVER_DIR }}
+          server-dir: $GITHUB_OUTPUT.SERVER_DIR
