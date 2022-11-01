@@ -12,7 +12,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Install node_modules and run build
         run: npm i && npm run build
