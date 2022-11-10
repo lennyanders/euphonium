@@ -11,7 +11,6 @@ import {
 } from './files';
 import { beToFETrack } from './files/converters';
 import { getCover } from './files/getCover';
-import { fileHandleIsCover } from './files/utils';
 import { partialUpdates$, state } from './state';
 import { postMessage } from './utils';
 
@@ -78,32 +77,43 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
 
 export const updateFiles = async () => {
   console.time('update');
+
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
   console.timeEnd('get files from directories');
 
   console.time('get difference to existing files');
-  const { newFiles, removedTrackIds, removedCoverIds } = await diffFiles(fileHandles);
+  const database = await getDatabase();
+
+  const existingTracks = await database.getAll('track');
+  const [newTracks, removedTrackIds] = diffFiles(existingTracks, fileHandles.tracks);
+
+  const existingCovers = await database.getAll('cover');
+  const [newCovers, removedCoverIds] = diffFiles(existingCovers, fileHandles.covers);
+
   console.timeEnd('get difference to existing files');
+  console.log({ newTracks, removedTrackIds, newCover: newCovers, removedCoverIds });
 
   console.time('parse files');
   const tracks: DbTrack[] = [];
   const covers: DbCover[] = [];
   let count = 0;
-  for (const fileHandle of newFiles) {
-    if (fileHandleIsCover(fileHandle)) {
-      const cover = await getCover(fileHandle);
-      if (cover) covers.push(cover);
-    } else {
-      const track = await getTrack(fileHandle);
-      if (track) tracks.push(track);
-    }
-    console.log(`parsed file ${++count} of ${newFiles.length}`);
+  const totalCount = newTracks.length + newCovers.length;
+  for (const fileHandle of newTracks) {
+    const track = await getTrack(fileHandle);
+    if (track) tracks.push(track);
+
+    console.log(`parsed file ${++count} of ${totalCount}`);
+  }
+  for (const fileHandle of newCovers) {
+    const cover = await getCover(fileHandle);
+    if (cover) covers.push(cover);
+
+    console.log(`parsed file ${++count} of ${totalCount}`);
   }
   console.timeEnd('parse files');
 
   console.time('update database');
-  const database = await getDatabase();
   const txT = database.transaction('track', 'readwrite');
   const txC = database.transaction('cover', 'readwrite');
   await Promise.all([
@@ -117,6 +127,7 @@ export const updateFiles = async () => {
   console.timeEnd('update database');
 
   state.trackData = await getFETrackData();
+
   console.timeEnd('update');
 };
 
