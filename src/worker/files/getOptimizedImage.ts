@@ -1,4 +1,9 @@
-export const getOptimizedImage = async (image: Blob, resolution: number) => {
+export const getOptimizedImages = async (image: Blob, ...resolutions: number[]) => {
+  if (!resolutions.length) resolutions = [1080, 96];
+  return await Promise.all(resolutions.map((resolution) => getOptimizedImage(image, resolution)));
+};
+
+const getOptimizedImage = async (image: Blob, resolution: number) => {
   const imageBitmap = await createImageBitmap(image);
   const canvas = new OffscreenCanvas(resolution, resolution);
 

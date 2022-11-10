@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 import { parseBuffer } from 'music-metadata';
 
 import { FileHandle } from './FileHandle';
-import { getOptimizedImage } from './getOptimizedImage';
+import { getOptimizedImages } from './getOptimizedImage';
 
 // @ts-ignore
 globalThis.Buffer = Buffer;
@@ -20,9 +20,8 @@ export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> 
     let coverPreview: Blob | undefined;
     if (common.picture?.length) {
       const [image] = common.picture;
-      const imageData = new Uint8ClampedArray(image.data);
-      cover = await getOptimizedImage(new Blob([imageData], { type: image.type }), 1080);
-      coverPreview = await getOptimizedImage(new Blob([imageData], { type: image.type }), 96);
+      const imageData = new Blob([new Uint8ClampedArray(image.data)], { type: image.type });
+      [cover, coverPreview] = await getOptimizedImages(imageData);
     }
 
     return {
