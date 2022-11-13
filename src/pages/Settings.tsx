@@ -54,18 +54,31 @@ export const Settings = () => (
     <h1>Settings</h1>
     <h2>Library</h2>
     <div class='flex justify-between'>
-      <button onClick={() => addDirectoryToLibrary(state.libraryDirectories)}>
+      <button
+        class='bg-dark-500 p-1-2 rd-1 hover:bg-dark-800 transition-background-color'
+        disabled={state.importing}
+        onClick={() => addDirectoryToLibrary(state.libraryDirectories)}
+      >
         Add directory to library
       </button>
-      <button onClick={() => postMessage({ message: 'reloadLibrary' })}>Refresh</button>
+      <button
+        class='bg-dark-500 p-1-2 rd-1 hover:bg-dark-800 transition-background-color'
+        disabled={state.importing}
+        onClick={() => postMessage({ message: 'reloadLibrary' })}
+      >
+        Refresh
+      </button>
     </div>
-    <Ternary when={state.libraryDirectories?.length}>
-      <ul class='grid gap-2'>
+    <Ternary when={() => state.libraryDirectories?.length}>
+      <ul class={['grid gap-2 duration-250 transition-opacity', { 'op-50': state.importing }]}>
         <For values={state.libraryDirectories!}>
           {({ name, id }) => (
             <li class='flex gap-1'>
               {name}
-              <button onClick={() => postMessage({ message: 'removeLibraryDirectory', id })}>
+              <button
+                disabled={state.importing}
+                onClick={() => postMessage({ message: 'removeLibraryDirectory', id })}
+              >
                 ×
               </button>
             </li>

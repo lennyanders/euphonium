@@ -96,7 +96,11 @@ type GeneralData = Partial<{
   loop: 'none' | 'track' | 'queue';
 }>;
 
-interface State extends GeneralData {
+type TemporaryData = Partial<{
+  importing: boolean;
+}>;
+
+interface State extends GeneralData, TemporaryData {
   trackData: Record<number, FETrack>;
   albumData: Record<string, FEAlbum>;
   artistData: Record<string, FEArtist>;

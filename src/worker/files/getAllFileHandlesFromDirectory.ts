@@ -1,4 +1,5 @@
 import { getDatabase } from '../database';
+import { state } from '../state';
 import { postMessage } from '../utils';
 import { FileHandle } from './FileHandle';
 
@@ -64,6 +65,7 @@ const getAllFileHandlesFromDirectory = async ({
     }
     return res;
   } catch (_) {
+    state.importing = false;
     postMessage({ message: 'requestPermission', directoryHandle });
     throw Error();
   }

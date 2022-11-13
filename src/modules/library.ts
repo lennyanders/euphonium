@@ -33,4 +33,5 @@ onMessage(({ data }) => {
   if (data.message === 'setArtistData') return (state.artistData = data.state);
   if (data.message === 'setLibraryDirectories') return (state.libraryDirectories = data.state);
   if (data.message === 'setGeneralData') return batch(() => Object.assign(state, data.state));
+  if (data.message === 'setTemporaryData') return batch(() => Object.assign(state, data.state));
 });

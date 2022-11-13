@@ -39,3 +39,11 @@ $.effect(() => {
   if (!state.artistData || !$.untrack(partialUpdates$)) return;
   postMessage({ message: 'setArtistData', state: $.store.unwrap(state).artistData });
 });
+
+$.effect(() => {
+  if (state.importing === undefined || !$.untrack(partialUpdates$)) return;
+  postMessage({
+    message: 'setTemporaryData',
+    state: { importing: $.store.unwrap(state).importing },
+  });
+});

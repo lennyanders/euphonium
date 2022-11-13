@@ -23,6 +23,7 @@ export type MWME =
   | WME<'setArtistData', { state: Record<string, FEArtist> }>
   | WME<'setLibraryDirectories', { state: FELibraryDirectory[] }>
   | WME<'setGeneralData', { state: GeneralData }>
+  | WME<'setTemporaryData', { state: TemporaryData }>
   | WME<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
   | WME<'tryAddDirectoryToLibrary', { relation: Relation }>;
 

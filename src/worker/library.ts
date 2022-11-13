@@ -77,6 +77,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
 
 export const updateFiles = async () => {
   console.time('update');
+  state.importing = true;
 
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
@@ -96,7 +97,6 @@ export const updateFiles = async () => {
     existingCovers,
     fileHandles.covers,
   );
-
   console.timeEnd('get difference to existing files');
 
   console.time('parse files');
@@ -149,6 +149,7 @@ export const updateFiles = async () => {
   console.timeEnd('update database');
 
   state.trackData = await getFETrackData();
+  state.importing = false;
 
   console.timeEnd('update');
 };
