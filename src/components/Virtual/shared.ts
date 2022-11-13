@@ -22,9 +22,9 @@ export const baseOptions = {
   scrollToFn: windowScroll,
 };
 
-export const getVirtualItems = (vItems: VirtualItem<any>[]) => vItems.map((vItem) => vItem.index);
+export const getVirtualItems = (vItems: VirtualItem[]) => vItems.map((vItem) => vItem.index);
 
-export const getVirtualItemToStart = (vItems: VirtualItem<any>[]) => {
+export const getVirtualItemToStart = (vItems: VirtualItem[]) => {
   const map: Record<number, number> = {};
   for (const { index, start } of vItems) map[index] = start;
   return map;

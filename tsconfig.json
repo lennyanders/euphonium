@@ -10,7 +10,8 @@
     "jsxImportSource": "voby",
     "types": ["vite/client", "@types/wicg-file-system-access", "@types/offscreencanvas"],
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

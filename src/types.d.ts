@@ -2,10 +2,13 @@ interface FileHandle {
   filePath: string;
   folderPath: string;
   fileName: string;
-  fileModified?: number;
   fileHandle: FileSystemFileHandle;
   directoryHandle: FileSystemDirectoryHandle;
   libraryDirectory: number;
+}
+
+interface DbFileHandle extends FileHandle {
+  fileModified: number;
 }
 
 interface DbLibraryDirectory {
@@ -13,7 +16,7 @@ interface DbLibraryDirectory {
   handle: FileSystemDirectoryHandle;
 }
 
-interface DbTrack extends FileHandle {
+interface DbTrack extends DbFileHandle {
   id?: number;
   duration: number;
   number?: number;
@@ -29,7 +32,7 @@ interface DbTrack extends FileHandle {
   coverPreview?: Blob;
 }
 
-interface DbCover extends FileHandle {
+interface DbCover extends DbFileHandle {
   id?: number;
   image: Blob;
   imagePreview: Blob;
