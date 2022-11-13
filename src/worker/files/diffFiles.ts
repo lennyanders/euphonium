@@ -1,16 +1,30 @@
 import { FileHandle } from './FileHandle';
 
-export const diffFiles = (
-  existingFiles: (DbTrack | DbCover)[],
+export const diffFiles = async <T extends DbTrack | DbCover>(
+  existingFiles: T[],
   currentFiles: FileHandle[],
-): [FileHandle[], number[]] => {
-  const newFiles = currentFiles.filter(
-    (file) => !existingFiles.find((f) => f.filePath === file.filePath),
-  );
+): Promise<[FileHandle[], T[], number[]]> => {
+  const stayingFiles = existingFiles.filter((existingFile) => {
+    return currentFiles.find((currentFile) => currentFile.filePath === existingFile.filePath);
+  });
 
-  const removedFileIds = existingFiles
-    .filter((file) => !existingFiles.find((f) => f.filePath === file.filePath))
-    .map((file) => file.id!);
+  const newFiles = currentFiles.filter((currentFile) => {
+    return !stayingFiles.find((stayingFile) => stayingFile.filePath === currentFile.filePath);
+  });
 
-  return [newFiles, removedFileIds];
+  const changedFiles = (
+    await Promise.all(
+      stayingFiles.map(async (stayingFile) => {
+        if ((await stayingFile.fileHandle.getFile()).lastModified > stayingFile.fileModified) {
+          return stayingFile;
+        }
+      }),
+    )
+  ).filter((changedFile) => changedFile) as T[];
+
+  const removedFiles = existingFiles.filter((existingFile) => {
+    return !stayingFiles.find((stayingFile) => stayingFile.filePath === existingFile.filePath);
+  });
+
+  return [newFiles, changedFiles, removedFiles.map((file) => file.id!)];
 };

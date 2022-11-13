@@ -86,28 +86,48 @@ export const updateFiles = async () => {
   const database = await getDatabase();
 
   const existingTracks = await database.getAll('track');
-  const [newTracks, removedTrackIds] = diffFiles(existingTracks, fileHandles.tracks);
+  const [newTracks, changedTracks, removedTrackIds] = await diffFiles(
+    existingTracks,
+    fileHandles.tracks,
+  );
 
   const existingCovers = await database.getAll('cover');
-  const [newCovers, removedCoverIds] = diffFiles(existingCovers, fileHandles.covers);
+  const [newCovers, changedCovers, removedCoverIds] = await diffFiles(
+    existingCovers,
+    fileHandles.covers,
+  );
 
   console.timeEnd('get difference to existing files');
-  console.log({ newTracks, removedTrackIds, newCover: newCovers, removedCoverIds });
 
   console.time('parse files');
-  const tracks: DbTrack[] = [];
-  const covers: DbCover[] = [];
+  const newDbTracks: DbTrack[] = [];
+  const changedDbTracks: DbTrack[] = [];
+  const newDbCovers: DbCover[] = [];
+  const changedDbCovers: DbCover[] = [];
   let count = 0;
-  const totalCount = newTracks.length + newCovers.length;
+  const totalCount =
+    newTracks.length + changedTracks.length + newCovers.length + changedCovers.length;
   for (const fileHandle of newTracks) {
     const track = await getTrack(fileHandle);
-    if (track) tracks.push(track);
+    if (track) newDbTracks.push(track);
+
+    console.log(`parsed file ${++count} of ${totalCount}`);
+  }
+  for (const fileHandle of changedTracks) {
+    const track = await getTrack(fileHandle);
+    if (track) changedDbTracks.push(track);
 
     console.log(`parsed file ${++count} of ${totalCount}`);
   }
   for (const fileHandle of newCovers) {
     const cover = await getCover(fileHandle);
-    if (cover) covers.push(cover);
+    if (cover) newDbCovers.push(cover);
+
+    console.log(`parsed file ${++count} of ${totalCount}`);
+  }
+  for (const fileHandle of changedCovers) {
+    const cover = await getCover(fileHandle);
+    if (cover) changedDbCovers.push(cover);
 
     console.log(`parsed file ${++count} of ${totalCount}`);
   }
@@ -118,10 +138,12 @@ export const updateFiles = async () => {
   const txC = database.transaction('cover', 'readwrite');
   await Promise.all([
     ...removedTrackIds.map((id) => txT.store.delete(id)),
-    ...tracks.map((t) => txT.store.add(t)),
+    ...newDbTracks.map((track) => txT.store.add(track)),
+    ...changedDbTracks.map((track) => txT.store.put(track)),
     txT.done,
     ...removedCoverIds.map((id) => txC.store.delete(id)),
-    ...covers.map((c) => txC.store.add(c)),
+    ...newDbCovers.map((cover) => txC.store.add(cover)),
+    ...changedDbCovers.map((cover) => txC.store.put(cover)),
     txC.done,
   ]);
   console.timeEnd('update database');
