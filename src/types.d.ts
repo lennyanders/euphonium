@@ -100,6 +100,6 @@ interface State extends GeneralData {
   trackData: Record<number, FETrack>;
   albumData: Record<string, FEAlbum>;
   artistData: Record<string, FEArtist>;
-  libraryDirectories?: FELibraryDirectory[];
-  loading?: boolean;
+  libraryDirectories: FELibraryDirectory[];
+  loading: boolean;
 }

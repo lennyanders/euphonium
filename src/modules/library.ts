@@ -2,7 +2,13 @@ import { batch, store, useMemo } from 'voby';
 
 import { onMessage } from '../utils/worker';
 
-export const state = store<State>({ trackData: {}, albumData: {}, artistData: {}, loading: true });
+export const state = store<State>({
+  libraryDirectories: [],
+  trackData: {},
+  albumData: {},
+  artistData: {},
+  loading: true,
+});
 
 export const tracks$ = useMemo(() => Object.values(state.trackData));
 export const tracksSortedByTitle$ = useMemo(() =>

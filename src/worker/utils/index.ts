@@ -1,5 +1,3 @@
-import $ from 'oby';
-
 import { MWME, WWME } from '../../shared/workerFeCommunicationTypes';
 
 export const postMessage = (message: MWME['data']) => {
