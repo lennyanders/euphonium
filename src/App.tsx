@@ -63,35 +63,33 @@ const desktopRoutes = [
 
 export const App = () => {
   const showLoadingSpinner$ = $(state.loading);
-  return (
-    <>
-      <If when={() => !state.loading}>
-        <If
-          when={w1024$}
-          fallback={() => (mainEl$(document.body), (<Router routes={mobileRoutes} />))}
-        >
-          <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-6-6-33-4 overflow-y-auto bg-dark-800'>
-            <Home />
-          </aside>
-          <main class='flex flex-col gap-4 flex-1 p-4 p-b-33' ref={mainEl$}>
-            <Router routes={desktopRoutes} />
-          </main>
-        </If>
-        <Footer />
-        <ContextMenu />
+  return [
+    <If when={() => !state.loading}>
+      <If
+        when={w1024$}
+        fallback={() => (mainEl$(document.body), (<Router routes={mobileRoutes} />))}
+      >
+        <aside class='h-100vh sticky top-0 flex flex-col gap-4 p-6-6-33-4 overflow-y-auto bg-dark-800'>
+          <Home />
+        </aside>
+        <main class='flex flex-col gap-4 flex-1 p-4 p-b-33' ref={mainEl$}>
+          <Router routes={desktopRoutes} />
+        </main>
       </If>
-      <If when={showLoadingSpinner$}>
-        <div
-          class={[
-            'fixed bg-inherit inset-0 grid gap-4 justify-items-center content-center transition-delay-100 transition-opacity',
-            () => !state.loading && 'opacity-0',
-          ]}
-          onTransitionEnd={() => showLoadingSpinner$(false)}
-        >
-          <div class='i-mdi-loading w-12 h-12 animate-spin' />
-          loading
-        </div>
-      </If>
-    </>
-  );
+      <Footer />
+      <ContextMenu />
+    </If>,
+    <If when={showLoadingSpinner$}>
+      <div
+        class={[
+          'fixed bg-inherit inset-0 grid gap-4 justify-items-center content-center transition-delay-100 transition-opacity',
+          () => !state.loading && 'opacity-0',
+        ]}
+        onTransitionEnd={() => showLoadingSpinner$(false)}
+      >
+        <div class='i-mdi-loading w-12 h-12 animate-spin' />
+        loading
+      </div>
+    </If>,
+  ];
 };

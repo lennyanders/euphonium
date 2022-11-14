@@ -1,4 +1,4 @@
-import { $, useMemo, useEffect, useEventListener, store } from 'voby';
+import { $, useMemo, useEffect, useEventListener, store, $$ } from 'voby';
 
 import {
   appendToArrayUnique,
@@ -7,7 +7,7 @@ import {
   requestFileAccess,
 } from '../utils';
 import { postMessage } from '../utils/worker';
-import { state } from './library';
+import { cleanQueue$, state } from './library';
 
 const audioEl = new Audio();
 
@@ -15,9 +15,9 @@ export const playing$ = $(false);
 export const currentTime$ = $(0);
 export const currentTrack$ = useMemo(() => state.trackData[state.activeTrackId || -1]);
 
-const currentTrackIndex$ = useMemo(() => state.queue?.indexOf(state.activeTrackId || -1));
+const currentTrackIndex$ = useMemo(() => $$(cleanQueue$)?.indexOf(state.activeTrackId || -1));
 export const isFirst$ = useMemo(() => currentTrackIndex$() === 0);
-export const isLast$ = useMemo(() => currentTrackIndex$() === (state.queue?.length || 0) - 1);
+export const isLast$ = useMemo(() => currentTrackIndex$() === ($$(cleanQueue$)?.length || 0) - 1);
 
 export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();

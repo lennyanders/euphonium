@@ -37,13 +37,11 @@ const LinkList = ({ links }: { links: IconLink[] }) => (
   </For>
 );
 
-export const Home = () => (
-  <>
-    <ul class='grid gap-2'>
-      <LinkList links={mainLinks} />
-    </ul>
-    <ul class='grid gap-2 m-t-a p-t-12 text-sm op-75'>
-      <LinkList links={secondaryLinks} />
-    </ul>
-  </>
-);
+export const Home = () => [
+  <ul class='grid gap-2'>
+    <LinkList links={mainLinks} />
+  </ul>,
+  <ul class='grid gap-2 m-t-a p-t-12 text-sm op-75'>
+    <LinkList links={secondaryLinks} />
+  </ul>,
+];

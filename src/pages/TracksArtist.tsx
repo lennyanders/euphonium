@@ -13,12 +13,9 @@ export const TracksArtist = () => {
         <HeroImage
           image={() => artist$()?.image!}
           title={() => (
-            <>
-              All tracks from{' '}
-              <RouterLink href={() => `/artist/${encodeURIComponent(artist$()?.name!)}`}>
-                {artist$()?.name}
-              </RouterLink>
-            </>
+            <RouterLink href={() => `/artist/${encodeURIComponent(artist$()?.name!)}`}>
+              All tracks from {artist$()?.name}
+            </RouterLink>
           )}
           sublines={[
             <>

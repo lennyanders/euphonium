@@ -6,7 +6,7 @@ import { MainControls } from '../components/Player/MainControls';
 import { Progress } from '../components/Player/Progress';
 import { Slider, volumeIcon$ } from '../components/Player/Volume';
 import { TrackList } from '../components/TrackList';
-import { state } from '../modules/library';
+import { cleanQueue$, state } from '../modules/library';
 import { currentTrack$ } from '../modules/player';
 import { RouterLink } from '../router';
 
@@ -55,7 +55,7 @@ export const Player = () => {
         </div>
         Queue
       </div>
-      <TrackList trackIds={useMemo(() => state.queue || [])} stickToActiveTrack showIndex />
+      <TrackList trackIds={cleanQueue$} stickToActiveTrack showIndex />
     </If>
   );
 };
