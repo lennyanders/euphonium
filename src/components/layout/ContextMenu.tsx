@@ -1,5 +1,5 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
-import { $, For, If, batch, useEffect, useEventListener } from 'voby';
+import { $, For, If, batch, useEffect, useEventListener, $$ } from 'voby';
 
 export type ContextMenuItem = 'spacer' | { title: string; action: () => void };
 
@@ -30,14 +30,14 @@ export const ContextMenu = () => {
   const transformTransition$ = $(false);
   const ul$ = $<HTMLUListElement>();
   useEffect(() => {
-    if (ul$()) transformTransition$(false);
+    if ($$(ul$)) transformTransition$(false);
   });
   useEffect(() => {
-    const ul = ul$();
+    const ul = $$(ul$);
     if (!ul) return;
 
-    const mouseX = mousePosX$();
-    const mouseY = mousePosY$();
+    const mouseX = $$(mousePosX$);
+    const mouseY = $$(mousePosY$);
     const virtualEl = {
       getBoundingClientRect: () => ({
         width: 0,
@@ -67,14 +67,14 @@ export const ContextMenu = () => {
       <ul
         class={[
           'absolute top-0 left-0 min-w-40 text-sm p-1 rd-2 bg-black:75 backdrop-blur-2 grid',
-          () => !visible$() && 'opacity-0',
-          () => (transformTransition$() ? 'transition' : 'transition-opacity'),
+          () => !$$(visible$) && 'opacity-0',
+          () => ($$(transformTransition$) ? 'transition' : 'transition-opacity'),
         ]}
-        style={{ transform: () => `translateX(${menuPosX$()}px) translateY(${menuPosY$()}px)` }}
+        style={{ transform: () => `translateX(${$$(menuPosX$)}px) translateY(${$$(menuPosY$)}px)` }}
         ref={ul$}
         onMouseDown={(event) => event.stopPropagation()}
         onContextMenu={(event) => event.preventDefault()}
-        onTransitionEnd={() => !visible$() && visibleTransition$(false)}
+        onTransitionEnd={() => !$$(visible$) && visibleTransition$(false)}
       >
         <For values={items$}>
           {(item) => {

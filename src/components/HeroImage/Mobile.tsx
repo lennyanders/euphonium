@@ -1,4 +1,4 @@
-import { $, For } from 'voby';
+import { $, $$, For } from 'voby';
 
 import { HeroImageProps } from '.';
 import { CoverImage } from '../CoverImage';
@@ -9,7 +9,7 @@ export const HeroImageMobile = (props: HeroImageProps) => {
     <div
       class={[
         'p-t-8 relative m--4 min-w-[calc(100%+2rem)] overflow-hidden transition-margin duration-250 m-b-2',
-        () => !fullImage$() && 'm-t-[calc(-30vw-3rem)]',
+        () => !$$(fullImage$) && 'm-t-[calc(-30vw-3rem)]',
       ]}
       onClick={() => fullImage$((val) => !val)}
     >
@@ -17,7 +17,7 @@ export const HeroImageMobile = (props: HeroImageProps) => {
         src={props.image}
         class={[
           'w-100% transition-transform duration-250',
-          () => (fullImage$() ? 'translate-y--8' : 'translate-y-15vw'),
+          () => ($$(fullImage$) ? 'translate-y--8' : 'translate-y-15vw'),
         ]}
       />
       <div
@@ -40,7 +40,7 @@ export const HeroImageMobile = (props: HeroImageProps) => {
       <div
         class={[
           'i-mdi-chevron-up absolute bottom--3 w-12 h-12 left-50% m-l--6 transition-opacity duration-250',
-          () => !fullImage$() && 'opacity-0',
+          () => !$$(fullImage$) && 'opacity-0',
         ]}
       />
     </div>

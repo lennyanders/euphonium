@@ -35,23 +35,23 @@ export const Virtual = <T,>(options: VirtualProps<T>) => {
     useCleanup(virtualizer._didMount());
   });
   useEffect(() => {
-    items$();
+    $$(items$);
     untrack(virtualizer$)?._willUpdate();
   });
 
   return (
     <ul class={options.ulClass} style={{ height: height$, position: 'relative' }}>
       <ForValue values={items$}>
-        {(index) => (
+        {(index$) => (
           <li
             class={options.liClass}
             style={{
-              transform: () => `translateY(${itemToStart$()[index()]}px) `,
+              transform: () => `translateY(${$$(itemToStart$)[$$(index$)]}px) `,
               position: 'absolute',
               width: '100%',
             }}
           >
-            {options.children(() => $$(options.items)[index()], index)}
+            {options.children(() => $$(options.items)[$$(index$)], index$)}
           </li>
         )}
       </ForValue>

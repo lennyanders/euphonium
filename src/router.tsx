@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useReadonly, store, batch, useEffect } from 'voby';
+import { $, useReadonly, store, batch, useEffect, $$ } from 'voby';
 
 export type Params = Record<string, string | null>;
 
@@ -87,7 +87,7 @@ export const Router = ({
 }) => {
   const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
   return () => {
-    const p = _path$();
+    const p = $$(_path$);
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
       const url = new URL(location.href);
@@ -120,7 +120,7 @@ export const Router = ({
 export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   const el$ = $<HTMLAnchorElement>();
   props.onClick = (event: MouseEvent) => {
-    const anchor = el$();
+    const anchor = $$(el$);
     if (!anchor || anchor.origin !== location.origin) return;
 
     event.preventDefault();

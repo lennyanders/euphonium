@@ -1,4 +1,4 @@
-import { $, If, useMemo, Observable, useEffect } from 'voby';
+import { $, If, useMemo, Observable, useEffect, $$ } from 'voby';
 
 import { AlbumList } from '../components/AlbumList';
 import { ArtistList } from '../components/ArtistList';
@@ -32,7 +32,7 @@ const syncQueryParamBool = (prop: string, fallback: boolean) => {
     val$(!queryParams[prop] ? fallback : queryParams[prop] === '1');
   });
   useEffect(() => {
-    queryParams[prop] = val$() ? '1' : '0';
+    queryParams[prop] = $$(val$) ? '1' : '0';
   });
   return val$;
 };
@@ -43,13 +43,13 @@ export const Search = () => {
     query$(queryParams.search || '');
   });
   useEffect(() => {
-    queryParams.search = query$();
+    queryParams.search = $$(query$);
   });
   const queryTracks$ = syncQueryParamBool('tracks', true);
   const queryAlbums$ = syncQueryParamBool('albums', true);
   const queryArtists$ = syncQueryParamBool('artists', true);
   const queryOnlyAlbumArtists$ = syncQueryParamBool('onlyAlbumArtists', false);
-  const matchRegex$ = useMemo(() => new RegExp(query$(), 'i'));
+  const matchRegex$ = useMemo(() => new RegExp($$(query$), 'i'));
 
   return [
     <h1>Search</h1>,
@@ -80,12 +80,12 @@ export const Search = () => {
       <h2>Tracks</h2>
       <TrackList
         trackIds={useMemo(() =>
-          tracksSortedByTitle$()
+          $$(tracksSortedByTitle$)
             .filter(
               (track) =>
-                matchRegex$().test(track.title) ||
-                matchRegex$().test(track.artist || '') ||
-                matchRegex$()?.test(track.year?.toString() || ''),
+                $$(matchRegex$).test(track.title) ||
+                $$(matchRegex$).test(track.artist || '') ||
+                $$(matchRegex$)?.test(track.year?.toString() || ''),
             )
             .map((track) => track.id),
         )}
@@ -95,12 +95,12 @@ export const Search = () => {
       <h2>Albums</h2>
       <AlbumList
         albumIds={useMemo(() =>
-          albumsSortedByTitle$()
+          $$(albumsSortedByTitle$)
             .filter(
               (album) =>
-                matchRegex$().test(album.title) ||
-                matchRegex$().test(album.artist) ||
-                matchRegex$()?.test(album.year?.toString() || ''),
+                $$(matchRegex$).test(album.title) ||
+                $$(matchRegex$).test(album.artist) ||
+                $$(matchRegex$)?.test(album.year?.toString() || ''),
             )
             .map((album) => `${album.artist}${album.title}`),
         )}
@@ -110,11 +110,11 @@ export const Search = () => {
       <h2>Artists</h2>
       <ArtistList
         artistIds={useMemo(() =>
-          artistsSortedByName$()
+          $$(artistsSortedByName$)
             .filter(
               (artist) =>
-                matchRegex$().test(artist.name) &&
-                (queryOnlyAlbumArtists$() ? artist.albums.length : true),
+                $$(matchRegex$).test(artist.name) &&
+                ($$(queryOnlyAlbumArtists$) ? artist.albums.length : true),
             )
             .map((artist) => artist.name),
         )}

@@ -1,4 +1,4 @@
-import { $, useEffect } from 'voby';
+import { $, $$, useEffect } from 'voby';
 
 const useMatchMedia = (media: string) => {
   const matcher = matchMedia(media);
@@ -13,7 +13,7 @@ export const w1024$ = useMatchMedia('(min-width: 1024px)');
 export const mainEl$ = $<HTMLElement>();
 export const mainElWidth$ = $(0);
 useEffect(() => {
-  const mainEl = mainEl$();
+  const mainEl = $$(mainEl$);
   if (!mainEl) return;
   const observer = new ResizeObserver(([el]) => mainElWidth$(el.contentRect.width));
   observer.observe(mainEl);

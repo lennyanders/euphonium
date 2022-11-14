@@ -1,4 +1,4 @@
-import { $, Observable, useEffect } from 'voby';
+import { $, $$, Observable, useEffect } from 'voby';
 
 type Props = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> &
   (
@@ -15,7 +15,7 @@ export const Input = (props: Props) => {
   const ref$ = $<HTMLInputElement>();
   if (props.type === 'checkbox' || props.type === 'radio') {
     useEffect(() => {
-      const el = ref$();
+      const el = $$(ref$);
       if (el) el.checked = props.model();
     });
     props.onChange = (event) => props.model((event.target as HTMLInputElement).checked);
@@ -31,13 +31,13 @@ export const Input = (props: Props) => {
     props.type === 'week'
   ) {
     useEffect(() => {
-      const el = ref$();
+      const el = $$(ref$);
       if (el) el.value = props.model();
     });
     props.onInput = (event) => props.model((event.target as HTMLInputElement).value);
   } else if (props.type === 'number' || props.type === 'range') {
     useEffect(() => {
-      const el = ref$();
+      const el = $$(ref$);
       if (el) el.value = props.model().toString();
     });
     props.onInput = (event) => props.model(+(event.target as HTMLInputElement).value);

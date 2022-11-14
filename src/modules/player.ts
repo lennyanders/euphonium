@@ -16,8 +16,8 @@ export const currentTime$ = $(0);
 export const currentTrack$ = useMemo(() => state.trackData[state.activeTrackId || -1]);
 
 const currentTrackIndex$ = useMemo(() => $$(cleanQueue$)?.indexOf(state.activeTrackId || -1));
-export const isFirst$ = useMemo(() => currentTrackIndex$() === 0);
-export const isLast$ = useMemo(() => currentTrackIndex$() === ($$(cleanQueue$)?.length || 0) - 1);
+export const isFirst$ = useMemo(() => $$(currentTrackIndex$) === 0);
+export const isLast$ = useMemo(() => $$(currentTrackIndex$) === ($$(cleanQueue$)?.length || 0) - 1);
 
 export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();
@@ -81,7 +81,7 @@ export const pause = () => audioEl.pause();
 export const go = (offset: number) => {
   if (state.loop === 'track') offset = 0;
   const queue = state.queue || [];
-  let nextTrackIndex = (currentTrackIndex$() || 0) + offset;
+  let nextTrackIndex = ($$(currentTrackIndex$) || 0) + offset;
   if (state.loop === 'queue') {
     if (nextTrackIndex > queue.length - 1) nextTrackIndex = queue.length % nextTrackIndex;
     else if (nextTrackIndex < 0) nextTrackIndex = queue.length + nextTrackIndex;
@@ -126,7 +126,7 @@ const updateTime = () => {
   });
 };
 useEffect(() => {
-  if (playing$()) updateTime();
+  if ($$(playing$)) updateTime();
   else cancelAnimationFrame(animationFrameId);
 });
 
@@ -145,7 +145,7 @@ if (mediaSession) {
   });
 
   useEffect(() => {
-    const track = currentTrack$();
+    const track = $$(currentTrack$);
     if (!track) {
       mediaSession.metadata = null;
       return;

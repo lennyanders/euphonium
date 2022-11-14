@@ -1,4 +1,4 @@
-import { Ternary, useMemo } from 'voby';
+import { $$, Ternary, useMemo } from 'voby';
 
 import { TrackList } from '../components/TrackList';
 import { state, tracksSortedByTitle$ } from '../modules/library';
@@ -8,7 +8,7 @@ export const Tracks = () => (
   <Ternary when={state.trackData}>
     <>
       <h1>Tracks</h1>
-      <TrackList trackIds={useMemo(() => tracksSortedByTitle$().map((track) => track.id))} />
+      <TrackList trackIds={useMemo(() => $$(tracksSortedByTitle$).map((track) => track.id))} />
     </>
     {/* no tracks */}
     <p>

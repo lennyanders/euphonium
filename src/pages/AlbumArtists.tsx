@@ -1,4 +1,4 @@
-import { Ternary, useMemo } from 'voby';
+import { $$, Ternary, useMemo } from 'voby';
 
 import { ArtistList } from '../components/ArtistList';
 import { artistsSortedByName$ } from '../modules/library';
@@ -6,12 +6,12 @@ import { RouterLink } from '../router';
 
 export const AlbumArtists = () => {
   const albumArtists$ = useMemo(() =>
-    artistsSortedByName$()
+    $$(artistsSortedByName$)
       .filter((artist) => artist.albums.length)
       .map((artist) => artist.name),
   );
   return (
-    <Ternary when={() => albumArtists$()?.length}>
+    <Ternary when={() => $$(albumArtists$)?.length}>
       <>
         <h1>Album Artists</h1>
         <ArtistList artistIds={albumArtists$} />

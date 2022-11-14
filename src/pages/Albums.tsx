@@ -1,4 +1,4 @@
-import { Ternary, useMemo } from 'voby';
+import { $$, Ternary, useMemo } from 'voby';
 
 import { AlbumList } from '../components/AlbumList';
 import { albumsSortedByTitle$, state } from '../modules/library';
@@ -10,7 +10,7 @@ export const Albums = () => (
       <h1>Albums</h1>
       <AlbumList
         albumIds={useMemo(() =>
-          albumsSortedByTitle$().map((album) => `${album.artist}${album.title}`),
+          $$(albumsSortedByTitle$).map((album) => `${album.artist}${album.title}`),
         )}
       />
     </>

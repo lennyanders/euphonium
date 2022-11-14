@@ -1,4 +1,4 @@
-import { If, Ternary, useMemo } from 'voby';
+import { $$, If, Ternary, useMemo } from 'voby';
 
 import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
@@ -12,35 +12,35 @@ export const Artist = () => {
     <Ternary when={artist$}>
       <>
         <HeroImage
-          image={() => artist$()?.image!}
-          title={() => artist$()?.name}
+          image={() => $$(artist$)?.image!}
+          title={() => $$(artist$)?.name}
           sublines={[
             <>
-              {() => artist$()?.tracks.length} <div class='i-mdi-music-note m-l-.5 m-r-2' />
-              <If when={() => artist$()?.albums.length}>
-                {() => artist$()?.albums.length} <div class='i-mdi-disk m-l-.5 m-r-2' />
+              {() => $$(artist$)?.tracks.length} <div class='i-mdi-music-note m-l-.5 m-r-2' />
+              <If when={() => $$(artist$)?.albums.length}>
+                {() => $$(artist$)?.albums.length} <div class='i-mdi-disk m-l-.5 m-r-2' />
               </If>
-              {() => artist$()?.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
+              {() => $$(artist$)?.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
             </>,
           ]}
         />
-        <If when={() => artist$()?.albums.length}>
+        <If when={() => $$(artist$)?.albums.length}>
           <RouterLink
-            href={() => `/tracks/${encodeURIComponent(artist$()?.name!)}`}
+            href={() => `/tracks/${encodeURIComponent($$(artist$)?.name!)}`}
             class='flex gap-4 items-center'
           >
             <div class='w-8 i-mdi-music-circle' />
             <div>
               All artist songs
-              <small class='lh-[1] block'>{() => artist$()?.tracks.length}</small>
+              <small class='lh-[1] block'>{() => $$(artist$)?.tracks.length}</small>
             </div>
           </RouterLink>
-          <h2>Albums ({() => artist$()?.albums.length})</h2>
-          <AlbumList albumIds={useMemo(() => artist$()?.albums!)} />
+          <h2>Albums ({() => $$(artist$)?.albums.length})</h2>
+          <AlbumList albumIds={useMemo(() => $$(artist$)?.albums!)} />
         </If>
-        <If when={() => artist$()?.singles.length}>
-          <h2>Singles ({() => artist$()?.singles.length})</h2>
-          <TrackList trackIds={useMemo(() => artist$()?.singles!)} />
+        <If when={() => $$(artist$)?.singles.length}>
+          <h2>Singles ({() => $$(artist$)?.singles.length})</h2>
+          <TrackList trackIds={useMemo(() => $$(artist$)?.singles!)} />
         </If>
       </>
       {/* no artist */}

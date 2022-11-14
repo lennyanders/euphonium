@@ -11,7 +11,7 @@ import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 const onContextMenu = (event: MouseEvent, track: FETrack, trackIds: number[]) => {
   const isActiveTrack = track.id === state.activeTrackId;
   const items: ContextMenuItem[] = [];
-  if (isActiveTrack && playing$()) items.push({ title: 'Pause', action: pause });
+  if (isActiveTrack && $$(playing$)) items.push({ title: 'Pause', action: pause });
   else items.push({ title: 'Play', action: () => play(track.id, trackIds) });
 
   if (!isActiveTrack) {
@@ -92,7 +92,7 @@ export const TrackList = ({
     props.ref = virtualizer$;
     useEffect(() => {
       const index = $$(trackIds).indexOf(state.activeTrackId!);
-      if (index > -1) virtualizer$()?.scrollToIndex(index, { align: 'start' });
+      if (index > -1) $$(virtualizer$)?.scrollToIndex(index, { align: 'start' });
     });
   }
 

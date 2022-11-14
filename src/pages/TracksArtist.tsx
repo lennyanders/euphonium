@@ -1,4 +1,4 @@
-import { Ternary, useMemo } from 'voby';
+import { $$, Ternary, useMemo } from 'voby';
 
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
@@ -11,20 +11,20 @@ export const TracksArtist = () => {
     <Ternary when={artist$}>
       <>
         <HeroImage
-          image={() => artist$()?.image!}
+          image={() => $$(artist$)?.image!}
           title={() => (
-            <RouterLink href={() => `/artist/${encodeURIComponent(artist$()?.name!)}`}>
-              All tracks from {artist$()?.name}
+            <RouterLink href={() => `/artist/${encodeURIComponent($$(artist$)?.name!)}`}>
+              All tracks from {$$(artist$)?.name}
             </RouterLink>
           )}
           sublines={[
             <>
-              {() => artist$()?.tracks.length} <div class='i-mdi-music-note m-l-.5 m-r-2' />
-              {() => artist$()?.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
+              {() => $$(artist$)?.tracks.length} <div class='i-mdi-music-note m-l-.5 m-r-2' />
+              {() => $$(artist$)?.durationFormatted} <div class='i-mdi-timer-sand m-l-.5' />
             </>,
           ]}
         />
-        <TrackList trackIds={useMemo(() => artist$()?.tracks!)} />
+        <TrackList trackIds={useMemo(() => $$(artist$)?.tracks!)} />
       </>
       {/* no artist */}
       <p>

@@ -1,4 +1,4 @@
-import { If, Ternary } from 'voby';
+import { $$, If, Ternary } from 'voby';
 
 import { w1024$ } from '../../modules/layout';
 import { currentTrack$ } from '../../modules/player';
@@ -14,14 +14,14 @@ const Desktop = () => [
   <div class='flex items-center'>
     <div class='flex-1 flex gap-4 p-x-4 truncate'>
       <CoverImage
-        src={() => currentTrack$()?.coverPreview!}
+        src={() => $$(currentTrack$)?.coverPreview!}
         class='w-12 h-12 rd-1 shrink-0 background-size-125%'
       />
       <div class='truncate'>
-        {() => currentTrack$()?.title}
+        {() => $$(currentTrack$)?.title}
         <small class='truncate block'>
-          <RouterLink href={() => `/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
-            {() => currentTrack$()?.artist}
+          <RouterLink href={() => `/artist/${encodeURIComponent($$(currentTrack$)?.artist!)}`}>
+            {() => $$(currentTrack$)?.artist}
           </RouterLink>
         </small>
       </div>
@@ -29,11 +29,11 @@ const Desktop = () => [
     <MainControls />
     <div class='flex-1 flex gap-4 p-x-4 justify-end'>
       <VolumeDesktop />
-      <Ternary when={() => path$() === '/queue' && history.length > 2}>
+      <Ternary when={() => $$(path$) === '/queue' && history.length > 2}>
         <button class='w-8 h-8 i-mdi-playlist-music-outline' onClick={() => history.back()} />
         <RouterLink
           class='w-8 h-8 i-mdi-playlist-music-outline'
-          href={() => (path$() === '/queue' ? '../' : '/queue')}
+          href={() => ($$(path$) === '/queue' ? '../' : '/queue')}
         />
       </Ternary>
     </div>
@@ -41,12 +41,12 @@ const Desktop = () => [
 ];
 
 const Mobile = () => [
-  <If when={() => path$() !== '/player' && currentTrack$()}>
+  <If when={() => $$(path$) !== '/player' && $$(currentTrack$)}>
     <div class='w-64 flex items-center'>
       <PlayPause class='m-4' />
       <RouterLink href='/player' class='flex-1 grid'>
-        <span class='truncate'>{() => currentTrack$()?.title}</span>
-        <small class='truncate block'>{() => currentTrack$()?.artist}</small>
+        <span class='truncate'>{() => $$(currentTrack$)?.title}</span>
+        <small class='truncate block'>{() => $$(currentTrack$)?.artist}</small>
       </RouterLink>
     </div>
   </If>,

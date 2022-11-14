@@ -1,4 +1,4 @@
-import { For } from 'voby';
+import { $$, For } from 'voby';
 
 import { path$, RouterLink } from '../router';
 
@@ -25,7 +25,7 @@ const LinkList = ({ links }: { links: IconLink[] }) => (
         <RouterLink
           class={[
             'flex items-center gap-2 transition-opacity',
-            () => path$() !== href && 'lg:op-66',
+            () => $$(path$) !== href && 'lg:op-66',
           ]}
           href={href}
         >

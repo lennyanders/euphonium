@@ -1,4 +1,4 @@
-import { $, If, useMemo } from 'voby';
+import { $, $$, If, useMemo } from 'voby';
 
 import { HeroImage } from '../components/HeroImage';
 import { HeroImageMobilePlayer } from '../components/HeroImage/MobilePlayer';
@@ -12,17 +12,17 @@ import { RouterLink } from '../router';
 
 export const Player = () => {
   const editVolume$ = $(false);
-  const volumeControlsClasses$ = useMemo(() => !editVolume$() && 'opacity-0 pointer-events-none');
+  const volumeControlsClasses$ = useMemo(() => !$$(editVolume$) && 'opacity-0 pointer-events-none');
 
   return (
     <If when={currentTrack$}>
       <div class='sticky top-0 m-x--4 m-t--4 p-4 p-b-0 bg-dark-400 z-1 after:(content-none block absolute top-100% left-0 right-0 h-4 c-dark-400 bgi-[linear-gradient(currentColor,transparent)])'>
         <HeroImage
-          image={() => currentTrack$()?.cover!}
-          title={() => currentTrack$()?.title}
+          image={() => $$(currentTrack$)?.cover!}
+          title={() => $$(currentTrack$)?.title}
           sublines={[
-            <RouterLink href={() => `/artist/${encodeURIComponent(currentTrack$()?.artist!)}`}>
-              {() => currentTrack$()?.artist}
+            <RouterLink href={() => `/artist/${encodeURIComponent($$(currentTrack$)?.artist!)}`}>
+              {() => $$(currentTrack$)?.artist}
             </RouterLink>,
           ]}
           mobileComp={HeroImageMobilePlayer}
@@ -48,7 +48,7 @@ export const Player = () => {
           </div>
           <div class='flex-1 flex justify-end'>
             <button
-              onClick={() => (editVolume$() ? (state.mute = !state.mute) : editVolume$(true))}
+              onClick={() => ($$(editVolume$) ? (state.mute = !state.mute) : editVolume$(true))}
               class={['w-8 h-8', volumeIcon$]}
             />
           </div>

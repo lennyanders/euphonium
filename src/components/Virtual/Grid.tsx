@@ -64,18 +64,18 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
     });
   });
   useEffect(() => {
-    items$();
+    $$(items$);
     untrack(virtualizer$)?._willUpdate();
   });
 
   return (
     <ul class={options.ulClass} style={{ height: height$, position: 'relative' }}>
       <ForValue values={items$}>
-        {(index) => (
-          <ForValue values={() => Array.from({ length: itemsPerRow$() }).map((_, i) => i)}>
-            {(colIndex) => {
-              const index$ = useMemo(() => index() * itemsPerRow$() + colIndex());
-              const item$ = useMemo(() => $$(options.items)[index$()]);
+        {(indexRow$) => (
+          <ForValue values={() => Array.from({ length: $$(itemsPerRow$) }).map((_, i) => i)}>
+            {(indexCol$) => {
+              const index$ = useMemo(() => $$(indexRow$) * $$(itemsPerRow$) + $$(indexCol$));
+              const item$ = useMemo(() => $$(options.items)[$$(index$)]);
               return (
                 <If when={item$}>
                   <li
@@ -83,8 +83,8 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
                     style={{
                       width: itemWidth$,
                       transform: () =>
-                        `translateY(${itemsToStart$()[index()]}px) translateX(${
-                          itemWidth$() * colIndex()
+                        `translateY(${$$(itemsToStart$)[$$(indexRow$)]}px) translateX(${
+                          $$(itemWidth$) * $$(indexCol$)
                         }px)`,
                       position: 'absolute',
                     }}
