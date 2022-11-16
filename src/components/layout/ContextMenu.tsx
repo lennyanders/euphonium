@@ -1,4 +1,5 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { ternary } from 'oby';
 import { $, For, If, batch, useEffect, useEventListener, $$ } from 'voby';
 
 export type ContextMenuItem = 'spacer' | { title: string; action: () => void };
@@ -68,7 +69,7 @@ export const ContextMenu = () => {
         class={[
           'absolute top-0 left-0 min-w-40 text-sm p-1 rd-2 bg-black:75 backdrop-blur-2 grid',
           () => !$$(visible$) && 'opacity-0',
-          () => ($$(transformTransition$) ? 'transition' : 'transition-opacity'),
+          ternary(transformTransition$, 'transition', 'transition-opacity'),
         ]}
         style={{ transform: () => `translateX(${$$(menuPosX$)}px) translateY(${$$(menuPosY$)}px)` }}
         ref={ul$}
