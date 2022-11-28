@@ -1,7 +1,7 @@
 import { $$, useMemo } from 'voby';
 
 import { state } from '../../modules/library';
-import { go, isFirst$, isLast$, shuffle } from '../../modules/player';
+import { currentTrack$, go, isFirst$, isLast$, shuffle } from '../../modules/player';
 import { PlayPause } from './PlayPause';
 
 const loopIcon$ = useMemo(() => {
@@ -27,13 +27,13 @@ export const MainControls = () => (
     <button
       onClick={() => go(-1)}
       class='w-8 h-8 i-mdi-skip-previous-outline'
-      disabled={() => !$$(isLoop$) && $$(isFirst$)}
+      disabled={() => !$$(currentTrack$) || (!$$(isLoop$) && $$(isFirst$))}
     />
     <PlayPause />
     <button
       onClick={() => go(1)}
       class='w-8 h-8 i-mdi-skip-next-outline'
-      disabled={() => !$$(isLoop$) && $$(isLast$)}
+      disabled={() => !$$(currentTrack$) || (!$$(isLoop$) && $$(isLast$))}
     />
     <button
       onClick={() => shuffle(!state.shuffle)}
