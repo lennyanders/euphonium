@@ -44,22 +44,8 @@ const restoreScrollPosition = () => {
 
 const updatePage = (path: string) => {
   history.replaceState({ scrollY: window.scrollY }, '');
-
-  // @ts-ignore
-  if (!document.createDocumentTransition) {
-    _path$(path);
-    restoreScrollPosition();
-    return;
-  }
-
-  document.documentElement.classList.add('transition-warming-up');
-  // @ts-ignore
-  const transition = document.createDocumentTransition();
-  transition.start(() => {
-    _path$(path);
-    restoreScrollPosition();
-    document.documentElement.classList.remove('transition-warming-up');
-  });
+  _path$(path);
+  restoreScrollPosition();
 };
 
 export const go = (path: string) => {
