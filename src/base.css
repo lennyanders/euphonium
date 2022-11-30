@@ -86,8 +86,11 @@ input {
   border: 0;
   padding: 0;
   font: inherit;
-  cursor: pointer;
   text-align: inherit;
+}
+
+button:enabled {
+  cursor: pointer;
 }
 
 ::-webkit-search-cancel-button {
