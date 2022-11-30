@@ -51,7 +51,7 @@ onMessage(async ({ data }) => {
 export const Settings = () => {
   // prettier-ignore
   const buttonCss = 'bg-dark-500 p-1-2 rd-1 hover:bg-dark-800 transition-background-color transition-color';
-  const importing$ = useMemo(() => state.importing);
+  const importing$ = useMemo(() => !!state.importing);
   return [
     <h1>Settings</h1>,
     <h2>Library</h2>,

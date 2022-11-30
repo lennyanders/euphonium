@@ -65,7 +65,7 @@ const getAllFileHandlesFromDirectory = async ({
     }
     return res;
   } catch (_) {
-    state.importing = false;
+    delete state.importing;
     postMessage({ message: 'requestPermission', directoryHandle });
     throw Error();
   }

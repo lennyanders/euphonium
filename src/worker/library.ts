@@ -11,7 +11,7 @@ import {
 } from './files';
 import { beToFETrack } from './files/converters';
 import { getCover } from './files/getCover';
-import { partialUpdates$, state } from './state';
+import { enablePartialUpdates, state } from './state';
 import { postMessage } from './utils';
 
 const getDbData = async () => {
@@ -77,7 +77,9 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
 
 export const updateFiles = async () => {
   console.time('update');
-  state.importing = true;
+  state.importing = {
+    message: 'importing',
+  };
 
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
@@ -149,7 +151,7 @@ export const updateFiles = async () => {
   console.timeEnd('update database');
 
   state.trackData = await getFETrackData();
-  state.importing = false;
+  delete state.importing;
 
   console.timeEnd('update');
 };
@@ -171,6 +173,6 @@ Promise.all([getFEDirectories(), getFETrackData(), getDbData()]).then(
     $.batch(() => Object.assign(state, { libraryDirectories, trackData }, data));
 
     postMessage({ message: 'setState', state: $.store.unwrap(state) });
-    partialUpdates$(true);
+    enablePartialUpdates();
   },
 );

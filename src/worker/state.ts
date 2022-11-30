@@ -3,8 +3,6 @@ import $ from 'oby';
 import { albumDataGetter, artistDataGetter } from './computedValues';
 import { postMessage } from './utils';
 
-export const partialUpdates$ = $(false);
-
 export const state = $.store<State>({
   loading: false,
   libraryDirectories: [],
@@ -17,33 +15,39 @@ export const state = $.store<State>({
   },
 });
 
-$.effect(() => {
-  if (!state.libraryDirectories || !$.untrack(partialUpdates$)) return;
-  postMessage({
-    message: 'setLibraryDirectories',
-    state: $.store.unwrap(state).libraryDirectories,
-  });
-});
+export const enablePartialUpdates = () => {
+  $.store.on(
+    () => state.libraryDirectories,
+    () => {
+      postMessage({
+        message: 'setLibraryDirectories',
+        state: $.store.unwrap(state).libraryDirectories,
+      });
+    },
+  );
 
-$.effect(() => {
-  if (!state.trackData || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setTrackData', state: $.store.unwrap(state).trackData });
-});
+  $.store.on(
+    () => state.trackData,
+    () => postMessage({ message: 'setTrackData', state: $.store.unwrap(state).trackData }),
+  );
 
-$.effect(() => {
-  if (!state.albumData || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setAlbumData', state: $.store.unwrap(state).albumData });
-});
+  $.store.on(
+    () => state.albumData,
+    () => postMessage({ message: 'setAlbumData', state: $.store.unwrap(state).albumData }),
+  );
 
-$.effect(() => {
-  if (!state.artistData || !$.untrack(partialUpdates$)) return;
-  postMessage({ message: 'setArtistData', state: $.store.unwrap(state).artistData });
-});
+  $.store.on(
+    () => state.artistData,
+    () => postMessage({ message: 'setArtistData', state: $.store.unwrap(state).artistData }),
+  );
 
-$.effect(() => {
-  if (state.importing === undefined || !$.untrack(partialUpdates$)) return;
-  postMessage({
-    message: 'setTemporaryData',
-    state: { importing: $.store.unwrap(state).importing },
-  });
-});
+  $.store.on(
+    () => state.importing,
+    () => {
+      postMessage({
+        message: 'setTemporaryData',
+        state: { importing: $.store.unwrap(state).importing },
+      });
+    },
+  );
+};
