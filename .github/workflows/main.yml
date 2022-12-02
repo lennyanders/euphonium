@@ -32,7 +32,7 @@ jobs:
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Deploy build to server
-        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USER }}
