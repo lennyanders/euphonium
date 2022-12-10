@@ -8,6 +8,7 @@ import { MainControls } from '../Player/MainControls';
 import { PlayPause } from '../Player/PlayPause';
 import { Progress } from '../Player/Progress';
 import { VolumeDesktop } from '../Player/Volume';
+import { Toasts } from '../Toasts';
 
 const Desktop = () => [
   <Progress class='p-x-4 p-t-2 p-b-1' />,
@@ -41,6 +42,7 @@ const Desktop = () => [
 ];
 
 const Mobile = () => [
+  <Toasts css='absolute bottom-100% right-0 mb-4' />,
   <If when={() => $$(path$) !== '/player' && $$(currentTrack$)}>
     <div class='w-64 flex items-center'>
       <PlayPause class='m-4' />

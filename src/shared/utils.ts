@@ -7,3 +7,7 @@ export const getFormattedTime = (duration: number) => {
 
   return `${hours ? `${hours}:` : ''}${hours ? pad(minutes) : minutes}:${pad(seconds)}`;
 };
+
+export const wait = async (time: number) => {
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
+};

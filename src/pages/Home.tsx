@@ -1,5 +1,7 @@
-import { $$, For } from 'voby';
+import { $$, For, If } from 'voby';
 
+import { Toasts } from '../components/Toasts';
+import { w1024$ } from '../modules/layout';
 import { path$, RouterLink } from '../router';
 
 type IconLink = { href: string; icon: string; title: string };
@@ -38,10 +40,13 @@ const LinkList = ({ links }: { links: IconLink[] }) => (
 );
 
 export const Home = () => [
-  <ul class='grid gap-2'>
+  <ul class='grid gap-2 p-b-12 m-b-a'>
     <LinkList links={mainLinks} />
   </ul>,
-  <ul class='grid gap-2 m-t-a p-t-12 text-sm op-75'>
+  <If when={w1024$}>
+    <Toasts css='sticky bottom-0 ml--2 mr--4' />
+  </If>,
+  <ul class='grid gap-2 text-sm op-75'>
     <LinkList links={secondaryLinks} />
   </ul>,
 ];

@@ -1,5 +1,6 @@
 import $ from 'oby';
 
+import { wait } from '../shared/utils';
 import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
 import { getDatabase } from './database';
 import {
@@ -77,9 +78,10 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
 
 export const updateFiles = async () => {
   console.time('update');
-  state.importing = {
-    message: 'importing',
-  };
+
+  const now = performance.now();
+
+  state.importing = { message: 'importing' };
 
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
@@ -142,18 +144,21 @@ export const updateFiles = async () => {
     ...removedTrackIds.map((id) => txT.store.delete(id)),
     ...newDbTracks.map((track) => txT.store.add(track)),
     ...changedDbTracks.map((track) => txT.store.put(track)),
-    txT.done,
     ...removedCoverIds.map((id) => txC.store.delete(id)),
     ...newDbCovers.map((cover) => txC.store.add(cover)),
     ...changedDbCovers.map((cover) => txC.store.put(cover)),
-    txC.done,
   ]);
+  await Promise.all([txT.done, txC.done]);
   console.timeEnd('update database');
 
   state.trackData = await getFETrackData();
-  delete state.importing;
 
   console.timeEnd('update');
+
+  const minTime = 1000;
+  const timeSpent = performance.now() - now;
+  if (timeSpent < minTime) await wait(minTime - timeSpent);
+  delete state.importing;
 };
 
 export const setGeneralData = async (data: GeneralData) => {
