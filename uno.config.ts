@@ -36,6 +36,7 @@ export default defineConfig({
     ],
     [/^p-(\d+)-(\d+)$/, ([_, y, x]) => ({ padding: `${+y / 4}rem ${+x / 4}rem` })],
     [/^background-size-(.*)$/, ([, d]) => ({ 'background-size': d })],
+    [/^animation-duration-(.*)$/, ([, d]) => ({ 'animation-duration': d })],
     [/^var-(.*)-(.*)$/, ([, name, val]) => ({ [`--${name}`]: val })],
     [/^shadow-\[(.*)\]$/, ([, val]) => ({ 'box-shadow': val.replace(/_/g, ' ') })],
     [/^bgi-\[(.*)\]$/, ([, val]) => ({ 'background-image': val.replace(/_/g, ' ') })],
