@@ -1,4 +1,4 @@
-import { $, If } from 'voby';
+import { $, If, store } from 'voby';
 
 import { ContextMenu } from './components/layout/ContextMenu';
 import { Footer } from './components/layout/Footer';
@@ -62,7 +62,7 @@ const desktopRoutes = [
 ];
 
 export const App = () => {
-  const showLoadingSpinner$ = $(state.loading);
+  const showLoadingSpinner$ = $(store.unwrap(state).loading);
   return [
     <If when={() => !state.loading}>
       <If
