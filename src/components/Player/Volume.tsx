@@ -10,7 +10,7 @@ export const volumeIcon$ = useMemo(() => {
   return 'i-mdi-volume-low';
 });
 
-export const Slider = ({ css, bg }: { css?: string; bg?: string }) => (
+export const Slider = ({ class: css, bg }: { class?: string; bg?: string }) => (
   <Range
     max={1}
     val={() => (state.volume !== undefined ? state.volume : 1)}
@@ -27,7 +27,7 @@ export const VolumeDesktop = () => (
       class={['w-8 h-8 next:(hover:(opacity-100 pointer-events-auto))', volumeIcon$]}
     />
     <div class='p-2 transition-opacity opacity-0 pointer-events-none hover:(opacity-100 pointer-events-auto)'>
-      <Slider css='w-32' />
+      <Slider class='w-32' />
     </div>
   </div>
 );
