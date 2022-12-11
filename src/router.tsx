@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useReadonly, store, batch, useEffect, $$ } from 'voby';
+import { $, useReadonly, store, batch, useEffect, $$, useMemo } from 'voby';
 
 export type Params = Record<string, string | null>;
 
@@ -73,9 +73,7 @@ export const Router = ({
 }) => {
   const parsedRoutes = routes.map((route) => ({ ...route, regex: parse(route.path) }));
 
-  const component$ = $<JSX.Child>();
-
-  useEffect(() => {
+  return useMemo(() => {
     const p = $$(_path$);
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
     if (updateUrl) {
@@ -102,10 +100,8 @@ export const Router = ({
       updateQueryParams();
     });
 
-    component$(route.component);
+    return route.component;
   });
-
-  return component$;
 };
 
 export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {
