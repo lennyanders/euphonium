@@ -78,7 +78,7 @@ export const App = () => [
   <Transition
     when={() => state.loading}
     class='fixed bg-inherit inset-0 grid gap-4 justify-items-center content-center transition-delay-100 transition-opacity'
-    leaveClass='opacity-0'
+    leaveToClass='opacity-0'
   >
     <div class='i-mdi-loading w-12 h-12 animate-spin' />
     loading

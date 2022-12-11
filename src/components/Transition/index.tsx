@@ -1,20 +1,27 @@
 import {
   $,
   $$,
+  batch,
   Dynamic,
   FunctionMaybe,
   If,
   Observable,
-  untrack,
   useAnimationFrame,
   useEffect,
   useEventListener,
 } from 'voby';
+import { Disposer } from 'voby/dist/types';
+
+import { useDebouncedMemo } from '../../utils';
 
 export const Transition = <T extends any, U extends keyof JSX.IntrinsicElements>({
   when,
-  enterClass,
-  leaveClass,
+  enterFromClass,
+  enterActiveClass,
+  enterToClass,
+  leaveFromClass,
+  leaveActiveClass,
+  leaveToClass,
   el,
   children,
   class: css,
@@ -22,37 +29,88 @@ export const Transition = <T extends any, U extends keyof JSX.IntrinsicElements>
   ...props
 }: JSX.IntrinsicElements[U] & {
   when: FunctionMaybe<T>;
-  enterClass?: JSX.Class;
-  leaveClass?: JSX.Class;
+  enterFromClass?: JSX.Class;
+  enterActiveClass?: JSX.Class;
+  enterToClass?: JSX.Class;
+  leaveFromClass?: JSX.Class;
+  leaveActiveClass?: JSX.Class;
+  leaveToClass?: JSX.Class;
   el?: U;
   children?: JSX.Child;
 }) => {
-  const show$ = $(!!untrack(when));
+  const when$ = useDebouncedMemo(() => $$(when));
+  const show$ = $(false);
   const el$ = $() as Observable<JSX.IntrinsicElementsMap[U]>;
 
+  const enterFromClass$ = $<JSX.Class>();
+  const enterActiveClass$ = $<JSX.Class>();
+  const enterToClass$ = $<JSX.Class>();
   useEffect(() => {
-    if ($$(when)) show$(true);
+    if (!$$(when$)) return;
+
+    let transitionDisposer: Disposer;
+    batch(() => {
+      show$(true);
+      enterFromClass$(enterFromClass);
+      enterActiveClass$(enterActiveClass);
+    });
+    useAnimationFrame(() => {
+      batch(() => {
+        enterFromClass$(undefined);
+        enterToClass$(enterToClass);
+      });
+      transitionDisposer = useEventListener(el$, 'transitionend', () => {
+        transitionDisposer();
+        enterActiveClass$(undefined);
+      });
+    });
+
+    return () => {
+      transitionDisposer?.();
+      enterFromClass$(undefined);
+      enterActiveClass$(undefined);
+      enterToClass$(undefined);
+    };
   });
 
-  const showEnterClass$ = $(untrack(show$));
-  if (typeof enterClass !== 'undefined') {
-    useEffect(() => {
-      if (!$$(when)) return;
+  const leaveFromClass$ = $<JSX.Class>();
+  const leaveActiveClass$ = $<JSX.Class>();
+  const leaveToClass$ = $<JSX.Class>();
+  useEffect(() => {
+    if ($$(when$) || !$$(el$)) return;
 
-      showEnterClass$(true);
-      useAnimationFrame(() => showEnterClass$(false));
-    });
-  }
+    if (!leaveFromClass && !leaveActiveClass && !leaveToClass) {
+      show$(false);
+      return;
+    }
 
-  if (typeof leaveClass !== 'undefined') {
-    useEffect(() => {
-      if ($$(el$) && !$$(when)) useEventListener(el$, 'transitionend', () => show$(false));
+    let transitionDisposer: Disposer;
+    batch(() => {
+      leaveFromClass$(leaveFromClass);
+      leaveActiveClass$(leaveActiveClass);
     });
-  } else {
-    useEffect(() => {
-      if (!$$(when)) show$(false);
+    useAnimationFrame(() => {
+      batch(() => {
+        leaveFromClass$(undefined);
+        leaveToClass$(leaveToClass);
+      });
+      transitionDisposer = useEventListener(el$, 'transitionend', () => {
+        transitionDisposer();
+        batch(() => {
+          show$(false);
+          leaveToClass$(undefined);
+          leaveActiveClass$(undefined);
+        });
+      });
     });
-  }
+
+    return () => {
+      transitionDisposer?.();
+      leaveFromClass$(undefined);
+      leaveActiveClass$(undefined);
+      leaveToClass$(undefined);
+    };
+  });
 
   return (
     <If when={show$}>
@@ -61,7 +119,15 @@ export const Transition = <T extends any, U extends keyof JSX.IntrinsicElements>
         props={{
           ...props,
           ref: [el$, ref],
-          class: [css, () => $$(showEnterClass$) && enterClass, () => !$$(when) && leaveClass],
+          class: [
+            css,
+            enterFromClass$,
+            enterActiveClass$,
+            enterToClass$,
+            leaveFromClass$,
+            leaveActiveClass$,
+            leaveToClass$,
+          ],
         }}
         children={children}
       />

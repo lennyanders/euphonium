@@ -1,6 +1,5 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
-import { ternary } from 'oby';
-import { $, For, batch, useEffect, useEventListener, $$ } from 'voby';
+import { $, For, batch, useEffect, useEventListener, $$, store } from 'voby';
 
 import { Transition } from '../Transition';
 
@@ -8,16 +7,14 @@ export type ContextMenuItem = 'spacer' | { title: string; action: () => void };
 
 const items$ = $<ContextMenuItem[]>([]);
 const visible$ = $(false);
-const mousePosX$ = $(0);
-const mousePosY$ = $(0);
+const mousePos = store({ x: 0, y: 0 });
 
 export const showContextMenu = (event: MouseEvent, items: ContextMenuItem[]) => {
   if (!items.length) return;
   event.preventDefault();
   event.stopPropagation();
   batch(() => {
-    mousePosX$(event.x);
-    mousePosY$(event.y);
+    Object.assign(mousePos, { x: event.x, y: event.y });
     items$(items);
     visible$(true);
   });
@@ -26,54 +23,40 @@ export const showContextMenu = (event: MouseEvent, items: ContextMenuItem[]) => 
 export const ContextMenu = () => {
   useEventListener(window, 'mousedown', () => visible$(false));
 
-  const menuPosX$ = $(0);
-  const menuPosY$ = $(0);
-  const transformTransition$ = $(false);
+  const menuPos = store({ x: 0, y: 0 });
   const ul$ = $<HTMLUListElement>();
-  useEffect(() => {
-    if ($$(ul$)) transformTransition$(false);
-  });
+
   useEffect(() => {
     const ul = $$(ul$);
     if (!ul) return;
 
-    const mouseX = $$(mousePosX$);
-    const mouseY = $$(mousePosY$);
-    const virtualEl = {
-      getBoundingClientRect: () => ({
-        width: 0,
-        height: 0,
-        x: mouseX,
-        y: mouseY,
-        left: mouseX,
-        right: mouseX,
-        top: mouseY,
-        bottom: mouseY,
-      }),
+    const rect = {
+      width: 0,
+      height: 0,
+      x: mousePos.x,
+      y: mousePos.y,
+      left: mousePos.x,
+      right: mousePos.x,
+      top: mousePos.y,
+      bottom: mousePos.y,
     };
-    computePosition(virtualEl, ul, {
+    computePosition({ getBoundingClientRect: () => rect }, ul, {
       placement: 'right-start',
       middleware: [offset(5), flip(), shift()],
-    }).then(({ x, y }) => {
-      batch(() => {
-        menuPosX$(x);
-        menuPosY$(y);
-      });
-      requestAnimationFrame(() => transformTransition$(true));
-    });
+    }).then(({ x, y }) => batch(() => Object.assign(menuPos, { x, y })));
   });
 
   return (
     <Transition
       el='ul'
       when={visible$}
-      class={[
-        'absolute top-0 left-0 min-w-40 text-sm p-1 rd-2 bg-black:75 backdrop-blur-2 grid',
-        ternary(transformTransition$, 'transition', 'transition-opacity'),
-      ]}
-      enterClass='opacity-0'
-      leaveClass='opacity-0'
-      style={{ transform: () => `translateX(${$$(menuPosX$)}px) translateY(${$$(menuPosY$)}px)` }}
+      class='absolute top-0 left-0 min-w-40 text-sm p-1 rd-2 bg-black:75 backdrop-blur-2 grid'
+      enterFromClass='opacity-0'
+      enterActiveClass='transition-opacity'
+      enterToClass='transition-transform'
+      leaveActiveClass='transition-opacity'
+      leaveToClass='opacity-0'
+      style={{ transform: () => `translateX(${menuPos.x}px) translateY(${menuPos.y}px)` }}
       ref={ul$}
       onMouseDown={(event) => event.stopPropagation()}
       onContextMenu={(event) => event.preventDefault()}

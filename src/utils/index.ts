@@ -1,4 +1,4 @@
-import { store } from 'voby';
+import { store, $, $$, untrack, useAnimationFrame, useEffect } from 'voby';
 
 import { state } from '../modules/library';
 
@@ -46,4 +46,13 @@ export const appendToArrayUnique = (arr: number[], val: number) => {
   const newArr = arr.slice().filter((v) => v !== val);
   newArr.push(val);
   return newArr;
+};
+
+export const useDebouncedMemo = <T extends any>(val: () => T) => {
+  const val$ = $<T>(untrack(val));
+  useEffect(() => {
+    $$(val);
+    useAnimationFrame(() => val$($$(val)));
+  });
+  return val$;
 };
