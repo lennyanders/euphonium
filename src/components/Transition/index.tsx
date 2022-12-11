@@ -11,23 +11,24 @@ import {
   useEventListener,
 } from 'voby';
 
-export const Transition = <T extends any>({
+export const Transition = <T extends any, U extends keyof JSX.IntrinsicElements>({
   when,
-  class: css,
   enterClass,
   leaveClass,
-  el = 'div',
+  el,
   children,
-}: {
+  class: css,
+  ref,
+  ...props
+}: JSX.IntrinsicElements[U] & {
   when: FunctionMaybe<T>;
-  class?: JSX.Class;
   enterClass?: JSX.Class;
   leaveClass?: JSX.Class;
-  el?: keyof JSX.IntrinsicElementsMap;
+  el?: U;
   children?: JSX.Child;
 }) => {
   const show$ = $(!!untrack(when));
-  const el$ = $() as Observable<JSX.IntrinsicElementsMap[typeof el]>;
+  const el$ = $() as Observable<JSX.IntrinsicElementsMap[U]>;
 
   useEffect(() => {
     if ($$(when)) show$(true);
@@ -56,14 +57,14 @@ export const Transition = <T extends any>({
   return (
     <If when={show$}>
       <Dynamic
-        component={el}
+        component={el || 'div'}
         props={{
-          ref: el$,
+          ...props,
+          ref: [el$, ref],
           class: [css, () => $$(showEnterClass$) && enterClass, () => !$$(when) && leaveClass],
         }}
-      >
-        {children}
-      </Dynamic>
+        children={children}
+      />
     </If>
   );
 };

@@ -1,12 +1,13 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
 import { ternary } from 'oby';
-import { $, For, If, batch, useEffect, useEventListener, $$ } from 'voby';
+import { $, For, batch, useEffect, useEventListener, $$ } from 'voby';
+
+import { Transition } from '../Transition';
 
 export type ContextMenuItem = 'spacer' | { title: string; action: () => void };
 
 const items$ = $<ContextMenuItem[]>([]);
 const visible$ = $(false);
-const visibleTransition$ = $(false);
 const mousePosX$ = $(0);
 const mousePosY$ = $(0);
 
@@ -15,12 +16,11 @@ export const showContextMenu = (event: MouseEvent, items: ContextMenuItem[]) => 
   event.preventDefault();
   event.stopPropagation();
   batch(() => {
-    visibleTransition$(true);
     mousePosX$(event.x);
     mousePosY$(event.y);
     items$(items);
+    visible$(true);
   });
-  requestAnimationFrame(() => visible$(true));
 };
 
 export const ContextMenu = () => {
@@ -64,41 +64,41 @@ export const ContextMenu = () => {
   });
 
   return (
-    <If when={visibleTransition$}>
-      <ul
-        class={[
-          'absolute top-0 left-0 min-w-40 text-sm p-1 rd-2 bg-black:75 backdrop-blur-2 grid',
-          () => !$$(visible$) && 'opacity-0',
-          ternary(transformTransition$, 'transition', 'transition-opacity'),
-        ]}
-        style={{ transform: () => `translateX(${$$(menuPosX$)}px) translateY(${$$(menuPosY$)}px)` }}
-        ref={ul$}
-        onMouseDown={(event) => event.stopPropagation()}
-        onContextMenu={(event) => event.preventDefault()}
-        onTransitionEnd={() => !$$(visible$) && visibleTransition$(false)}
-      >
-        <For values={items$}>
-          {(item) => {
-            if (item === 'spacer') {
-              return (
-                <li>
-                  <hr class='m-y-1 m-x-.5 op-25' />
-                </li>
-              );
-            }
+    <Transition
+      el='ul'
+      when={visible$}
+      class={[
+        'absolute top-0 left-0 min-w-40 text-sm p-1 rd-2 bg-black:75 backdrop-blur-2 grid',
+        ternary(transformTransition$, 'transition', 'transition-opacity'),
+      ]}
+      enterClass='opacity-0'
+      leaveClass='opacity-0'
+      style={{ transform: () => `translateX(${$$(menuPosX$)}px) translateY(${$$(menuPosY$)}px)` }}
+      ref={ul$}
+      onMouseDown={(event) => event.stopPropagation()}
+      onContextMenu={(event) => event.preventDefault()}
+    >
+      <For values={items$}>
+        {(item) => {
+          if (item === 'spacer') {
             return (
               <li>
-                <button
-                  class='w-100% p-y-.5 p-x-1 rd-1 hover:bg-white:25'
-                  onClick={() => (item.action(), visible$(false))}
-                >
-                  {item.title}
-                </button>
+                <hr class='m-y-1 m-x-.5 op-25' />
               </li>
             );
-          }}
-        </For>
-      </ul>
-    </If>
+          }
+          return (
+            <li>
+              <button
+                class='w-100% p-y-.5 p-x-1 rd-1 hover:bg-white:25'
+                onClick={() => (item.action(), visible$(false))}
+              >
+                {item.title}
+              </button>
+            </li>
+          );
+        }}
+      </For>
+    </Transition>
   );
 };
