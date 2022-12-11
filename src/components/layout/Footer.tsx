@@ -42,7 +42,7 @@ const Desktop = () => [
 ];
 
 const Mobile = () => [
-  <Toasts css='absolute bottom-100% right-0 mb-4' />,
+  <Toasts class='absolute bottom-100% right-0 mb-4' />,
   <If when={() => $$(path$) !== '/player' && $$(currentTrack$)}>
     <div class='w-64 flex items-center'>
       <PlayPause class='m-4' />

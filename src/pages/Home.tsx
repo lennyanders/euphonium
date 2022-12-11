@@ -44,7 +44,7 @@ export const Home = () => [
     <LinkList links={mainLinks} />
   </ul>,
   <If when={w1024$}>
-    <Toasts css='sticky bottom-0 ml--2 mr--4' />
+    <Toasts class='sticky bottom-0 ml--2 mr--4' />
   </If>,
   <ul class='grid gap-2 text-sm op-75'>
     <LinkList links={secondaryLinks} />

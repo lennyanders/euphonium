@@ -97,9 +97,7 @@ type GeneralData = Partial<{
 }>;
 
 type TemporaryData = Partial<{
-  importing: {
-    message: string;
-  };
+  importing: boolean;
 }>;
 
 interface State extends GeneralData, TemporaryData {

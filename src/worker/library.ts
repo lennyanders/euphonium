@@ -81,7 +81,7 @@ export const updateFiles = async () => {
 
   const now = performance.now();
 
-  state.importing = { message: 'importing' };
+  state.importing = true;
 
   console.time('get files from directories');
   const fileHandles = await getFileHandlesFromRootDirectories();
