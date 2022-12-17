@@ -2,10 +2,14 @@ import unocss from 'unocss/vite';
 import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 import rewriteAll from 'vite-plugin-rewrite-all';
-import voby from 'voby-vite';
 
 export default defineConfig({
-  plugins: [voby(), unocss(), checker({ typescript: true }), rewriteAll()],
+  plugins: [unocss(), checker({ typescript: true }), rewriteAll()],
+  esbuild: {
+    jsxInject: `import { h as $$h, Fragment as $$F } from 'voby';\n`,
+    jsxFactory: '$$h',
+    jsxFragment: '$$F',
+  },
   define: {
     'global.Uint8Array': 'Uint8Array',
     'process.env.NODE_DEBUG': false,

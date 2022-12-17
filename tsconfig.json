@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "jsxImportSource": "voby",
     "types": ["vite/client", "@types/wicg-file-system-access", "@types/offscreencanvas"],
     "noEmit": true,
