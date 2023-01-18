@@ -30,7 +30,6 @@
     "@floating-ui/dom": "^1.0.4",
     "@tanstack/virtual-core": "^3.0.0-beta.2",
     "buffer": "^6.0.3",
-    "events": "^3.3.0",
     "idb": "^7.1.0",
     "music-metadata": "^8.1.0",
     "oby": "^12.4.2",
