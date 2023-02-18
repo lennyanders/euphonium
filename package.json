@@ -15,13 +15,13 @@
     "@types/node": "^18.11.8",
     "@types/offscreencanvas": "^2019.6.4",
     "@types/wicg-file-system-access": "^2020.9.5",
-    "@unocss/preset-icons": "^0.48.0",
-    "@unocss/preset-uno": "^0.48.0",
-    "@unocss/preset-web-fonts": "^0.48.0",
-    "@unocss/transformer-variant-group": "^0.48.0",
+    "@unocss/preset-icons": "^0.49.7",
+    "@unocss/preset-uno": "^0.49.7",
+    "@unocss/preset-web-fonts": "^0.49.7",
+    "@unocss/transformer-variant-group": "^0.49.7",
     "prettier": "^2.6.2",
     "typescript": "^4.8.4",
-    "unocss": "^0.48.0",
+    "unocss": "^0.49.7",
     "vite": "^4.0.1",
     "vite-plugin-checker": "^0.5.1",
     "vite-plugin-rewrite-all": "^1.0.0"
@@ -34,6 +34,6 @@
     "music-metadata": "^8.1.0",
     "oby": "^12.4.2",
     "regexparam": "^2.0.0",
-    "voby": "^0.43.5"
+    "voby": "^0.44.0"
   }
 }

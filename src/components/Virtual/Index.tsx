@@ -4,16 +4,16 @@ import { $, $$, batch, useEffect, useCleanup, untrack, ForValue } from 'voby';
 import { baseOptions, getVirtualItemToStart, getVirtualItems, SharedProps } from './shared';
 
 export interface VirtualProps<T> extends SharedProps<T> {
-  ref?: (virtualizer: Virtualizer<Window & typeof globalThis, any>) => void;
+  ref?: (virtualizer: Virtualizer<Window, any>) => void;
 }
 export const Virtual = <T,>(options: VirtualProps<T>) => {
-  const virtualizer$ = $<Virtualizer<Window & typeof globalThis, any>>();
+  const virtualizer$ = $<Virtualizer<Window, any>>();
   const height$ = $(0);
   const items$ = $<number[]>([]);
   const itemToStart$ = $<Record<number, number>>({});
   useEffect(() => {
     const virtualizer = virtualizer$(
-      new Virtualizer({
+      new Virtualizer<Window, any>({
         ...baseOptions,
         overscan: options.overscan,
         count: $$(options.items).length,
