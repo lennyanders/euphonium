@@ -5,7 +5,7 @@ import { state } from '../modules/library';
 import { play, pause, playing$, appendToQueue, playNext } from '../modules/player';
 import { go } from '../router';
 import { CoverImage } from './CoverImage';
-import { Virtual, VirtualProps } from './Virtual/Index';
+import { Virtual, VirtualProps } from './Virtual';
 import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 
 const onContextMenu = (event: MouseEvent, track: FETrack, trackIds: number[]) => {
