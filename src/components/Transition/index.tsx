@@ -1,7 +1,6 @@
 import {
   $,
   $$,
-  batch,
   Dynamic,
   FunctionMaybe,
   If,
@@ -49,16 +48,12 @@ export const Transition = <T extends any, U extends keyof JSX.IntrinsicElements>
     if (!$$(when$)) return;
 
     let transitionDisposer: Disposer;
-    batch(() => {
-      show$(true);
-      enterFromClass$(enterFromClass);
-      enterActiveClass$(enterActiveClass);
-    });
+    show$(true);
+    enterFromClass$(enterFromClass);
+    enterActiveClass$(enterActiveClass);
     useAnimationFrame(() => {
-      batch(() => {
-        enterFromClass$(undefined);
-        enterToClass$(enterToClass);
-      });
+      enterFromClass$(undefined);
+      enterToClass$(enterToClass);
       transitionDisposer = useEventListener(el$, 'transitionend', () => {
         transitionDisposer();
         enterActiveClass$(undefined);
@@ -85,22 +80,16 @@ export const Transition = <T extends any, U extends keyof JSX.IntrinsicElements>
     }
 
     let transitionDisposer: Disposer;
-    batch(() => {
-      leaveFromClass$(leaveFromClass);
-      leaveActiveClass$(leaveActiveClass);
-    });
+    leaveFromClass$(leaveFromClass);
+    leaveActiveClass$(leaveActiveClass);
     useAnimationFrame(() => {
-      batch(() => {
-        leaveFromClass$(undefined);
-        leaveToClass$(leaveToClass);
-      });
+      leaveFromClass$(undefined);
+      leaveToClass$(leaveToClass);
       transitionDisposer = useEventListener(el$, 'transitionend', () => {
         transitionDisposer();
-        batch(() => {
-          show$(false);
-          leaveToClass$(undefined);
-          leaveActiveClass$(undefined);
-        });
+        show$(false);
+        leaveToClass$(undefined);
+        leaveActiveClass$(undefined);
       });
     });
 

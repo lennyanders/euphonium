@@ -1,4 +1,4 @@
-import { $$, batch, store, useMemo } from 'voby';
+import { $$, store, useMemo } from 'voby';
 
 import { onMessage } from '../utils/worker';
 
@@ -34,11 +34,11 @@ export const cleanQueue$ = useMemo(() => {
 
 onMessage(({ data }) => {
   if (import.meta.env.DEV && data.message === 'setState') console.log(data.state);
-  if (data.message === 'setState') return batch(() => Object.assign(state, data.state));
+  if (data.message === 'setState') return Object.assign(state, data.state);
   if (data.message === 'setTrackData') return (state.trackData = data.state);
   if (data.message === 'setAlbumData') return (state.albumData = data.state);
   if (data.message === 'setArtistData') return (state.artistData = data.state);
   if (data.message === 'setLibraryDirectories') return (state.libraryDirectories = data.state);
-  if (data.message === 'setGeneralData') return batch(() => Object.assign(state, data.state));
-  if (data.message === 'setTemporaryData') return batch(() => Object.assign(state, data.state));
+  if (data.message === 'setGeneralData') return Object.assign(state, data.state);
+  if (data.message === 'setTemporaryData') return Object.assign(state, data.state);
 });

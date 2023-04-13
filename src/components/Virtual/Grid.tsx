@@ -1,16 +1,5 @@
 import { Virtualizer } from '@tanstack/virtual-core';
-import {
-  $,
-  Observable,
-  If,
-  batch,
-  useCleanup,
-  useEffect,
-  untrack,
-  $$,
-  ForValue,
-  useMemo,
-} from 'voby';
+import { $, Observable, If, useCleanup, useEffect, untrack, $$, For, useMemo } from 'voby';
 
 import { baseOptions, getVirtualItems, getVirtualItemToStart, SharedProps } from './shared';
 
@@ -36,32 +25,26 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
     const itemWidth = contentWidth / itemsPerRow;
     const itemHeight = options.size(itemWidth);
 
-    batch(() => {
-      const virtualizer = virtualizer$(
-        new Virtualizer<Window, any>({
-          ...baseOptions,
-          count: Math.ceil($$(options.items).length / itemsPerRow),
-          overscan: options.overscan,
-          estimateSize: () => itemHeight,
-          onChange: (virtualizer) => {
-            const vItems = virtualizer.getVirtualItems();
-            batch(() => {
-              items$(getVirtualItems(vItems));
-              itemsToStart$(getVirtualItemToStart(vItems));
-            });
-          },
-        }),
-      )!;
-      const vItems = virtualizer.getVirtualItems();
-      batch(() => {
-        itemWidth$(itemWidth);
-        itemsPerRow$(itemsPerRow);
-        height$(virtualizer.getTotalSize());
-        items$(getVirtualItems(vItems));
-        itemsToStart$(getVirtualItemToStart(vItems));
-      });
-      useCleanup(virtualizer._didMount());
-    });
+    const virtualizer = virtualizer$(
+      new Virtualizer<Window, any>({
+        ...baseOptions,
+        count: Math.ceil($$(options.items).length / itemsPerRow),
+        overscan: options.overscan,
+        estimateSize: () => itemHeight,
+        onChange: (virtualizer) => {
+          const vItems = virtualizer.getVirtualItems();
+          items$(getVirtualItems(vItems));
+          itemsToStart$(getVirtualItemToStart(vItems));
+        },
+      }),
+    )!;
+    const vItems = virtualizer.getVirtualItems();
+    itemWidth$(itemWidth);
+    itemsPerRow$(itemsPerRow);
+    height$(virtualizer.getTotalSize());
+    items$(getVirtualItems(vItems));
+    itemsToStart$(getVirtualItemToStart(vItems));
+    useCleanup(virtualizer._didMount());
   });
   useEffect(() => {
     $$(items$);
@@ -70,11 +53,11 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
 
   return (
     <ul class={options.ulClass} style={{ height: height$, position: 'relative' }}>
-      <ForValue values={items$}>
-        {(indexRow$) => (
-          <ForValue values={() => Array.from({ length: $$(itemsPerRow$) }).map((_, i) => i)}>
+      <For values={items$}>
+        {(indexRow) => (
+          <For values={() => Array.from({ length: $$(itemsPerRow$) }).map((_, i) => i)}>
             {(indexCol$) => {
-              const index$ = useMemo(() => $$(indexRow$) * $$(itemsPerRow$) + $$(indexCol$));
+              const index$ = useMemo(() => indexRow * $$(itemsPerRow$) + $$(indexCol$));
               const item$ = useMemo(() => $$(options.items)[$$(index$)]);
               return (
                 <If when={item$}>
@@ -83,7 +66,7 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
                     style={{
                       width: itemWidth$,
                       transform: () =>
-                        `translateY(${$$(itemsToStart$)[$$(indexRow$)]}px) translateX(${
+                        `translateY(${$$(itemsToStart$)[indexRow]}px) translateX(${
                           $$(itemWidth$) * $$(indexCol$)
                         }px)`,
                       position: 'absolute',
@@ -94,9 +77,9 @@ export const VirtualGrid = <T,>(options: VirtualGridProps<T>) => {
                 </If>
               );
             }}
-          </ForValue>
+          </For>
         )}
-      </ForValue>
+      </For>
     </ul>
   );
 };

@@ -175,7 +175,7 @@ export const setGeneralData = async (data: GeneralData) => {
 
 Promise.all([getFEDirectories(), getFETrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
-    $.batch(() => Object.assign(state, { libraryDirectories, trackData }, data));
+    Object.assign(state, { libraryDirectories, trackData }, data);
 
     postMessage({ message: 'setState', state: $.store.unwrap(state) });
     enablePartialUpdates();

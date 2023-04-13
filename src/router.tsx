@@ -1,5 +1,5 @@
 import { parse } from 'regexparam';
-import { $, useReadonly, store, batch, useEffect, $$ } from 'voby';
+import { $, useReadonly, store, useEffect, $$ } from 'voby';
 
 export type Params = Record<string, string | null>;
 
@@ -19,10 +19,8 @@ const getQueryParams = () => {
 };
 export const queryParams = store<Record<string, string>>(getQueryParams());
 const updateQueryParams = () => {
-  batch(() => {
-    for (const key in store.unwrap(queryParams)) delete queryParams[key];
-    Object.assign(queryParams, getQueryParams());
-  });
+  for (const key in store.unwrap(queryParams)) delete queryParams[key];
+  Object.assign(queryParams, getQueryParams());
 };
 useEffect(() => {
   const url = new URL(location.href);
@@ -96,11 +94,9 @@ export const Router = ({
       document.title = route.title(newParams);
     }
 
-    batch(() => {
-      for (const key in store.unwrap(params)) delete params[key];
-      Object.assign(params, newParams);
-      updateQueryParams();
-    });
+    for (const key in store.unwrap(params)) delete params[key];
+    Object.assign(params, newParams);
+    updateQueryParams();
 
     component$(route.component);
   });

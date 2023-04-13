@@ -1,5 +1,5 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
-import { $, For, batch, useEffect, useEventListener, $$, store } from 'voby';
+import { $, For, useEffect, useEventListener, $$, store } from 'voby';
 
 import { Transition } from '../Transition';
 
@@ -13,11 +13,9 @@ export const showContextMenu = (event: MouseEvent, items: ContextMenuItem[]) => 
   if (!items.length) return;
   event.preventDefault();
   event.stopPropagation();
-  batch(() => {
-    Object.assign(mousePos, { x: event.x, y: event.y });
-    items$(items);
-    visible$(true);
-  });
+  Object.assign(mousePos, { x: event.x, y: event.y });
+  items$(items);
+  visible$(true);
 };
 
 export const ContextMenu = () => {
@@ -43,7 +41,7 @@ export const ContextMenu = () => {
     computePosition({ getBoundingClientRect: () => rect }, ul, {
       placement: 'right-start',
       middleware: [offset(5), flip(), shift()],
-    }).then(({ x, y }) => batch(() => Object.assign(menuPos, { x, y })));
+    }).then(({ x, y }) => Object.assign(menuPos, { x, y }));
   });
 
   return (
