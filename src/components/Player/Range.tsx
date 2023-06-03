@@ -17,11 +17,11 @@ export const Range = ({ max, val, seek, bg = 'bg-dark-400', class: css = 'flex-1
   >
     <div
       class={[
-        'overflow-hidden relative h-2 rd-1 before:(content-none absolute top-0 right-1 bottom-0 left-1 translate-x-[var(--pos)] bg-current shadow-[-1rem_0_0_currentColor])',
+        'overflow-hidden relative h-2 rd-1 before:(content-empty absolute top-0 right-1 bottom-0 left-1 translate-x-[var(--pos)] bg-current shadow-[-1rem_0_0_currentColor])',
         bg,
       ]}
     />
-    <div class='absolute top-0 right-1 bottom-0 left-1 translate-x-[var(--pos)] pointer-events-none before:(content-none pointer-events-auto block absolute h-2 w-2 rd-1 right--1 bg-current transition-transform scale-[var(--thumb-size,1)])' />
+    <div class='absolute top-0 right-1 bottom-0 left-1 translate-x-[var(--pos)] pointer-events-none before:(content-empty pointer-events-auto block absolute h-2 w-2 rd-1 right--1 bg-current transition-transform scale-[var(--thumb-size,1)])' />
     <input
       class='absolute top-0 right-0 bottom-0 left-0 m-0 op-0 cursor-pointer'
       type='range'

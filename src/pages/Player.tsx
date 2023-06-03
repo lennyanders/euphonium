@@ -16,7 +16,7 @@ export const Player = () => {
 
   return (
     <If when={currentTrack$}>
-      <div class='sticky top-0 m-x--4 m-t--4 p-4 p-b-0 bg-dark-400 z-1 after:(content-none block absolute top-100% left-0 right-0 h-4 c-dark-400 bgi-[linear-gradient(currentColor,transparent)])'>
+      <div class='sticky top-0 m-x--4 m-t--4 p-4 p-b-0 bg-dark-400 z-1 after:(content-empty block absolute top-100% left-0 right-0 h-4 c-dark-400 bgi-[linear-gradient(currentColor,transparent)])'>
         <HeroImage
           image={() => $$(currentTrack$)?.cover!}
           title={() => $$(currentTrack$)?.title}
