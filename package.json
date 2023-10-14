@@ -14,14 +14,14 @@
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/node": "^20.2.5",
     "@types/offscreencanvas": "^2019.6.4",
-    "@types/wicg-file-system-access": "^2020.9.5",
-    "@unocss/preset-icons": "^0.52.7",
-    "@unocss/preset-uno": "^0.52.7",
-    "@unocss/preset-web-fonts": "^0.52.7",
-    "@unocss/transformer-variant-group": "^0.52.7",
-    "prettier": "^2.6.2",
+    "@types/wicg-file-system-access": "^2023.10.1",
+    "@unocss/preset-icons": "^0.56.5",
+    "@unocss/preset-uno": "^0.56.5",
+    "@unocss/preset-web-fonts": "^0.56.5",
+    "@unocss/transformer-variant-group": "^0.56.5",
+    "prettier": "^3.0.3",
     "typescript": "^5.0.3",
-    "unocss": "^0.52.7",
+    "unocss": "^0.56.5",
     "vite": "^4.0.1",
     "vite-plugin-checker": "^0.6.0",
     "vite-plugin-rewrite-all": "^1.0.0",
@@ -29,12 +29,12 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.0.4",
-    "@tanstack/virtual-core": "^3.0.0-beta.2",
+    "@tanstack/virtual-core": "^3.0.0-beta.65",
     "buffer": "^6.0.3",
     "idb": "^7.1.0",
     "music-metadata": "^8.1.0",
     "oby": "^14.2.2",
     "regexparam": "^2.0.0",
-    "voby": "^0.53.4"
+    "voby": "^0.56.4"
   }
 }
