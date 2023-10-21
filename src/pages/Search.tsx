@@ -1,3 +1,4 @@
+import { Searcher } from 'fast-fuzzy';
 import { $, If, useMemo, Observable, useEffect, $$ } from 'voby';
 
 import { AlbumList } from '../components/AlbumList';
@@ -37,6 +38,12 @@ const syncQueryParamBool = (prop: string, fallback: boolean) => {
   return val$;
 };
 
+const trackOrAlbumKeySelector = (obj: FETrack | FEAlbum) => [
+  obj.title,
+  ...(obj.artist ? [obj.artist] : []),
+  ...(obj.year ? [obj.year.toString()] : []),
+];
+
 export const Search = () => {
   const query$ = $('');
   useEffect(() => {
@@ -45,11 +52,48 @@ export const Search = () => {
   useEffect(() => {
     queryParams.search = $$(query$);
   });
+
   const queryTracks$ = syncQueryParamBool('tracks', true);
+  const tracksSearcher$ = useMemo(() => {
+    if (!queryTracks$()) return;
+    return new Searcher(tracksSortedByTitle$(), {
+      keySelector: trackOrAlbumKeySelector,
+      ignoreSymbols: false,
+    });
+  });
+  const tracks$ = useMemo(() => {
+    const searcher = tracksSearcher$();
+    if (!searcher) return [];
+    return searcher.search(query$()).map((track) => track.id);
+  });
+
   const queryAlbums$ = syncQueryParamBool('albums', true);
+  const albumsSearcher$ = useMemo(() => {
+    if (!queryAlbums$()) return;
+    return new Searcher(albumsSortedByTitle$(), {
+      keySelector: trackOrAlbumKeySelector,
+      ignoreSymbols: false,
+    });
+  });
+  const albums$ = useMemo(() => {
+    const searcher = albumsSearcher$();
+    if (!searcher) return [];
+    return searcher.search(query$()).map((album) => `${album.artist}${album.title}`);
+  });
+
   const queryArtists$ = syncQueryParamBool('artists', true);
   const queryOnlyAlbumArtists$ = syncQueryParamBool('onlyAlbumArtists', false);
-  const matchRegex$ = useMemo(() => new RegExp($$(query$), 'i'));
+  const artistsSearcher$ = useMemo(() => {
+    if (!queryArtists$()) return;
+    let artists = artistsSortedByName$();
+    if (queryOnlyAlbumArtists$()) artists = artists.filter((artist) => artist.albums.length);
+    return new Searcher(artists, { keySelector: (obj) => obj.name, ignoreSymbols: false });
+  });
+  const artists$ = useMemo(() => {
+    const searcher = artistsSearcher$();
+    if (!searcher) return [];
+    return searcher.search(query$()).map((artist) => artist.name);
+  });
 
   return [
     <h1>Search</h1>,
@@ -76,49 +120,17 @@ export const Search = () => {
         Only album artists
       </label>
     </div>,
-    <If when={queryTracks$}>
+    <If when={() => tracks$().length}>
       <h2>Tracks</h2>
-      <TrackList
-        trackIds={useMemo(() =>
-          $$(tracksSortedByTitle$)
-            .filter(
-              (track) =>
-                $$(matchRegex$).test(track.title) ||
-                $$(matchRegex$).test(track.artist || '') ||
-                $$(matchRegex$)?.test(track.year?.toString() || ''),
-            )
-            .map((track) => track.id),
-        )}
-      />
+      <TrackList trackIds={tracks$} />
     </If>,
-    <If when={queryAlbums$}>
+    <If when={() => albums$().length}>
       <h2>Albums</h2>
-      <AlbumList
-        albumIds={useMemo(() =>
-          $$(albumsSortedByTitle$)
-            .filter(
-              (album) =>
-                $$(matchRegex$).test(album.title) ||
-                $$(matchRegex$).test(album.artist) ||
-                $$(matchRegex$)?.test(album.year?.toString() || ''),
-            )
-            .map((album) => `${album.artist}${album.title}`),
-        )}
-      />
+      <AlbumList albumIds={albums$} />
     </If>,
-    <If when={queryArtists$}>
+    <If when={() => artists$().length}>
       <h2>Artists</h2>
-      <ArtistList
-        artistIds={useMemo(() =>
-          $$(artistsSortedByName$)
-            .filter(
-              (artist) =>
-                $$(matchRegex$).test(artist.name) &&
-                ($$(queryOnlyAlbumArtists$) ? artist.albums.length : true),
-            )
-            .map((artist) => artist.name),
-        )}
-      />
+      <ArtistList artistIds={artists$} />
     </If>,
   ];
 };
