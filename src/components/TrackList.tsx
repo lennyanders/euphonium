@@ -98,47 +98,52 @@ export const TrackList = ({
 
   return (
     <Virtual {...props}>
-      {(track, index) => [
-        <If when={() => $$(showDiskOnTracks)?.includes(track().id)}>
-          Disk: {() => track().diskNumber}
-        </If>,
-        <button
-          class={[
-            'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
-            () => state.activeTrackId === track().id && 'bg-dark-200',
-          ]}
-          onClick={() => play(track().id, $$(trackIds))}
-          onContextMenu={(event) => onContextMenu(event, track(), $$(trackIds))}
-        >
-          <If when={showNumber}>
-            <span
-              class='shrink-0'
-              style={{
-                width: `${
-                  Math.floor($$(trackIds).length / ($$(showDiskOnTracks)?.length || 1)).toString()
-                    .length
-                }ch`,
-              }}
-            >
-              {() => track().number || '-'}
-            </span>
+      {(track, index) => (
+        <If when={track}>
+          <If when={() => $$(showDiskOnTracks)?.includes(track().id)}>
+            Disk: {() => track().diskNumber}
           </If>
-          <If when={!showNumber && showIndex}>
-            <span class='shrink-0' style={{ width: `${$$(trackIds).length.toString().length}ch` }}>
-              {() => index() + 1}
-            </span>
-          </If>
-          <CoverImage
-            src={() => track().coverPreview!}
-            class='w-12 h-12 rd-1 shrink-0 background-size-125%'
-          />
-          <div class='break-all truncate'>
-            {() => track().title}
-            <small class='block'>{() => track().artist}</small>
-          </div>
-          <span class='m-l-a self-start p-r-1'>{() => track().durationFormatted}</span>
-        </button>,
-      ]}
+          <button
+            class={[
+              'w-100% flex gap-2 items-center p-1 rd-1 min-h-14',
+              () => state.activeTrackId === track().id && 'bg-dark-200',
+            ]}
+            onClick={() => play(track().id, $$(trackIds))}
+            onContextMenu={(event) => onContextMenu(event, track(), $$(trackIds))}
+          >
+            <If when={showNumber}>
+              <span
+                class='shrink-0'
+                style={{
+                  width: `${
+                    Math.floor($$(trackIds).length / ($$(showDiskOnTracks)?.length || 1)).toString()
+                      .length
+                  }ch`,
+                }}
+              >
+                {() => track().number || '-'}
+              </span>
+            </If>
+            <If when={!showNumber && showIndex}>
+              <span
+                class='shrink-0'
+                style={{ width: `${$$(trackIds).length.toString().length}ch` }}
+              >
+                {() => index() + 1}
+              </span>
+            </If>
+            <CoverImage
+              src={() => track().coverPreview!}
+              class='w-12 h-12 rd-1 shrink-0 background-size-125%'
+            />
+            <div class='break-all truncate'>
+              {() => track().title}
+              <small class='block'>{() => track().artist}</small>
+            </div>
+            <span class='m-l-a self-start p-r-1'>{() => track().durationFormatted}</span>
+          </button>
+        </If>
+      )}
     </Virtual>
   );
 };
