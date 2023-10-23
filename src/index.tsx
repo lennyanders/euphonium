@@ -8,7 +8,6 @@ import { App } from './App';
 import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from './consts';
 import { About } from './pages/About';
 import { NoSupport } from './pages/NoSupport';
-import { Privacy } from './pages/Privacy';
 import { Router } from './router';
 
 if (!workerSupport || !fileSystemApiSupport || !offscreenCanvasSupport) {
@@ -17,7 +16,6 @@ if (!workerSupport || !fileSystemApiSupport || !offscreenCanvasSupport) {
       <Router
         routes={[
           { path: '/about', component: About },
-          { path: '/privacy', component: Privacy },
           { path: '*', component: NoSupport },
         ]}
       />

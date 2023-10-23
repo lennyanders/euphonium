@@ -41,6 +41,5 @@ export const NoSupport = () => [
   </ul>,
   <ul class='flex gap-8 m-t-a p-t-12 text-sm op-75'>
     <InfoEntry link='/about'>About</InfoEntry>
-    <InfoEntry link='/privacy'>Privacy Policy</InfoEntry>
   </ul>,
 ];

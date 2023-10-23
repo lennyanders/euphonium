@@ -17,7 +17,6 @@ const mainLinks: IconLink[] = [
 
 const secondaryLinks: IconLink[] = [
   { href: '/about', icon: 'i-mdi-information-outline', title: 'About' },
-  { href: '/privacy', icon: 'i-mdi-shield-half-full', title: 'Privacy Policy' },
 ];
 
 const LinkList = ({ links }: { links: IconLink[] }) => (

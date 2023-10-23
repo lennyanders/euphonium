@@ -13,7 +13,6 @@ import { Artist } from './pages/Artist';
 import { Artists } from './pages/Artists';
 import { Home } from './pages/Home';
 import { Player } from './pages/Player';
-import { Privacy } from './pages/Privacy';
 import { Queue } from './pages/Queue';
 import { Search } from './pages/Search';
 import { Settings } from './pages/Settings';
@@ -48,7 +47,6 @@ const baseRoutes = [
   },
   { path: '/settings', component: Settings, title: getTitle('Settings') },
   { path: '/about', component: About, title: getTitle('About') },
-  { path: '/privacy', component: Privacy, title: getTitle('Privacy') },
 ];
 
 const mobileRoutes = [

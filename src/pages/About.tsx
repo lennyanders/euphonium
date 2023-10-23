@@ -12,12 +12,6 @@ export const About = () => [
         Source Code
       </a>
     </li>
-    <li>
-      <a href='/privacy' class='flex items-center gap-2'>
-        <div class='i-mdi-file-document-outline' />
-        Privacy Policy
-      </a>
-    </li>
   </ul>,
   <h2>Acknowledgements</h2>,
   <ul class='grid gap-2'>
