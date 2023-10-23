@@ -11,7 +11,7 @@ export const TracksArtist = () => {
     <Ternary when={artist$}>
       <>
         <HeroImage
-          image={() => $$(artist$)?.image!}
+          image={() => $$(artist$)?.images?.large!}
           title={() => (
             <a href={() => `/artist/${encodeURIComponent($$(artist$)?.name!)}`}>
               All tracks from {$$(artist$)?.name}

@@ -155,7 +155,7 @@ if (mediaSession) {
       title: track.title,
       artist: track.artist,
       ...(track.albumTitle && { album: track.albumTitle }),
-      ...(track.cover && { artwork: [{ src: track.cover }] }),
+      ...(track.images && { artwork: [{ src: track.images.medium }] }),
     });
   });
 }

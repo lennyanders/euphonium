@@ -16,6 +16,14 @@ interface DbLibraryDirectory {
   handle: FileSystemDirectoryHandle;
 }
 
+interface BEImages {
+  small: Blob;
+  medium: Blob;
+  large: Blob;
+}
+
+type FEImages = Record<keyof BEImages, string>;
+
 interface DbTrack extends DbFileHandle {
   id?: number;
   duration: number;
@@ -28,14 +36,12 @@ interface DbTrack extends DbFileHandle {
   title?: string;
   albumArtist?: string;
   albumTitle?: string;
-  cover?: Blob;
-  coverPreview?: Blob;
+  images?: BEImages;
 }
 
 interface DbCover extends DbFileHandle {
   id?: number;
-  image: Blob;
-  imagePreview: Blob;
+  images?: BEImages;
 }
 
 interface FELibraryDirectory {
@@ -47,8 +53,7 @@ interface FELibraryDirectory {
 type FETrack = Omit<
   DbTrack,
   | 'id'
-  | 'cover'
-  | 'coverPreview'
+  | 'images'
   | 'filePath'
   | 'folderPath'
   | 'fileName'
@@ -59,16 +64,15 @@ type FETrack = Omit<
 > & {
   id: number;
   title: string;
-  cover?: string;
-  coverPreview?: string;
   durationFormatted: string;
+  images?: FEImages;
 };
 
 interface FEAlbum {
   title: string;
   artist: string;
   year?: number;
-  cover?: string;
+  images?: FEImages;
   tracks: number[];
   showDiskOnTracks: number[];
   diskCount: number;
@@ -78,7 +82,7 @@ interface FEAlbum {
 
 interface FEArtist {
   name: string;
-  image?: string;
+  images?: FEImages;
   albums: string[];
   singles: number[];
   tracks: number[];

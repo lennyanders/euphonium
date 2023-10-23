@@ -47,7 +47,7 @@ export function albumDataGetter(this: State) {
       tracks: sortedTracks.map((track) => track.id),
       showDiskOnTracks,
       durationFormatted: getFormattedTime(album.duration),
-      cover: sortedTracks.find((track) => track.cover)?.cover,
+      images: sortedTracks.find((track) => track.images)?.images,
     };
   }
   return finalAlbumsObject;
@@ -76,9 +76,9 @@ export function artistDataGetter(this: State) {
     );
     artistObject[artist] = {
       name: artist,
-      image:
-        artistAlbums.find((album) => album.cover)?.cover ||
-        sortedSingles.find((track) => track.cover)?.cover,
+      images:
+        artistAlbums.find((album) => album.images)?.images ||
+        sortedSingles.find((track) => track.images)?.images,
       albums: artistAlbums.map((album) => `${album.artist}${album.title}`),
       singles,
       tracks: artistAlbums

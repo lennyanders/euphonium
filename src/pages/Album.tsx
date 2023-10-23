@@ -11,7 +11,7 @@ export const Album = () => {
     <Ternary when={album$}>
       <>
         <HeroImage
-          image={() => $$(album$)?.cover!}
+          image={() => $$(album$)?.images?.large!}
           title={() => $$(album$)?.title}
           sublines={[
             <a href={() => `/artist/${encodeURIComponent($$(album$)?.artist)}`}>

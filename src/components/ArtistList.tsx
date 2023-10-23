@@ -24,7 +24,7 @@ export const ArtistList = ({ artistIds }: { artistIds: ObservableMaybe<string[]>
           class='block truncate text-center'
         >
           <CoverImage
-            src={() => artist().image!}
+            src={() => artist().images?.medium!}
             class='w-100% rd-50% m-b-4 background-size-125%'
           />
           {() => artist().name}

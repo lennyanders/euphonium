@@ -16,12 +16,11 @@ export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> 
       { duration: true, skipCovers: false },
     );
 
-    let cover: Blob | undefined;
-    let coverPreview: Blob | undefined;
+    let images: BEImages | undefined;
     if (common.picture?.length) {
       const [image] = common.picture;
       const imageData = new Blob([new Uint8ClampedArray(image.data)], { type: image.type });
-      [cover, coverPreview] = await getOptimizedImages(imageData);
+      images = await getOptimizedImages(imageData);
     }
 
     return {
@@ -37,8 +36,7 @@ export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> 
       title: common.title,
       albumArtist: common.albumartist,
       albumTitle: common.album,
-      cover,
-      coverPreview,
+      images,
     };
   } catch (error) {
     console.error(error);

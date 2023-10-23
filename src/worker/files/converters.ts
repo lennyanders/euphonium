@@ -1,23 +1,25 @@
 import { getFormattedTime } from '../../shared/utils';
 
-const coverCache: Record<string, { cover: string; coverPreview: string }> = {};
+const coverCache: Record<string, FEImages> = {};
+
+const beToFeImages = (beImages: BEImages) => {
+  return Object.fromEntries(
+    Object.entries(beImages).map(([name, size]) => [name, URL.createObjectURL(size)]),
+  ) as FEImages;
+};
 
 export const beToFETrack = (track: DbTrack, covers: DbCover[]): FETrack => {
-  let cover: string | undefined;
-  let coverPreview: string | undefined;
-  if (track.cover && track.coverPreview) {
-    cover = URL.createObjectURL(track.cover);
-    coverPreview = URL.createObjectURL(track.coverPreview);
+  let images: FEImages | undefined;
+  if (track.images) {
+    images = beToFeImages(track.images);
   } else {
     if (coverCache[track.folderPath]) {
-      cover = coverCache[track.folderPath].cover;
-      coverPreview = coverCache[track.folderPath].coverPreview;
+      images = coverCache[track.folderPath];
     } else {
       const dbCover = covers.find((cover) => cover.folderPath === track.folderPath);
-      if (dbCover) {
-        cover = URL.createObjectURL(dbCover.image);
-        coverPreview = URL.createObjectURL(dbCover.imagePreview);
-        coverCache[track.folderPath] = { cover, coverPreview };
+      if (dbCover?.images) {
+        images = beToFeImages(dbCover.images);
+        coverCache[track.folderPath] = images;
       }
     }
   }
@@ -36,7 +38,6 @@ export const beToFETrack = (track: DbTrack, covers: DbCover[]): FETrack => {
     title: track.title || track.fileName,
     albumArtist: track.albumArtist,
     albumTitle: track.albumTitle,
-    cover,
-    coverPreview,
+    images,
   };
 };

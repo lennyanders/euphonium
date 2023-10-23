@@ -12,7 +12,7 @@ export const Artist = () => {
     <Ternary when={artist$}>
       <>
         <HeroImage
-          image={() => $$(artist$)?.image!}
+          image={() => $$(artist$)?.images?.large!}
           title={() => $$(artist$)?.name}
           sublines={[
             <>
