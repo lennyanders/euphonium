@@ -2,7 +2,7 @@ import { $$, For, If } from 'voby';
 
 import { Toasts } from '../components/Toasts';
 import { w1024$ } from '../modules/layout';
-import { path$, RouterLink } from '../router';
+import { path$ } from '../router';
 
 type IconLink = { href: string; icon: string; title: string };
 
@@ -24,7 +24,7 @@ const LinkList = ({ links }: { links: IconLink[] }) => (
   <For values={links}>
     {({ href, icon, title }) => (
       <li>
-        <RouterLink
+        <a
           class={[
             'flex items-center gap-2 transition-opacity',
             () => $$(path$) !== href && 'lg:op-66',
@@ -33,7 +33,7 @@ const LinkList = ({ links }: { links: IconLink[] }) => (
         >
           <div class={icon} />
           {title}
-        </RouterLink>
+        </a>
       </li>
     )}
   </For>

@@ -3,7 +3,9 @@ import { $, For, useEffect, useEventListener, $$, store } from 'voby';
 
 import { Transition } from '../Transition';
 
-export type ContextMenuItem = 'spacer' | { title: string; action: () => void };
+export type ContextMenuItem =
+  | 'spacer'
+  | ({ title: string } & ({ action: () => void } | { url: string }));
 
 const items$ = $<ContextMenuItem[]>([]);
 const visible$ = $(false);
@@ -16,6 +18,25 @@ export const showContextMenu = (event: MouseEvent, items: ContextMenuItem[]) => 
   Object.assign(mousePos, { x: event.x, y: event.y });
   items$(items);
   visible$(true);
+};
+
+const ContextMenuItem = ({ item }: { item: ContextMenuItem }) => {
+  if (item === 'spacer') return <hr class='m-y-1 m-x-.5 op-25' />;
+
+  const css = 'block w-100% p-y-.5 p-x-1 rd-1 hover:bg-white:25';
+  if ('action' in item) {
+    return (
+      <button class={css} onClick={() => (item.action(), visible$(false))}>
+        {item.title}
+      </button>
+    );
+  }
+
+  return (
+    <a class={css} href={item.url}>
+      {item.title}
+    </a>
+  );
 };
 
 export const ContextMenu = () => {
@@ -60,25 +81,11 @@ export const ContextMenu = () => {
       onContextMenu={(event) => event.preventDefault()}
     >
       <For values={items$}>
-        {(item) => {
-          if (item === 'spacer') {
-            return (
-              <li>
-                <hr class='m-y-1 m-x-.5 op-25' />
-              </li>
-            );
-          }
-          return (
-            <li>
-              <button
-                class='w-100% p-y-.5 p-x-1 rd-1 hover:bg-white:25'
-                onClick={() => (item.action(), visible$(false))}
-              >
-                {item.title}
-              </button>
-            </li>
-          );
-        }}
+        {(item) => (
+          <li>
+            <ContextMenuItem item={item} />
+          </li>
+        )}
       </For>
     </Transition>
   );

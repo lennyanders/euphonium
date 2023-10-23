@@ -8,7 +8,6 @@ import { Slider, volumeIcon$ } from '../components/Player/Volume';
 import { TrackList } from '../components/TrackList';
 import { cleanQueue$, state } from '../modules/library';
 import { currentTrack$ } from '../modules/player';
-import { RouterLink } from '../router';
 
 export const Player = () => {
   const editVolume$ = $(false);
@@ -21,9 +20,9 @@ export const Player = () => {
           image={() => $$(currentTrack$)?.cover!}
           title={() => $$(currentTrack$)?.title}
           sublines={[
-            <RouterLink href={() => `/artist/${encodeURIComponent($$(currentTrack$)?.artist!)}`}>
+            <a href={() => `/artist/${encodeURIComponent($$(currentTrack$)?.artist!)}`}>
               {() => $$(currentTrack$)?.artist}
-            </RouterLink>,
+            </a>,
           ]}
           mobileComp={HeroImageMobilePlayer}
         />

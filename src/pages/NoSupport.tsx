@@ -2,7 +2,6 @@ import { ternary } from 'oby';
 import { FunctionMaybe } from 'voby';
 
 import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from '../consts';
-import { RouterLink } from '../router';
 
 type EntryParams = {
   support: FunctionMaybe<boolean>;
@@ -20,10 +19,10 @@ const SupportEntry = ({ support, link, children }: EntryParams) => (
 
 const InfoEntry = ({ link, children }: Omit<EntryParams, 'support'>) => (
   <li>
-    <RouterLink class='flex items-center gap-2' href={link}>
+    <a class='flex items-center gap-2' href={link}>
       <div class='i-mdi-information-outline' />
       {children}
-    </RouterLink>
+    </a>
   </li>
 );
 

@@ -4,7 +4,7 @@ import { AlbumList } from '../components/AlbumList';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { state } from '../modules/library';
-import { params, RouterLink } from '../router';
+import { params } from '../router';
 
 export const Artist = () => {
   const artist$ = useMemo(() => state.artistData[params.artistName!]);
@@ -25,7 +25,7 @@ export const Artist = () => {
           ]}
         />
         <If when={() => $$(artist$)?.albums.length}>
-          <RouterLink
+          <a
             href={() => `/tracks/${encodeURIComponent($$(artist$)?.name!)}`}
             class='flex gap-4 items-center'
           >
@@ -34,7 +34,7 @@ export const Artist = () => {
               All artist songs
               <small class='lh-[1] block'>{() => $$(artist$)?.tracks.length}</small>
             </div>
-          </RouterLink>
+          </a>
           <h2>Albums ({() => $$(artist$)?.albums.length})</h2>
           <AlbumList albumIds={useMemo(() => $$(artist$)?.albums!)} />
         </If>
@@ -46,9 +46,9 @@ export const Artist = () => {
       {/* no artist */}
       <p>
         You don't have any music for this artist, add directories in the
-        <RouterLink href='/settings' class='underline'>
+        <a href='/settings' class='underline'>
           settings
-        </RouterLink>
+        </a>
         and start listening to music!
       </p>
     </Ternary>

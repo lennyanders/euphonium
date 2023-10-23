@@ -3,7 +3,7 @@ import { $$, Ternary, useMemo } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { state } from '../modules/library';
-import { params, RouterLink } from '../router';
+import { params } from '../router';
 
 export const TracksArtist = () => {
   const artist$ = useMemo(() => state.artistData[params.artistName!]);
@@ -13,9 +13,9 @@ export const TracksArtist = () => {
         <HeroImage
           image={() => $$(artist$)?.image!}
           title={() => (
-            <RouterLink href={() => `/artist/${encodeURIComponent($$(artist$)?.name!)}`}>
+            <a href={() => `/artist/${encodeURIComponent($$(artist$)?.name!)}`}>
               All tracks from {$$(artist$)?.name}
-            </RouterLink>
+            </a>
           )}
           sublines={[
             <>
@@ -29,9 +29,9 @@ export const TracksArtist = () => {
       {/* no artist */}
       <p>
         You don't have any music for this artist, add directories in the
-        <RouterLink href='/settings' class='underline'>
+        <a href='/settings' class='underline'>
           settings
-        </RouterLink>
+        </a>
         and start listening to music!
       </p>
     </Ternary>

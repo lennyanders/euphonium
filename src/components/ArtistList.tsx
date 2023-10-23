@@ -2,7 +2,6 @@ import { $$, ObservableMaybe, useMemo } from 'voby';
 
 import { mainElWidth$ } from '../modules/layout';
 import { state } from '../modules/library';
-import { RouterLink } from '../router';
 import { CoverImage } from './CoverImage';
 import { VirtualGrid } from './Virtual/Grid';
 
@@ -20,7 +19,7 @@ export const ArtistList = ({ artistIds }: { artistIds: ObservableMaybe<string[]>
       liClass='p-4'
     >
       {(artist) => (
-        <RouterLink
+        <a
           href={() => `/artist/${encodeURIComponent(artist().name)}`}
           class='block truncate text-center'
         >
@@ -29,7 +28,7 @@ export const ArtistList = ({ artistIds }: { artistIds: ObservableMaybe<string[]>
             class='w-100% rd-50% m-b-4 background-size-125%'
           />
           {() => artist().name}
-        </RouterLink>
+        </a>
       )}
     </VirtualGrid>
   );

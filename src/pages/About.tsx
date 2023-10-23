@@ -1,5 +1,4 @@
 import { version } from '../../package.json';
-import { RouterLink } from '../router';
 
 export const About = () => [
   <h1>About</h1>,
@@ -14,10 +13,10 @@ export const About = () => [
       </a>
     </li>
     <li>
-      <RouterLink href='/privacy' class='flex items-center gap-2'>
+      <a href='/privacy' class='flex items-center gap-2'>
         <div class='i-mdi-file-document-outline' />
         Privacy Policy
-      </RouterLink>
+      </a>
     </li>
   </ul>,
   <h2>Acknowledgements</h2>,

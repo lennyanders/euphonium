@@ -2,7 +2,7 @@ import { $$, If, Ternary } from 'voby';
 
 import { w1024$ } from '../../modules/layout';
 import { currentTrack$ } from '../../modules/player';
-import { path$, RouterLink } from '../../router';
+import { path$ } from '../../router';
 import { CoverImage } from '../CoverImage';
 import { MainControls } from '../Player/MainControls';
 import { PlayPause } from '../Player/PlayPause';
@@ -21,18 +21,21 @@ const Desktop = () => [
       <div class='truncate'>
         {() => $$(currentTrack$)?.title}
         <small class='truncate block'>
-          <RouterLink href={() => `/artist/${encodeURIComponent($$(currentTrack$)?.artist!)}`}>
+          <a href={() => `/artist/${encodeURIComponent($$(currentTrack$)?.artist!)}`}>
             {() => $$(currentTrack$)?.artist}
-          </RouterLink>
+          </a>
         </small>
       </div>
     </div>
     <MainControls />
     <div class='flex-1 flex gap-4 p-x-4 justify-end'>
       <VolumeDesktop />
-      <Ternary when={() => $$(path$) === '/queue' && history.length > 2}>
-        <button class='w-8 h-8 i-mdi-playlist-music-outline' onClick={() => history.back()} />
-        <RouterLink
+      <Ternary when={() => $$(path$) === '/queue' && window.navigation?.canGoBack}>
+        <button
+          class='w-8 h-8 i-mdi-playlist-music-outline'
+          onClick={() => window.navigation?.back()}
+        />
+        <a
           class='w-8 h-8 i-mdi-playlist-music-outline'
           href={() => ($$(path$) === '/queue' ? '../' : '/queue')}
         />
@@ -46,15 +49,15 @@ const Mobile = () => [
   <If when={() => $$(path$) !== '/player' && $$(currentTrack$)}>
     <div class='w-64 flex items-center'>
       <PlayPause class='m-4' />
-      <RouterLink href='/player' class='flex-1 grid'>
+      <a href='/player' class='flex-1 grid'>
         <span class='truncate'>{() => $$(currentTrack$)?.title}</span>
         <small class='truncate block'>{() => $$(currentTrack$)?.artist}</small>
-      </RouterLink>
+      </a>
     </div>
   </If>,
-  <RouterLink href='/'>
+  <a href='/'>
     <div class='m-4 w-8 h-8 i-mdi-view-grid-outline'></div>
-  </RouterLink>,
+  </a>,
 ];
 
 export const Footer = () => (

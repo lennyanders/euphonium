@@ -2,7 +2,6 @@ import { $$, Ternary, useMemo } from 'voby';
 
 import { ArtistList } from '../components/ArtistList';
 import { artistsSortedByName$ } from '../modules/library';
-import { RouterLink } from '../router';
 
 export const AlbumArtists = () => {
   const albumArtists$ = useMemo(() =>
@@ -19,9 +18,9 @@ export const AlbumArtists = () => {
       {/* no album artists */}
       <p>
         Add directories in the
-        <RouterLink href='/settings' class='underline'>
+        <a href='/settings' class='underline'>
           settings
-        </RouterLink>
+        </a>
         and start listening to music!
       </p>
     </Ternary>

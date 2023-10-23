@@ -3,6 +3,11 @@ import { $, useReadonly, store, useEffect, $$ } from 'voby';
 
 export type Params = Record<string, string | null>;
 
+const cleanSetStore = <T,>(data: Record<string, T>, newData: Record<string, T>) => {
+  for (const key in store.unwrap(data)) delete data[key];
+  Object.assign(data, newData);
+};
+
 const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
   const matches = result.pattern.exec(path)!;
   return matches.slice(1).reduce<Params>((res, val, index) => {
@@ -13,48 +18,46 @@ const exec = (path: string, result: { keys: string[]; pattern: RegExp }) => {
 
 const getQueryParams = () => {
   const newQueryParams: Record<string, string> = {};
-  const params = new URLSearchParams(location.search);
-  params.forEach((val, key) => (newQueryParams[key] = val));
+  new URLSearchParams(location.search).forEach((val, key) => (newQueryParams[key] = val));
   return newQueryParams;
 };
 export const queryParams = store<Record<string, string>>(getQueryParams());
-const updateQueryParams = () => {
-  for (const key in store.unwrap(queryParams)) delete queryParams[key];
-  Object.assign(queryParams, getQueryParams());
-};
+
 useEffect(() => {
   const url = new URL(location.href);
-  url.searchParams.forEach((_val, key) => url.searchParams.delete(key));
-  for (const key in queryParams) url.searchParams.set(key, queryParams[key]);
-  if (url.href !== location.href) history.pushState(null, '', url);
+  url.search = new URLSearchParams(queryParams).toString();
+  location.replace(url.href);
 });
 
 export const params = store<Params>({});
 const _path$ = $(location.pathname);
 export const path$ = useReadonly(_path$);
-let updateUrl = false;
 
-let scrollY = 0;
-const restoreScrollPosition = () => {
-  window.scrollTo({ top: scrollY });
-  scrollY = 0;
-};
+const scroll = (top: number) => window.scrollTo({ top, behavior: 'instant' });
 
-const updatePage = (path: string) => {
-  history.replaceState({ scrollY: window.scrollY }, '');
-  _path$(path);
-  restoreScrollPosition();
-};
+window.navigation?.addEventListener('navigate', (event) => {
+  if (!event.canIntercept) return;
 
-export const go = (path: string) => {
-  updateUrl = true;
-  updatePage(path);
-};
+  window.navigation?.updateCurrentEntry({ state: { scrollY: window.scrollY } });
 
-addEventListener('popstate', ({ state }) => {
-  scrollY = typeof state?.scrollY === 'number' ? state.scrollY : 0;
-  updatePage(location.pathname);
-  updateQueryParams();
+  const newUrl = new URL(event.destination.url);
+  const pathChanged = location.pathname !== newUrl.pathname;
+
+  event.intercept({
+    scroll: 'manual',
+    focusReset: pathChanged ? 'after-transition' : 'manual',
+    async handler() {
+      if (pathChanged) {
+        _path$(location.pathname);
+        const stateScrollY = (event.destination?.getState() as any)?.scrollY;
+        if (typeof stateScrollY !== 'number') scroll(0);
+        else requestAnimationFrame(() => scroll(stateScrollY));
+      }
+      if (location.search !== newUrl.search) {
+        cleanSetStore(queryParams, getQueryParams());
+      }
+    },
+  });
 });
 
 export const Router = ({
@@ -76,14 +79,10 @@ export const Router = ({
   useEffect(() => {
     const p = $$(_path$);
     const route = parsedRoutes.find((route) => route.regex.pattern.test(p) || route.path === '*');
-    if (updateUrl) {
-      const url = new URL(location.href);
-      history.pushState(null, '', Object.assign(url, { pathname: p, search: '' }));
-      updateUrl = false;
-    }
     if (!route) return;
+
     if ('redirect' in route) {
-      go(route.redirect);
+      location.replace(route.redirect);
       return;
     }
 
@@ -94,24 +93,10 @@ export const Router = ({
       document.title = route.title(newParams);
     }
 
-    for (const key in store.unwrap(params)) delete params[key];
-    Object.assign(params, newParams);
-    updateQueryParams();
+    cleanSetStore(params, newParams);
 
     component$(route.component);
   });
 
   return component$;
-};
-
-export const RouterLink = (props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  const el$ = $<HTMLAnchorElement>();
-  props.onClick = (event: MouseEvent) => {
-    const anchor = $$(el$);
-    if (!anchor || anchor.origin !== location.origin) return;
-
-    event.preventDefault();
-    go(anchor.pathname);
-  };
-  return <a ref={el$} {...props}></a>;
 };

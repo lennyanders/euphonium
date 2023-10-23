@@ -3,7 +3,7 @@ import { $$, If, Ternary, useMemo } from 'voby';
 import { HeroImage } from '../components/HeroImage';
 import { TrackList } from '../components/TrackList';
 import { state } from '../modules/library';
-import { params, RouterLink } from '../router';
+import { params } from '../router';
 
 export const Album = () => {
   const album$ = useMemo(() => state.albumData[`${params.artist}${params.albumTitle}`]);
@@ -14,9 +14,9 @@ export const Album = () => {
           image={() => $$(album$)?.cover!}
           title={() => $$(album$)?.title}
           sublines={[
-            <RouterLink href={() => `/artist/${encodeURIComponent($$(album$)?.artist)}`}>
+            <a href={() => `/artist/${encodeURIComponent($$(album$)?.artist)}`}>
               {() => $$(album$)?.artist}
-            </RouterLink>,
+            </a>,
             <>
               <If when={() => $$(album$)?.year}>
                 {() => $$(album$)?.year} <div class='i-mdi-candle m-l-.5 m-r-2' />
@@ -36,9 +36,9 @@ export const Album = () => {
       {/* no album */}
       <p>
         You don't have that album in you'r library, add directories in the
-        <RouterLink href='/settings' class='underline'>
+        <a href='/settings' class='underline'>
           settings
-        </RouterLink>
+        </a>
         and start listening to music!
       </p>
     </Ternary>
