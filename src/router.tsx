@@ -3,6 +3,11 @@ import { $, useReadonly, store, useEffect, $$ } from 'voby';
 
 export type Params = Record<string, string | null>;
 
+const updatePageWithViewTransition = (updater: () => void | Promise<void>) => {
+  if (!document.startViewTransition) return updater();
+  else document.startViewTransition(updater);
+};
+
 const cleanSetStore = <T,>(data: Record<string, T>, newData: Record<string, T>) => {
   for (const key in store.unwrap(data)) delete data[key];
   Object.assign(data, newData);
@@ -48,10 +53,15 @@ window.navigation?.addEventListener('navigate', (event) => {
     focusReset: pathChanged ? 'after-transition' : 'manual',
     async handler() {
       if (pathChanged) {
-        _path$(location.pathname);
-        const stateScrollY = (event.destination?.getState() as any)?.scrollY;
-        if (typeof stateScrollY !== 'number') scroll(0);
-        else requestAnimationFrame(() => scroll(stateScrollY));
+        updatePageWithViewTransition(async () => {
+          _path$(location.pathname);
+
+          const stateScrollY = (event.destination?.getState() as any)?.scrollY;
+          if (typeof stateScrollY !== 'number') return scroll(0);
+
+          await new Promise((r) => setTimeout(r));
+          scroll(stateScrollY);
+        });
       }
       if (location.search !== newUrl.search) {
         cleanSetStore(queryParams, getQueryParams());

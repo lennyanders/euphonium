@@ -8,11 +8,13 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "jsxImportSource": "voby",
+    "noImplicitAny": true,
     "types": [
       "vite/client",
       "@types/wicg-file-system-access",
       "@types/offscreencanvas",
-      "@types/dom-navigation"
+      "@types/dom-navigation",
+      "@types/dom-view-transitions"
     ],
     "noEmit": true,
     "resolveJsonModule": true,
