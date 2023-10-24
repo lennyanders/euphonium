@@ -11,21 +11,23 @@ interface DbFileHandle extends FileHandle {
   fileModified: number;
 }
 
-interface DbLibraryDirectory {
+interface DbEntry {
   id?: number;
+}
+
+interface DbLibraryDirectory extends DbEntry {
   handle: FileSystemDirectoryHandle;
 }
 
-interface BEImages {
+interface DbImages {
   small: Blob;
   medium: Blob;
   large: Blob;
 }
 
-type FEImages = Record<keyof BEImages, string>;
+type FeImages = Record<keyof DbImages, string>;
 
-interface DbTrack extends DbFileHandle {
-  id?: number;
+interface DbTrack extends DbFileHandle, DbEntry {
   duration: number;
   number?: number;
   count?: number;
@@ -36,43 +38,31 @@ interface DbTrack extends DbFileHandle {
   title?: string;
   albumArtist?: string;
   albumTitle?: string;
-  images?: BEImages;
+  images?: DbImages;
 }
 
-interface DbCover extends DbFileHandle {
-  id?: number;
-  images?: BEImages;
+interface DbCover extends DbFileHandle, DbEntry {
+  images?: DbImages;
 }
 
-interface FELibraryDirectory {
+interface FeLibraryDirectory {
   id: number;
   name: string;
   directoryHandle: FileSystemDirectoryHandle;
 }
 
-type FETrack = Omit<
-  DbTrack,
-  | 'id'
-  | 'images'
-  | 'filePath'
-  | 'folderPath'
-  | 'fileName'
-  | 'fileModified'
-  | 'directoryHandle'
-  | 'libraryDirectory'
-  | 'title'
-> & {
+interface FeTrack extends Omit<DbTrack, 'images' | keyof Omit<DbFileHandle, 'fileHandle'>> {
   id: number;
   title: string;
   durationFormatted: string;
-  images?: FEImages;
-};
+  images?: FeImages;
+}
 
-interface FEAlbum {
+interface FeAlbum {
   title: string;
   artist: string;
   year?: number;
-  images?: FEImages;
+  images?: FeImages;
   tracks: number[];
   showDiskOnTracks: number[];
   diskCount: number;
@@ -80,9 +70,9 @@ interface FEAlbum {
   durationFormatted: string;
 }
 
-interface FEArtist {
+interface FeArtist {
   name: string;
-  images?: FEImages;
+  images?: FeImages;
   albums: string[];
   singles: number[];
   tracks: number[];
@@ -105,9 +95,9 @@ type TemporaryData = Partial<{
 }>;
 
 interface State extends GeneralData, TemporaryData {
-  trackData: Record<number, FETrack>;
-  albumData: Record<string, FEAlbum>;
-  artistData: Record<string, FEArtist>;
-  libraryDirectories: FELibraryDirectory[];
+  trackData: Record<number, FeTrack>;
+  albumData: Record<string, FeAlbum>;
+  artistData: Record<string, FeArtist>;
+  libraryDirectories: FeLibraryDirectory[];
   loading: boolean;
 }

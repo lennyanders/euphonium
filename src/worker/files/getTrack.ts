@@ -15,7 +15,7 @@ export const getTrack = async (fileHandle: FileHandle): Promise<DbTrack | null> 
       { duration: true, skipCovers: false },
     );
 
-    let images: BEImages | undefined;
+    let images: DbImages | undefined;
     if (common.picture?.length) {
       const [image] = common.picture;
       const imageData = new Blob([new Uint8ClampedArray(image.data)], { type: image.type });

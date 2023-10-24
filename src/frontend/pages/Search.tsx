@@ -38,7 +38,7 @@ const syncQueryParamBool = (prop: string, fallback: boolean) => {
   return val$;
 };
 
-const trackOrAlbumKeySelector = (obj: FETrack | FEAlbum) => [
+const trackOrAlbumKeySelector = (obj: FeTrack | FeAlbum) => [
   obj.title,
   ...(obj.artist ? [obj.artist] : []),
   ...(obj.year ? [obj.year.toString()] : []),

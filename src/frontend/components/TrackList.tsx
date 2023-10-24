@@ -7,7 +7,7 @@ import { CoverImage } from './CoverImage';
 import { Virtual, VirtualProps } from './Virtual';
 import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 
-const onContextMenu = (event: MouseEvent, track: FETrack, trackIds: number[]) => {
+const onContextMenu = (event: MouseEvent, track: FeTrack, trackIds: number[]) => {
   const isActiveTrack = track.id === state.activeTrackId;
   const items: ContextMenuItem[] = [];
   if (isActiveTrack && $$(playing$)) items.push({ title: 'Pause', action: pause });
@@ -78,7 +78,7 @@ export const TrackList = ({
   showDiskOnTracks?: ObservableMaybe<number[]>;
   stickToActiveTrack?: boolean;
 }) => {
-  const props: Omit<VirtualProps<FETrack>, 'children'> = {
+  const props: Omit<VirtualProps<FeTrack>, 'children'> = {
     items: useMemo(() => $$(trackIds).map((id) => state.trackData[id])),
     overscan: 25,
     size: (track) => ($$(showDiskOnTracks)?.includes(track.id) ? 80 : 56),

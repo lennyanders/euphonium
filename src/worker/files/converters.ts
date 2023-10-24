@@ -1,15 +1,15 @@
 import { getFormattedTime } from '../../shared/utils';
 
-const coverCache: Record<string, FEImages> = {};
+const coverCache: Record<string, FeImages> = {};
 
-const beToFeImages = (beImages: BEImages) => {
+const beToFeImages = (beImages: DbImages) => {
   return Object.fromEntries(
     Object.entries(beImages).map(([name, size]) => [name, URL.createObjectURL(size)]),
-  ) as FEImages;
+  ) as FeImages;
 };
 
-export const beToFETrack = (track: DbTrack, covers: DbCover[]): FETrack => {
-  let images: FEImages | undefined;
+export const beToFeTrack = (track: DbTrack, covers: DbCover[]): FeTrack => {
+  let images: FeImages | undefined;
   if (track.images) {
     images = beToFeImages(track.images);
   } else {

@@ -1,4 +1,4 @@
-export const getOptimizedImages = async (image: Blob): Promise<BEImages> => {
+export const getOptimizedImages = async (image: Blob): Promise<DbImages> => {
   const sizes = { small: 96, medium: 320, large: 1080 };
   return Object.fromEntries(
     await Promise.all(

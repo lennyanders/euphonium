@@ -10,7 +10,7 @@ import {
   getDirectoryRelation,
   getTrack,
 } from './files';
-import { beToFETrack } from './files/converters';
+import { beToFeTrack } from './files/converters';
 import { getCover } from './files/getCover';
 import { enablePartialUpdates, state } from './state';
 import { postMessage } from './utils';
@@ -23,19 +23,19 @@ const getDbData = async () => {
   return data;
 };
 
-export const getFETrackData = async () => {
+export const getFeTrackData = async () => {
   const database = await getDatabase();
   const covers = await database.getAll('cover');
   const tracks = await database.getAll('track');
-  const fetracks: Record<number, FETrack> = {};
-  for (const track of tracks) fetracks[track.id!] = beToFETrack(track, covers);
+  const fetracks: Record<number, FeTrack> = {};
+  for (const track of tracks) fetracks[track.id!] = beToFeTrack(track, covers);
   return fetracks;
 };
 
-export const getFEDirectories = async () => {
+export const getFeDirectories = async () => {
   const database = await getDatabase();
   const directoryHandles = await database.getAll('libraryDirectory');
-  return directoryHandles.map<FELibraryDirectory>(({ handle, id }) => ({
+  return directoryHandles.map<FeLibraryDirectory>(({ handle, id }) => ({
     name: handle.name,
     id: id!,
     directoryHandle: handle,
@@ -45,7 +45,7 @@ export const getFEDirectories = async () => {
 export const removeDirectory = async (id: number) => {
   const database = await getDatabase();
   await database.delete('libraryDirectory', id);
-  state.libraryDirectories = await getFEDirectories();
+  state.libraryDirectories = await getFeDirectories();
   await updateFiles();
 };
 
@@ -54,7 +54,7 @@ export const tryAddDirectory = async (handle: FileSystemDirectoryHandle) => {
   if (relation.type === DirectoryRelationType.DirectoryIsNew) {
     const database = await getDatabase();
     await database.add('libraryDirectory', { handle });
-    state.libraryDirectories = await getFEDirectories();
+    state.libraryDirectories = await getFeDirectories();
     await updateFiles();
   }
   postMessage({ message: 'tryAddDirectoryToLibrary', relation });
@@ -72,7 +72,7 @@ export const forceAddDirectory = async (relation: Relation, handle: FileSystemDi
     await database.delete('libraryDirectory', oldId);
   }
   console.timeEnd('reparent directories');
-  state.libraryDirectories = await getFEDirectories();
+  state.libraryDirectories = await getFeDirectories();
   await updateFiles();
 };
 
@@ -151,7 +151,7 @@ export const updateFiles = async () => {
   await Promise.all([txT.done, txC.done]);
   console.timeEnd('update database');
 
-  state.trackData = await getFETrackData();
+  state.trackData = await getFeTrackData();
 
   console.timeEnd('update');
 
@@ -173,7 +173,7 @@ export const setGeneralData = async (data: GeneralData) => {
   await Promise.all([...txs, tx.done]);
 };
 
-Promise.all([getFEDirectories(), getFETrackData(), getDbData()]).then(
+Promise.all([getFeDirectories(), getFeTrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
     Object.assign(state, { libraryDirectories, trackData }, data);
 

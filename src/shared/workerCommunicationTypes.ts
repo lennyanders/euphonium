@@ -20,10 +20,10 @@ export type TypedMessageEvent<T extends string, U extends object = {}> = Message
 
 export type MessageEventPostWorker =
   | TypedMessageEvent<'setState', { state: State }>
-  | TypedMessageEvent<'setTrackData', { state: Record<number, FETrack> }>
-  | TypedMessageEvent<'setAlbumData', { state: Record<string, FEAlbum> }>
-  | TypedMessageEvent<'setArtistData', { state: Record<string, FEArtist> }>
-  | TypedMessageEvent<'setLibraryDirectories', { state: FELibraryDirectory[] }>
+  | TypedMessageEvent<'setTrackData', { state: Record<number, FeTrack> }>
+  | TypedMessageEvent<'setAlbumData', { state: Record<string, FeAlbum> }>
+  | TypedMessageEvent<'setArtistData', { state: Record<string, FeArtist> }>
+  | TypedMessageEvent<'setLibraryDirectories', { state: FeLibraryDirectory[] }>
   | TypedMessageEvent<'setGeneralData', { state: GeneralData }>
   | TypedMessageEvent<'setTemporaryData', { state: TemporaryData }>
   | TypedMessageEvent<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
