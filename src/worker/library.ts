@@ -1,7 +1,7 @@
 import $ from 'oby';
 
 import { wait } from '../shared/utils';
-import { DirectoryRelationType, Relation } from '../shared/workerFeCommunicationTypes';
+import { DirectoryRelationType, Relation } from '../shared/workerCommunicationTypes';
 import { getDatabase } from './database';
 import {
   getFileHandlesFromRootDirectories,

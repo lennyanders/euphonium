@@ -1,6 +1,6 @@
 import { For, Ternary, useMemo } from 'voby';
 
-import { DirectoryRelationType } from '../../shared/workerFeCommunicationTypes';
+import { DirectoryRelationType } from '../../shared/workerCommunicationTypes';
 import { state } from '../modules/library';
 import { requestFileAccess } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';

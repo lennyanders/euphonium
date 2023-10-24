@@ -1,4 +1,4 @@
-import { DirectoryRelationType, Relation } from '../../shared/workerFeCommunicationTypes';
+import { DirectoryRelationType, Relation } from '../../shared/workerCommunicationTypes';
 import { getDatabase } from '../database';
 
 export const getDirectoryRelation = async (
