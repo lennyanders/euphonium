@@ -1,7 +1,6 @@
-import { MWME, WWME } from '../shared/workerFeCommunicationTypes';
-import MyWorker from '../worker?worker';
+import { MWME, WWME } from '../../shared/workerFeCommunicationTypes';
 
-export const worker = new MyWorker();
+export const worker = new Worker(new URL('../../worker', import.meta.url), { type: 'module' });
 
 export const postMessage = (message: WWME['data']) => worker.postMessage(message);
 

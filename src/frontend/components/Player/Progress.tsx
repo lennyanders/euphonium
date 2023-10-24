@@ -1,7 +1,7 @@
 import { $$, useMemo } from 'voby';
 
+import { getFormattedTime } from '../../../shared/utils';
 import { currentTime$, currentTrack$, seek } from '../../modules/player';
-import { getFormattedTime } from '../../shared/utils';
 import { Range } from './Range';
 
 export const Progress = ({ bg, class: css }: { bg?: string; class?: JSX.Class }) => (
