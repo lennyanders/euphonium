@@ -1,7 +1,6 @@
 import { getDatabase } from '../database';
 import { state } from '../state';
 import { postMessage } from '../utils';
-import { FileHandle } from './FileHandle';
 
 const trackMatcher = /\.aac$|\.mp3$|\.ogg$|\.wav$|\.flac$|\.m4a$/;
 const coverMatcher = /^cover\.png$|^cover\.jpg$/i;

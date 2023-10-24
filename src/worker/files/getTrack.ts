@@ -1,7 +1,6 @@
 import { Buffer } from 'buffer';
 import { parseBuffer } from 'music-metadata';
 
-import { FileHandle } from './FileHandle';
 import { getOptimizedImages } from './getOptimizedImage';
 
 // @ts-ignore

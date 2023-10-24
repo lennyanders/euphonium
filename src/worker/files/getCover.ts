@@ -1,4 +1,3 @@
-import { FileHandle } from './FileHandle';
 import { getOptimizedImages } from './getOptimizedImage';
 
 export const getCover = async (fileHandle: FileHandle): Promise<DbCover | null> => {

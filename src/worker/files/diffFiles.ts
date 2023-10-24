@@ -1,5 +1,3 @@
-import { FileHandle } from './FileHandle';
-
 export const diffFiles = async <T extends DbTrack | DbCover>(
   existingFiles: T[],
   currentFiles: FileHandle[],
