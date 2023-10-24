@@ -1,7 +1,7 @@
 import { ternary } from 'oby';
 import { FunctionMaybe } from 'voby';
 
-import { fileSystemApiSupport, offscreenCanvasSupport, workerSupport } from '../consts';
+import { fileSystemApiSupport, offscreenCanvasSupport, sharedWorkerSupport } from '../consts';
 
 type EntryParams = {
   support: FunctionMaybe<boolean>;
@@ -29,8 +29,8 @@ const InfoEntry = ({ link, children }: Omit<EntryParams, 'support'>) => (
 export const NoSupport = () => [
   'This app is not supported in your browser, please use a browser that supports the following features:',
   <ul class='grid gap-2'>
-    <SupportEntry support={workerSupport} link='https://caniuse.com/webworkers'>
-      Web Workers
+    <SupportEntry support={sharedWorkerSupport} link='https://caniuse.com/sharedworkers'>
+      Shared Web Workers
     </SupportEntry>
     <SupportEntry support={fileSystemApiSupport} link='https://caniuse.com/native-filesystem-api'>
       File System Access API

@@ -1,7 +1,7 @@
 import $ from 'oby';
 
 import { albumDataGetter, artistDataGetter } from './computedValues';
-import { postMessage } from './utils';
+import { postMessageGlobal } from './utils';
 
 export const state = $.store<State>({
   loading: false,
@@ -19,7 +19,7 @@ export const enablePartialUpdates = () => {
   $.store.on(
     () => state.libraryDirectories,
     () => {
-      postMessage({
+      postMessageGlobal({
         message: 'setLibraryDirectories',
         state: $.store.unwrap(state).libraryDirectories,
       });
@@ -28,23 +28,23 @@ export const enablePartialUpdates = () => {
 
   $.store.on(
     () => state.trackData,
-    () => postMessage({ message: 'setTrackData', state: $.store.unwrap(state).trackData }),
+    () => postMessageGlobal({ message: 'setTrackData', state: $.store.unwrap(state).trackData }),
   );
 
   $.store.on(
     () => state.albumData,
-    () => postMessage({ message: 'setAlbumData', state: $.store.unwrap(state).albumData }),
+    () => postMessageGlobal({ message: 'setAlbumData', state: $.store.unwrap(state).albumData }),
   );
 
   $.store.on(
     () => state.artistData,
-    () => postMessage({ message: 'setArtistData', state: $.store.unwrap(state).artistData }),
+    () => postMessageGlobal({ message: 'setArtistData', state: $.store.unwrap(state).artistData }),
   );
 
   $.store.on(
     () => state.importing,
     () => {
-      postMessage({
+      postMessageGlobal({
         message: 'setTemporaryData',
         state: { importing: $.store.unwrap(state).importing },
       });

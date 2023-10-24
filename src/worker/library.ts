@@ -13,7 +13,7 @@ import {
 import { beToFeTrack } from './files/converters';
 import { getCover } from './files/getCover';
 import { enablePartialUpdates, state } from './state';
-import { postMessage } from './utils';
+import { onConnect, postMessage, postMessageGlobal } from './utils';
 
 const getDbData = async () => {
   const database = await getDatabase();
@@ -57,7 +57,7 @@ export const tryAddDirectory = async (handle: FileSystemDirectoryHandle) => {
     state.libraryDirectories = await getFeDirectories();
     await updateFiles();
   }
-  postMessage({ message: 'tryAddDirectoryToLibrary', relation });
+  postMessageGlobal({ message: 'tryAddDirectoryToLibrary', relation });
 };
 
 export const forceAddDirectory = async (relation: Relation, handle: FileSystemDirectoryHandle) => {
@@ -177,7 +177,9 @@ Promise.all([getFeDirectories(), getFeTrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
     Object.assign(state, { libraryDirectories, trackData }, data);
 
-    postMessage({ message: 'setState', state: $.store.unwrap(state) });
+    postMessageGlobal({ message: 'setState', state: $.store.unwrap(state) });
+    onConnect((port) => postMessage(port, { message: 'setState', state: $.store.unwrap(state) }));
+
     enablePartialUpdates();
   },
 );

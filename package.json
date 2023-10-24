@@ -16,6 +16,7 @@
     "@types/dom-view-transitions": "^1.0.3",
     "@types/node": "^20.2.5",
     "@types/offscreencanvas": "^2019.6.4",
+    "@types/sharedworker": "^0.0.105",
     "@types/wicg-file-system-access": "^2023.10.1",
     "@unocss/preset-icons": "^0.56.5",
     "@unocss/preset-uno": "^0.56.5",

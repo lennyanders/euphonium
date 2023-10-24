@@ -1,6 +1,6 @@
 import { getDatabase } from '../database';
 import { state } from '../state';
-import { postMessage } from '../utils';
+import { postMessageGlobal } from '../utils';
 
 const trackMatcher = /\.aac$|\.mp3$|\.ogg$|\.wav$|\.flac$|\.m4a$/;
 const coverMatcher = /^cover\.png$|^cover\.jpg$/i;
@@ -65,7 +65,7 @@ const getAllFileHandlesFromDirectory = async ({
     return res;
   } catch (_) {
     delete state.importing;
-    postMessage({ message: 'requestPermission', directoryHandle });
+    postMessageGlobal({ message: 'requestPermission', directoryHandle });
     throw Error();
   }
 };

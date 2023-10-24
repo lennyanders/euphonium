@@ -14,7 +14,8 @@
       "@types/wicg-file-system-access",
       "@types/offscreencanvas",
       "@types/dom-navigation",
-      "@types/dom-view-transitions"
+      "@types/dom-view-transitions",
+      "@types/sharedworker"
     ],
     "noEmit": true,
     "resolveJsonModule": true,
