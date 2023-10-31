@@ -84,6 +84,7 @@ type GeneralData = Partial<{
   queue: number[];
   originalQueue: number[];
   activeTrackId: number;
+  currentTime: number;
   volume: number;
   mute: boolean;
   shuffle: boolean;
@@ -91,6 +92,8 @@ type GeneralData = Partial<{
 }>;
 
 type TemporaryData = Partial<{
+  playing: boolean;
+
   importing: boolean;
 }>;
 

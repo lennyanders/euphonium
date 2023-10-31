@@ -2,6 +2,7 @@ import {
   forceAddDirectory,
   removeDirectory,
   setGeneralData,
+  setTemporaryData,
   tryAddDirectory,
   updateFiles,
 } from './library';
@@ -22,5 +23,8 @@ onMessage(async ({ data }) => {
   }
   if (data.message === 'setGeneralData') {
     return setGeneralData(data.state);
+  }
+  if (data.message === 'setTemporaryData') {
+    return setTemporaryData(data.state);
   }
 });

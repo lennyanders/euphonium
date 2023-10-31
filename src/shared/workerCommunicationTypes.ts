@@ -37,4 +37,5 @@ export type MessageEventPostFrontend =
       'forceAddDirectoryToLibrary',
       { relation: Relation; directoryHandle: FileSystemDirectoryHandle }
     >
-  | TypedMessageEvent<'setGeneralData', { state: GeneralData }>;
+  | TypedMessageEvent<'setGeneralData', { state: GeneralData }>
+  | TypedMessageEvent<'setTemporaryData', { state: TemporaryData }>;

@@ -41,13 +41,38 @@ export const enablePartialUpdates = () => {
     () => postMessageGlobal({ message: 'setArtistData', state: $.store.unwrap(state).artistData }),
   );
 
-  $.store.on(
-    () => state.importing,
-    () => {
-      postMessageGlobal({
-        message: 'setTemporaryData',
-        state: { importing: $.store.unwrap(state).importing },
-      });
-    },
-  );
+  const temporaryDataKeys: (keyof TemporaryData)[] = ['playing', 'importing'];
+  for (const key of temporaryDataKeys) {
+    $.store.on(
+      () => state[key],
+      () => {
+        postMessageGlobal({
+          message: 'setTemporaryData',
+          state: { [key]: $.store.unwrap(state)[key] },
+        });
+      },
+    );
+  }
+
+  const generalDataKeys: (keyof GeneralData)[] = [
+    'queue',
+    'originalQueue',
+    'activeTrackId',
+    'currentTime',
+    'volume',
+    'mute',
+    'shuffle',
+    'loop',
+  ];
+  for (const key of generalDataKeys) {
+    $.store.on(
+      () => state[key],
+      () => {
+        postMessageGlobal({
+          message: 'setGeneralData',
+          state: { [key]: $.store.unwrap(state)[key] },
+        });
+      },
+    );
+  }
 };

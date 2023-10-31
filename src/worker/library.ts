@@ -162,6 +162,7 @@ export const updateFiles = async () => {
 };
 
 export const setGeneralData = async (data: GeneralData) => {
+  Object.assign(state, data);
   const database = await getDatabase();
   const tx = database.transaction('data', 'readwrite');
   const txs: Promise<any>[] = [];
@@ -172,6 +173,8 @@ export const setGeneralData = async (data: GeneralData) => {
   }
   await Promise.all([...txs, tx.done]);
 };
+
+export const setTemporaryData = (data: TemporaryData) => Object.assign(state, data);
 
 Promise.all([getFeDirectories(), getFeTrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {

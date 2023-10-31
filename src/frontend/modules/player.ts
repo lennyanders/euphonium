@@ -1,4 +1,4 @@
-import { $, useMemo, useEffect, useEventListener, store, $$ } from 'voby';
+import { useMemo, useEffect, useEventListener, store, $$ } from 'voby';
 
 import {
   appendToArrayUnique,
@@ -11,8 +11,6 @@ import { cleanQueue$, state } from './library';
 
 const audioEl = new Audio();
 
-export const playing$ = $(false);
-export const currentTime$ = $(0);
 export const currentTrack$ = useMemo(() => state.trackData[state.activeTrackId || -1]);
 
 const currentTrackIndex$ = useMemo(() => $$(cleanQueue$)?.indexOf(state.activeTrackId || -1));
@@ -89,7 +87,9 @@ export const go = (offset: number) => {
   if (nextTrackIndex < 0 || nextTrackIndex > queue.length - 1) return;
   play(queue[nextTrackIndex]);
 };
-export const seek = (time: number) => currentTime$((audioEl.currentTime = time));
+export const seek = (time: number) => {
+  postMessage({ message: 'setGeneralData', state: { currentTime: (audioEl.currentTime = time) } });
+};
 export const shuffle = (shuffle: boolean) => {
   if (!shuffle) {
     state.queue = state.originalQueue;
@@ -114,19 +114,23 @@ export const playNext = (trackId: number) => {
   }
 };
 
-useEventListener(audioEl, 'play', () => playing$(true));
-useEventListener(audioEl, 'pause', () => playing$(false));
+useEventListener(audioEl, 'play', () => {
+  postMessage({ message: 'setTemporaryData', state: { playing: true } });
+});
+useEventListener(audioEl, 'pause', () => {
+  postMessage({ message: 'setTemporaryData', state: { playing: false } });
+});
 useEventListener(audioEl, 'ended', () => go(1));
 
 let animationFrameId: number;
 const updateTime = () => {
   animationFrameId = requestAnimationFrame(() => {
-    currentTime$(audioEl.currentTime);
+    postMessage({ message: 'setGeneralData', state: { currentTime: audioEl.currentTime } });
     updateTime();
   });
 };
 useEffect(() => {
-  if ($$(playing$)) updateTime();
+  if (state.playing) updateTime();
   else cancelAnimationFrame(animationFrameId);
 });
 

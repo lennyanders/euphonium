@@ -2,7 +2,7 @@ import { Virtualizer } from '@tanstack/virtual-core';
 import { $, $$, If, useMemo, useEffect, ObservableMaybe } from 'voby';
 
 import { state } from '../modules/library';
-import { play, pause, playing$, appendToQueue, playNext } from '../modules/player';
+import { play, pause, appendToQueue, playNext } from '../modules/player';
 import { CoverImage } from './CoverImage';
 import { Virtual, VirtualProps } from './Virtual';
 import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
@@ -10,7 +10,7 @@ import { ContextMenuItem, showContextMenu } from './layout/ContextMenu';
 const onContextMenu = (event: MouseEvent, track: FeTrack, trackIds: number[]) => {
   const isActiveTrack = track.id === state.activeTrackId;
   const items: ContextMenuItem[] = [];
-  if (isActiveTrack && $$(playing$)) items.push({ title: 'Pause', action: pause });
+  if (isActiveTrack && state.playing) items.push({ title: 'Pause', action: pause });
   else items.push({ title: 'Play', action: () => play(track.id, trackIds) });
 
   if (!isActiveTrack) {
