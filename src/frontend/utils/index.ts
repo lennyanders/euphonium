@@ -16,8 +16,10 @@ export const requestFileAccess = async () => {
   return success;
 };
 
-export const getShuffledQueue = () => {
-  const tracks = [...(store.unwrap(state).originalQueue || [])];
+export const getShuffledQueue = (originalQueue?: number[]) => {
+  if (!originalQueue) return;
+
+  const tracks = [...originalQueue];
   let currentIndex = tracks.length;
   let randomIndex;
   while (currentIndex !== 0) {

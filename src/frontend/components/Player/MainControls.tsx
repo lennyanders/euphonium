@@ -2,6 +2,7 @@ import { $$, useMemo } from 'voby';
 
 import { state } from '../../modules/library';
 import { currentTrack$, go, isFirst$, isLast$, shuffle } from '../../modules/player';
+import { postMessage } from '../../utils/worker';
 import { PlayPause } from './PlayPause';
 
 const loopIcon$ = useMemo(() => {
@@ -21,7 +22,7 @@ const isLoop$ = useMemo(() => !!state.loop && state.loop !== 'none');
 export const MainControls = () => (
   <div class='p-4 flex gap-4 justify-center items-center'>
     <button
-      onClick={() => (state.loop = getNextLoopMode())}
+      onClick={() => postMessage({ message: 'setGeneralData', state: { loop: getNextLoopMode() } })}
       class={['w-6 h-6 transition-opacity', loopIcon$]}
     />
     <button

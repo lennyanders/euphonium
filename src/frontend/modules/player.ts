@@ -19,60 +19,35 @@ export const isLast$ = useMemo(() => $$(currentTrackIndex$) === ($$(cleanQueue$)
 
 export const play = async (trackId?: number, queue?: number[]) => {
   await requestFileAccess();
-  if ((trackId && trackId !== state.activeTrackId) || !audioEl.src) {
+  const noSrc = !audioEl.src;
+  if ((trackId && trackId !== state.activeTrackId) || noSrc) {
     const track = state.trackData[trackId || state.activeTrackId || -1];
     if (track) {
       const file = await track.fileHandle.getFile();
-      if (trackId) state.activeTrackId = trackId;
+      if (trackId) postMessage({ message: 'setGeneralData', state: { activeTrackId: trackId } });
+
       audioEl.src = URL.createObjectURL(file);
     }
   }
   if (queue) {
     if (!state.shuffle) {
-      state.queue = queue;
+      postMessage({ message: 'setGeneralData', state: { queue: [...queue] } });
     } else if (!state.originalQueue || queue.toString() !== state.originalQueue.toString()) {
-      state.originalQueue = queue;
-      state.queue = getShuffledQueue();
+      postMessage({
+        message: 'setGeneralData',
+        state: { originalQueue: [...queue], queue: getShuffledQueue(queue) },
+      });
     }
   }
-  if (audioEl.src) audioEl.play();
+  if (audioEl.src) {
+    audioEl.currentTime = (noSrc && state.currentTime) || 0;
+    audioEl.play();
+  }
 };
 
 useEffect(() => {
-  if (!state.queue?.length) return;
-  postMessage({ message: 'setGeneralData', state: { queue: store.unwrap(state).queue } });
-});
-useEffect(() => {
-  if (!state.originalQueue?.length) return;
-  postMessage({
-    message: 'setGeneralData',
-    state: { originalQueue: store.unwrap(state).originalQueue },
-  });
-});
-useEffect(() => {
-  if (state.activeTrackId === undefined) return;
-  postMessage({ message: 'setGeneralData', state: { activeTrackId: state.activeTrackId } });
-});
-useEffect(() => {
-  if (state.shuffle === undefined) return;
-  postMessage({
-    message: 'setGeneralData',
-    state: { shuffle: state.shuffle, ...(!state.shuffle && { originalQueue: undefined }) },
-  });
-});
-useEffect(() => {
-  if (state.loop === undefined) return;
-  postMessage({ message: 'setGeneralData', state: { loop: state.loop } });
-});
-useEffect(() => {
-  if (state.volume === undefined) return;
-  audioEl.volume = state.volume;
-  postMessage({ message: 'setGeneralData', state: { volume: state.volume } });
-});
-useEffect(() => {
   if (state.mute === undefined) return;
   audioEl.muted = state.mute;
-  postMessage({ message: 'setGeneralData', state: { mute: state.mute } });
 });
 
 export const pause = () => audioEl.pause();
@@ -92,25 +67,44 @@ export const seek = (time: number) => {
 };
 export const shuffle = (shuffle: boolean) => {
   if (!shuffle) {
-    state.queue = state.originalQueue;
-    delete state.originalQueue;
+    postMessage({
+      message: 'setGeneralData',
+      state: { shuffle, originalQueue: undefined, queue: store.unwrap(state).originalQueue },
+    });
   } else {
-    state.originalQueue = store.unwrap(state).queue;
-    state.queue = getShuffledQueue();
+    const queue = store.unwrap(state).queue;
+    postMessage({
+      message: 'setGeneralData',
+      state: { shuffle, originalQueue: queue, queue: getShuffledQueue(queue) },
+    });
   }
-  state.shuffle = shuffle;
 };
 
+const queueKeys: Array<keyof Pick<State, 'queue' | 'originalQueue'>> = ['queue', 'originalQueue'];
+
 export const appendToQueue = (trackId: number) => {
-  if (state.queue) state.queue = appendToArrayUnique(state.queue, trackId);
-  if (state.originalQueue) state.originalQueue = appendToArrayUnique(state.originalQueue, trackId);
+  for (const key of queueKeys) {
+    const queue = state[key];
+    if (!queue) continue;
+
+    postMessage({
+      message: 'setGeneralData',
+      state: { [key]: appendToArrayUnique(queue, trackId) },
+    });
+  }
 };
 
 export const playNext = (trackId: number) => {
   if (!state.activeTrackId) return appendToQueue(trackId);
-  if (state.queue) state.queue = insertAfterValInArr(state.queue, trackId, state.activeTrackId);
-  if (state.originalQueue) {
-    state.originalQueue = insertAfterValInArr(state.originalQueue, trackId, state.activeTrackId);
+
+  for (const key of queueKeys) {
+    const queue = state[key];
+    if (!queue) continue;
+
+    postMessage({
+      message: 'setGeneralData',
+      state: { [key]: insertAfterValInArr(queue, trackId, state.activeTrackId) },
+    });
   }
 };
 

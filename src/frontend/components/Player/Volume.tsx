@@ -1,6 +1,7 @@
 import { useMemo } from 'voby';
 
 import { state } from '../../modules/library';
+import { postMessage } from '../../utils/worker';
 import { Range } from '../Player/Range';
 
 export const volumeIcon$ = useMemo(() => {
@@ -14,7 +15,7 @@ export const Slider = ({ class: css, bg }: { class?: string; bg?: string }) => (
   <Range
     max={1}
     val={() => (state.volume !== undefined ? state.volume : 1)}
-    seek={(newVal) => ((state.volume = newVal), (state.mute = false))}
+    seek={(volume) => postMessage({ message: 'setGeneralData', state: { volume, mute: false } })}
     bg={bg}
     class={css}
   />
@@ -23,7 +24,7 @@ export const Slider = ({ class: css, bg }: { class?: string; bg?: string }) => (
 export const VolumeDesktop = () => (
   <div class='flex flex-row-reverse items-center'>
     <button
-      onClick={() => (state.mute = !state.mute)}
+      onClick={() => postMessage({ message: 'setGeneralData', state: { mute: !state.mute } })}
       class={['w-8 h-8 next:(hover:(opacity-100 pointer-events-auto))', volumeIcon$]}
     />
     <div class='p-2 transition-opacity opacity-0 pointer-events-none hover:(opacity-100 pointer-events-auto)'>
