@@ -40,7 +40,7 @@ export const play = async (trackId?: number, queue?: number[]) => {
     }
   }
   if (audioEl.src) {
-    audioEl.currentTime = (noSrc && state.currentTime) || 0;
+    audioEl.currentTime = trackId && trackId !== state.activeTrackId ? 0 : state.currentTime || 0;
     audioEl.play();
   }
 };

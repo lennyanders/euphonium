@@ -14,9 +14,12 @@ export const postMessage = (message: MessageEventPostFrontend['data']) => {
   worker.port.postMessage(message);
 };
 
+let first = true;
 export const onMessage = (cb: (message: MessageEventPostWorker) => void) => {
+  const log = import.meta.env.DEV && first;
+  if (first) first = false;
   const newCb = (message: MessageEventPostWorker) => {
-    if (import.meta.env.DEV) console.log('frontend on message: ', message);
+    if (log) console.log('frontend on message: ', message.data);
     cb(message);
   };
   worker.port.addEventListener('message', newCb);

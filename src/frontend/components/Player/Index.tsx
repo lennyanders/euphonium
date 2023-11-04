@@ -4,11 +4,11 @@ import { w1024$ } from '../../modules/layout';
 import { currentTrack$ } from '../../modules/player';
 import { path$ } from '../../router';
 import { CoverImage } from '../CoverImage';
-import { MainControls } from '../Player/MainControls';
-import { PlayPause } from '../Player/PlayPause';
-import { Progress } from '../Player/Progress';
-import { VolumeDesktop } from '../Player/Volume';
 import { Toasts } from '../Toasts';
+import { MainControls } from './MainControls';
+import { PlayPause } from './PlayPause';
+import { Progress } from './Progress';
+import { VolumeDesktop } from './Volume';
 
 const Desktop = () => [
   <Progress class='p-x-4 p-t-2 p-b-1' />,
@@ -60,7 +60,7 @@ const Mobile = () => [
   </a>,
 ];
 
-export const Footer = () => (
+export const Player = () => (
   <div class='fixed right-2 max-w-[calc(100%-1rem)] lg:left-2 rd-2 flex items-center lg:block bottom-4 bg-dark-900'>
     <Ternary when={w1024$}>
       <Desktop />

@@ -1,8 +1,8 @@
 import { If } from 'voby';
 
+import { Player } from './components/Player/Index';
 import { Transition } from './components/Transition';
 import { ContextMenu } from './components/layout/ContextMenu';
-import { Footer } from './components/layout/Footer';
 import { mainEl$, w1024$ } from './modules/layout';
 import { state } from './modules/library';
 import { About } from './pages/About';
@@ -12,7 +12,7 @@ import { Albums } from './pages/Albums';
 import { Artist } from './pages/Artist';
 import { Artists } from './pages/Artists';
 import { Home } from './pages/Home';
-import { Player } from './pages/Player';
+import { Player as PlayerPage } from './pages/Player';
 import { Queue } from './pages/Queue';
 import { Search } from './pages/Search';
 import { Settings } from './pages/Settings';
@@ -51,7 +51,7 @@ const baseRoutes = [
 
 const mobileRoutes = [
   ...baseRoutes,
-  { path: '/player', component: Player, title: getTitle('Player') },
+  { path: '/player', component: PlayerPage, title: getTitle('Player') },
   { path: '*', component: Home, title: baseTitle },
 ];
 const desktopRoutes = [
@@ -70,7 +70,7 @@ export const App = () => [
         <Router routes={desktopRoutes} />
       </main>
     </If>
-    <Footer />
+    <Player />
     <ContextMenu />
   </If>,
   <Transition
