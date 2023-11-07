@@ -6,7 +6,7 @@ import {
   insertAfterValInArr,
   requestFileAccess,
 } from '../utils';
-import { postMessage } from '../utils/worker';
+import { onMessage, postMessage } from '../utils/worker';
 import { cleanQueue$, state } from './library';
 
 const audioEl = new Audio();
@@ -17,17 +17,29 @@ const currentTrackIndex$ = useMemo(() => $$(cleanQueue$)?.indexOf(state.activeTr
 export const isFirst$ = useMemo(() => $$(currentTrackIndex$) === 0);
 export const isLast$ = useMemo(() => $$(currentTrackIndex$) === ($$(cleanQueue$)?.length || 0) - 1);
 
-export const play = async (trackId?: number, queue?: number[]) => {
-  await requestFileAccess();
-  const noSrc = !audioEl.src;
-  if ((trackId && trackId !== state.activeTrackId) || noSrc) {
-    const track = state.trackData[trackId || state.activeTrackId || -1];
-    if (track) {
-      const file = await track.fileHandle.getFile();
-      if (trackId) postMessage({ message: 'setGeneralData', state: { activeTrackId: trackId } });
+onMessage(({ data }) => {
+  if (data.message === 'play') {
+    return realPlay(data.trackId, data.queue, data.time);
+  }
+  if (data.message === 'pause') {
+    return realPause();
+  }
+});
 
-      audioEl.src = URL.createObjectURL(file);
-    }
+export const play = (trackId?: number, queue?: number[], time?: number) => {
+  postMessage({ message: 'play', trackId, ...(queue && { queue: [...queue] }), time });
+};
+
+export const realPlay = async (trackId?: number, queue?: number[], time = state.currentTime) => {
+  await requestFileAccess();
+
+  const track = state.trackData[trackId || state.activeTrackId || -1];
+  if (track && track.id !== +(audioEl.dataset.trackId || -1)) {
+    const file = await track.fileHandle.getFile();
+    if (trackId) postMessage({ message: 'setGeneralData', state: { activeTrackId: trackId } });
+
+    audioEl.src = URL.createObjectURL(file);
+    audioEl.dataset.trackId = track.id.toString();
   }
   if (queue) {
     if (!state.shuffle) {
@@ -40,7 +52,7 @@ export const play = async (trackId?: number, queue?: number[]) => {
     }
   }
   if (audioEl.src) {
-    audioEl.currentTime = trackId && trackId !== state.activeTrackId ? 0 : state.currentTime || 0;
+    audioEl.currentTime = trackId && trackId !== state.activeTrackId ? 0 : time || 0;
     audioEl.play();
   }
 };
@@ -50,7 +62,8 @@ useEffect(() => {
   audioEl.muted = state.mute;
 });
 
-export const pause = () => audioEl.pause();
+export const pause = () => postMessage({ message: 'pause' });
+export const realPause = () => audioEl.pause();
 export const go = (offset: number) => {
   if (state.loop === 'track') offset = 0;
   const queue = state.queue || [];
@@ -62,9 +75,8 @@ export const go = (offset: number) => {
   if (nextTrackIndex < 0 || nextTrackIndex > queue.length - 1) return;
   play(queue[nextTrackIndex]);
 };
-export const seek = (time: number) => {
-  postMessage({ message: 'setGeneralData', state: { currentTime: (audioEl.currentTime = time) } });
-};
+export const seek = (time: number) => postMessage({ message: 'play', time });
+
 export const shuffle = (shuffle: boolean) => {
   if (!shuffle) {
     postMessage({
@@ -124,7 +136,7 @@ const updateTime = () => {
   });
 };
 useEffect(() => {
-  if (state.playing) updateTime();
+  if (state.playing && !audioEl.paused) updateTime();
   else cancelAnimationFrame(animationFrameId);
 });
 

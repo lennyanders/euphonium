@@ -27,7 +27,9 @@ export type MessageEventPostWorker =
   | TypedMessageEvent<'setGeneralData', { state: GeneralData }>
   | TypedMessageEvent<'setTemporaryData', { state: TemporaryData }>
   | TypedMessageEvent<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
-  | TypedMessageEvent<'tryAddDirectoryToLibrary', { relation: Relation }>;
+  | TypedMessageEvent<'tryAddDirectoryToLibrary', { relation: Relation }>
+  | TypedMessageEvent<'play', { trackId?: number; queue?: number[]; time?: number }>
+  | TypedMessageEvent<'pause'>;
 
 export type MessageEventPostFrontend =
   | TypedMessageEvent<'reloadLibrary'>
@@ -38,4 +40,6 @@ export type MessageEventPostFrontend =
       { relation: Relation; directoryHandle: FileSystemDirectoryHandle }
     >
   | TypedMessageEvent<'setGeneralData', { state: GeneralData }>
-  | TypedMessageEvent<'setTemporaryData', { state: TemporaryData }>;
+  | TypedMessageEvent<'setTemporaryData', { state: TemporaryData }>
+  | TypedMessageEvent<'play', { trackId?: number; queue?: number[]; time?: number }>
+  | TypedMessageEvent<'pause'>;

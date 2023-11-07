@@ -3,7 +3,7 @@ import {
   MessageEventPostFrontend,
 } from '../../shared/workerCommunicationTypes';
 
-const ports: MessagePort[] = [];
+export const ports: MessagePort[] = [];
 
 export const postMessageGlobal = (message: MessageEventPostWorker['data']) => {
   // @ts-ignore vite-plugin-checker does not know that this is in a worker
@@ -14,7 +14,7 @@ export const postMessage = (port: MessagePort, message: MessageEventPostWorker['
   port.postMessage(message);
 };
 
-type MessageHandler = (message: MessageEventPostFrontend) => void;
+type MessageHandler = (message: MessageEventPostFrontend, port: MessagePort) => void;
 const messageHandlers: MessageHandler[] = [];
 export const onMessage = (cb: MessageHandler) => messageHandlers.push(cb);
 
@@ -29,7 +29,7 @@ globalThis.addEventListener('connect', (event) => {
   connectHandlers.forEach((connectHandler) => connectHandler(port));
 
   port.addEventListener('message', (event) => {
-    messageHandlers.forEach((messageHandler) => messageHandler(event));
+    messageHandlers.forEach((messageHandler) => messageHandler(event, port));
   });
 
   port.start();
