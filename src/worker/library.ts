@@ -161,8 +161,15 @@ export const updateFiles = async () => {
   delete state.importing;
 };
 
+let autoPauseTimeout: NodeJS.Timeout;
 export const setGeneralData = async (data: GeneralData) => {
+  if (data.currentTime) {
+    clearTimeout(autoPauseTimeout);
+    autoPauseTimeout = setTimeout(() => (state.playing = false), 250);
+  }
+
   Object.assign(state, data);
+
   const database = await getDatabase();
   const tx = database.transaction('data', 'readwrite');
   const txs: Promise<any>[] = [];
@@ -174,7 +181,11 @@ export const setGeneralData = async (data: GeneralData) => {
   await Promise.all([...txs, tx.done]);
 };
 
-export const setTemporaryData = (data: TemporaryData) => Object.assign(state, data);
+export const setTemporaryData = (data: TemporaryData) => {
+  if (data.playing === false) clearTimeout(autoPauseTimeout);
+
+  Object.assign(state, data);
+};
 
 Promise.all([getFeDirectories(), getFeTrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
