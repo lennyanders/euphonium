@@ -62,6 +62,11 @@ useEffect(() => {
   audioEl.muted = state.mute;
 });
 
+useEffect(() => {
+  if (typeof state.volume !== 'number') return;
+  audioEl.volume = state.volume;
+});
+
 export const pause = () => postMessage({ message: 'pause' });
 export const realPause = () => audioEl.pause();
 export const go = (offset: number) => {
