@@ -165,7 +165,8 @@ let autoPauseTimeout: NodeJS.Timeout;
 export const setGeneralData = async (data: GeneralData) => {
   if (data.currentTime) {
     clearTimeout(autoPauseTimeout);
-    autoPauseTimeout = setTimeout(() => (state.playing = false), 250);
+    // 300ms cause timeupdate can take up to 250ms and a bit of buffer https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
+    autoPauseTimeout = setTimeout(() => (state.playing = false), 300);
   }
 
   Object.assign(state, data);

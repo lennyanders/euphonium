@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useEventListener, store, $$ } from 'voby';
+import { useMemo, useEffect, useEventListener, store, $$, $ } from 'voby';
 
 import {
   appendToArrayUnique,
@@ -133,16 +133,36 @@ useEventListener(audioEl, 'pause', () => {
 });
 useEventListener(audioEl, 'ended', () => go(1));
 
-let animationFrameId: number;
+const getTabVisible = () => document.visibilityState === 'visible';
+const tabVisible$ = $(getTabVisible());
+document.addEventListener('visibilitychange', () => tabVisible$(getTabVisible()));
+
 const updateTime = () => {
-  animationFrameId = requestAnimationFrame(() => {
-    postMessage({ message: 'setGeneralData', state: { currentTime: audioEl.currentTime } });
-    updateTime();
-  });
+  postMessage({ message: 'setGeneralData', state: { currentTime: audioEl.currentTime } });
 };
+
+let animationFrameId: number;
+const updateTimeEveryFrame = () => {
+  animationFrameId = requestAnimationFrame(() => (updateTime(), updateTimeEveryFrame()));
+};
+
 useEffect(() => {
-  if (state.playing && !audioEl.paused) updateTime();
-  else cancelAnimationFrame(animationFrameId);
+  const tabVisible = tabVisible$();
+
+  if (!state.playing || audioEl.paused) {
+    if (tabVisible) cancelAnimationFrame(animationFrameId);
+    else audioEl.removeEventListener('timeupdate', updateTime);
+    return;
+  }
+
+  if (tabVisible) {
+    audioEl.removeEventListener('timeupdate', updateTime);
+    updateTimeEveryFrame();
+    return;
+  }
+
+  cancelAnimationFrame(animationFrameId);
+  audioEl.addEventListener('timeupdate', updateTime);
 });
 
 const mediaSession = navigator.mediaSession;
