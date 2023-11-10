@@ -32,12 +32,4 @@ export const cleanQueue$ = useMemo(() => {
     .map((track) => track.id);
 });
 
-onMessage(({ data }) => {
-  if (data.message === 'setState') return Object.assign(state, data.state);
-  if (data.message === 'setTrackData') return (state.trackData = data.state);
-  if (data.message === 'setAlbumData') return (state.albumData = data.state);
-  if (data.message === 'setArtistData') return (state.artistData = data.state);
-  if (data.message === 'setLibraryDirectories') return (state.libraryDirectories = data.state);
-  if (data.message === 'setGeneralData') return Object.assign(state, data.state);
-  if (data.message === 'setTemporaryData') return Object.assign(state, data.state);
-});
+onMessage(({ data }) => data.message === 'setState' && Object.assign(state, data.state));

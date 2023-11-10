@@ -34,3 +34,13 @@ globalThis.addEventListener('connect', (event) => {
 
   port.start();
 });
+
+export const clone = <T>(obj: T): T => {
+  if (typeof obj !== 'object' || obj instanceof FileSystemHandle) return obj;
+
+  if (Array.isArray(obj)) return obj.map((v: any) => clone(v)) as T;
+
+  const res = {} as T;
+  for (const key in obj) res[key] = clone(obj[key]);
+  return res;
+};

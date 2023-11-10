@@ -97,10 +97,20 @@ type TemporaryData = Partial<{
   importing: boolean;
 }>;
 
+type TrackData = Record<number, FeTrack>;
+type AlbumData = Record<string, FeAlbum>;
+type ArtistData = Record<string, FeArtist>;
+
 interface State extends GeneralData, TemporaryData {
-  trackData: Record<number, FeTrack>;
-  albumData: Record<string, FeAlbum>;
-  artistData: Record<string, FeArtist>;
+  trackData: TrackData;
+  albumData: AlbumData;
+  artistData: ArtistData;
   libraryDirectories: FeLibraryDirectory[];
   loading: boolean;
+}
+
+interface WorkerState extends State {
+  trackData: import('@vue/reactivity').Ref<TrackData>;
+  albumData: import('@vue/reactivity').ComputedRef<AlbumData>;
+  artistData: import('@vue/reactivity').ComputedRef<ArtistData>;
 }

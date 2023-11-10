@@ -1,4 +1,4 @@
-import $ from 'oby';
+import { watch } from '@vue-reactivity/watch';
 
 import { wait } from '../shared/utils';
 import { DirectoryRelationType, Relation } from '../shared/workerCommunicationTypes';
@@ -12,8 +12,8 @@ import {
 } from './files';
 import { beToFeTrack } from './files/converters';
 import { getCover } from './files/getCover';
-import { enablePartialUpdates, state } from './state';
-import { onConnect, postMessage, postMessageGlobal } from './utils';
+import { state, trackData } from './state';
+import { clone, onConnect, postMessage, postMessageGlobal } from './utils';
 
 const getDbData = async () => {
   const database = await getDatabase();
@@ -151,7 +151,7 @@ export const updateFiles = async () => {
   await Promise.all([txT.done, txC.done]);
   console.timeEnd('update database');
 
-  state.trackData = await getFeTrackData();
+  trackData.value = await getFeTrackData();
 
   console.timeEnd('update');
 
@@ -192,9 +192,31 @@ Promise.all([getFeDirectories(), getFeTrackData(), getDbData()]).then(
   ([libraryDirectories, trackData, data]) => {
     Object.assign(state, { libraryDirectories, trackData }, data);
 
-    postMessageGlobal({ message: 'setState', state: $.store.unwrap(state) });
-    onConnect((port) => postMessage(port, { message: 'setState', state: $.store.unwrap(state) }));
+    postMessageGlobal({ message: 'setState', state: clone(state) });
+    onConnect((port) => postMessage(port, { message: 'setState', state: clone(state) }));
 
-    enablePartialUpdates();
+    const objectWithAllStateKeys: Record<keyof State, null> = {
+      activeTrackId: null,
+      albumData: null,
+      artistData: null,
+      currentTime: null,
+      importing: null,
+      libraryDirectories: null,
+      loading: null,
+      loop: null,
+      mute: null,
+      originalQueue: null,
+      playing: null,
+      queue: null,
+      shuffle: null,
+      trackData: null,
+      volume: null,
+    };
+    for (const key of Object.keys(objectWithAllStateKeys)) {
+      watch(
+        () => state[key as keyof State],
+        (value) => postMessageGlobal({ message: 'setState', state: { [key]: clone(value) } }),
+      );
+    }
   },
 );

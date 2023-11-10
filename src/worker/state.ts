@@ -1,78 +1,104 @@
-import $ from 'oby';
+import { computed, reactive, ref } from '@vue/reactivity';
 
-import { albumDataGetter, artistDataGetter } from './computedValues';
-import { postMessageGlobal } from './utils';
+import { getFormattedTime } from '../shared/utils';
 
-export const state = $.store<State>({
-  loading: false,
-  libraryDirectories: [],
-  trackData: {},
-  get albumData() {
-    return albumDataGetter.apply(this);
-  },
-  get artistData() {
-    return artistDataGetter.apply(this);
-  },
+export const trackData = ref<TrackData>({});
+
+const albumData = computed(() => {
+  const albumsObject: Record<string, Omit<FeAlbum, 'durationFormatted' | 'showDiskOnTracks'>> = {};
+  for (const trackId in trackData.value) {
+    const track = trackData.value[trackId];
+    if (!track.albumTitle) continue;
+
+    const key = `${track.albumArtist}${track.albumTitle}`;
+    const albumObject = albumsObject[key];
+    if (albumObject) {
+      albumObject.duration += track.duration;
+      albumObject.tracks.push(track.id);
+      if (track.diskNumber && track.diskNumber > albumObject.diskCount) {
+        albumObject.diskCount = track.diskNumber;
+      }
+    } else {
+      albumsObject[key] = {
+        title: track.albumTitle,
+        artist: track.albumArtist || 'unknown artist',
+        year: track.year,
+        duration: track.duration,
+        tracks: [track.id],
+        diskCount: 1,
+      };
+    }
+  }
+  const finalAlbumsObject: Record<string, FeAlbum> = {};
+  for (const key in albumsObject) {
+    const album = albumsObject[key];
+    const sortedTracks = album.tracks
+      .map((track) => trackData.value[track])
+      .sort((a, b) => (a.number || 0) - (b.number || 0))
+      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+
+    const showDiskOnTracks: number[] = [];
+    let prevDiskNumber = 0;
+    for (const track of sortedTracks) {
+      if (track.diskNumber && prevDiskNumber !== track.diskNumber) {
+        showDiskOnTracks.push(track.id);
+        prevDiskNumber = track.diskNumber;
+      }
+    }
+
+    finalAlbumsObject[key] = {
+      ...album,
+      tracks: sortedTracks.map((track) => track.id),
+      showDiskOnTracks,
+      durationFormatted: getFormattedTime(album.duration),
+      images: sortedTracks.find((track) => track.images)?.images,
+    };
+  }
+  return finalAlbumsObject;
 });
 
-export const enablePartialUpdates = () => {
-  $.store.on(
-    () => state.libraryDirectories,
-    () => {
-      postMessageGlobal({
-        message: 'setLibraryDirectories',
-        state: $.store.unwrap(state).libraryDirectories,
-      });
-    },
-  );
+const artistData = computed(() => {
+  const tracks = Object.values(trackData.value);
+  const albums = Object.values(albumData.value);
+  if (!tracks.length) return {};
 
-  $.store.on(
-    () => state.trackData,
-    () => postMessageGlobal({ message: 'setTrackData', state: $.store.unwrap(state).trackData }),
-  );
+  const artists = [...new Set(tracks.map((track) => track.artist || 'unknown artist'))];
+  const artistObject: Record<string, FeArtist> = {};
+  for (const artist of artists) {
+    const artistAlbums = albums
+      .filter((album) => album.artist === artist)
+      .sort((a, b) => (a.year || 0) - (b.year || 0));
+    const sortedSingles = tracks
+      .filter((track) => track.albumArtist !== artist && track.artist === artist)
+      .sort((a, b) => (a.number || 0) - (b.number || 0))
+      .sort((a, b) => (a.diskNumber || 0) - (b.diskNumber || 0));
+    const singles = sortedSingles.map((track) => track.id);
 
-  $.store.on(
-    () => state.albumData,
-    () => postMessageGlobal({ message: 'setAlbumData', state: $.store.unwrap(state).albumData }),
-  );
-
-  $.store.on(
-    () => state.artistData,
-    () => postMessageGlobal({ message: 'setArtistData', state: $.store.unwrap(state).artistData }),
-  );
-
-  const temporaryDataKeys: (keyof TemporaryData)[] = ['playing', 'importing'];
-  for (const key of temporaryDataKeys) {
-    $.store.on(
-      () => state[key],
-      () => {
-        postMessageGlobal({
-          message: 'setTemporaryData',
-          state: { [key]: $.store.unwrap(state)[key] },
-        });
-      },
+    const duration = artistAlbums.reduce(
+      (res, album) => res + album.duration,
+      sortedSingles.reduce((res, track) => res + track.duration, 0),
     );
+    artistObject[artist] = {
+      name: artist,
+      images:
+        artistAlbums.find((album) => album.images)?.images ||
+        sortedSingles.find((track) => track.images)?.images,
+      albums: artistAlbums.map((album) => `${album.artist}${album.title}`),
+      singles,
+      tracks: artistAlbums
+        .reduce<number[]>((res, album) => res.concat(album.tracks), [])
+        .concat(singles),
+      duration,
+      durationFormatted: getFormattedTime(duration),
+    };
   }
+  return artistObject;
+});
 
-  const generalDataKeys: (keyof GeneralData)[] = [
-    'queue',
-    'originalQueue',
-    'activeTrackId',
-    'currentTime',
-    'volume',
-    'mute',
-    'shuffle',
-    'loop',
-  ];
-  for (const key of generalDataKeys) {
-    $.store.on(
-      () => state[key],
-      () => {
-        postMessageGlobal({
-          message: 'setGeneralData',
-          state: { [key]: $.store.unwrap(state)[key] },
-        });
-      },
-    );
-  }
-};
+export const state = reactive<WorkerState>({
+  loading: false,
+  libraryDirectories: [],
+  trackData,
+  albumData,
+  artistData,
+});

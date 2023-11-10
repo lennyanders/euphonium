@@ -19,13 +19,7 @@ export type TypedMessageEvent<T extends string, U extends object = {}> = Message
 >;
 
 export type MessageEventPostWorker =
-  | TypedMessageEvent<'setState', { state: State }>
-  | TypedMessageEvent<'setTrackData', { state: Record<number, FeTrack> }>
-  | TypedMessageEvent<'setAlbumData', { state: Record<string, FeAlbum> }>
-  | TypedMessageEvent<'setArtistData', { state: Record<string, FeArtist> }>
-  | TypedMessageEvent<'setLibraryDirectories', { state: FeLibraryDirectory[] }>
-  | TypedMessageEvent<'setGeneralData', { state: GeneralData }>
-  | TypedMessageEvent<'setTemporaryData', { state: TemporaryData }>
+  | TypedMessageEvent<'setState', { state: Partial<State> }>
   | TypedMessageEvent<'requestPermission', { directoryHandle: FileSystemDirectoryHandle }>
   | TypedMessageEvent<'tryAddDirectoryToLibrary', { relation: Relation }>
   | TypedMessageEvent<'play', { trackId?: number; queue?: number[]; time?: number }>
