@@ -78,7 +78,7 @@ export const go = (offset: number) => {
     else if (nextTrackIndex < 0) nextTrackIndex = queue.length + nextTrackIndex;
   }
   if (nextTrackIndex < 0 || nextTrackIndex > queue.length - 1) return;
-  play(queue[nextTrackIndex]);
+  play(queue[nextTrackIndex], undefined, 0);
 };
 export const seek = (time: number) => postMessage({ message: 'play', time });
 
