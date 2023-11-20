@@ -1,8 +1,8 @@
-import { $$, store, useMemo } from 'voby';
+import { computed, reactive } from 'vue';
 
 import { onMessage } from '../utils/worker';
 
-export const state = store<State>({
+export const state = reactive<State>({
   libraryDirectories: [],
   trackData: {},
   albumData: {},
@@ -10,22 +10,22 @@ export const state = store<State>({
   loading: true,
 });
 
-export const tracks$ = useMemo(() => Object.values(state.trackData));
-export const tracksSortedByTitle$ = useMemo(() =>
-  $$(tracks$).sort((a, b) => a.title.localeCompare(b.title)),
+export const tracks = computed(() => Object.values(state.trackData));
+export const tracksSortedByTitle = computed(() => {
+  return tracks.value.sort((a, b) => a.title.localeCompare(b.title));
+});
+
+export const albums = computed(() => Object.values(state.albumData));
+export const albumsSortedByTitle = computed(() =>
+  albums.value.sort((a, b) => a.title.localeCompare(b.title)),
 );
 
-export const albums$ = useMemo(() => Object.values(state.albumData));
-export const albumsSortedByTitle$ = useMemo(() =>
-  $$(albums$).sort((a, b) => a.title.localeCompare(b.title)),
+export const artists$ = computed(() => Object.values(state.artistData));
+export const artistsSortedByName$ = computed(() =>
+  artists$.value.sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
 );
 
-export const artists$ = useMemo(() => Object.values(state.artistData));
-export const artistsSortedByName$ = useMemo(() =>
-  $$(artists$).sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
-);
-
-export const cleanQueue$ = useMemo(() => {
+export const cleanQueue$ = computed(() => {
   return (state.queue || [])
     .map((id) => state.trackData[id])
     .filter((track) => track)

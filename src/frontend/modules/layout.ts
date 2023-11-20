@@ -1,21 +1,21 @@
-import { $, $$, useEffect } from 'voby';
+import { ref, watchEffect } from 'vue';
 
 const useMatchMedia = (media: string) => {
   const matcher = matchMedia(media);
-  const val$ = $(matcher.matches);
-  matcher.addEventListener('change', ({ matches }) => val$(matches));
-  return val$;
+  const value = ref(matcher.matches);
+  matcher.addEventListener('change', ({ matches }) => (value.value = matches));
+  return value;
 };
 
-export const w640$ = useMatchMedia('(min-width: 640px)');
-export const w1024$ = useMatchMedia('(min-width: 1024px)');
+export const w640 = useMatchMedia('(min-width: 640px)');
+export const w1024 = useMatchMedia('(min-width: 1024px)');
 
-export const mainEl$ = $<HTMLElement>();
-export const mainElWidth$ = $(0);
-useEffect(() => {
-  const mainEl = $$(mainEl$);
-  if (!mainEl) return;
-  const observer = new ResizeObserver(([el]) => mainElWidth$(el.contentRect.width));
-  observer.observe(mainEl);
-  return () => observer.disconnect();
+export const mainEl = ref<HTMLElement>();
+export const mainElWidth = ref(0);
+watchEffect((onCleanup) => {
+  if (!mainEl.value) return;
+
+  const observer = new ResizeObserver(([el]) => (mainElWidth.value = el.contentRect.width));
+  observer.observe(mainEl.value);
+  onCleanup(() => observer.disconnect());
 });

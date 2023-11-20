@@ -6,10 +6,9 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "voby",
     "noImplicitAny": true,
     "types": [
+      "shim-vue",
       "vite/client",
       "@types/wicg-file-system-access",
       "@types/offscreencanvas",
@@ -19,8 +18,9 @@
     ],
     "noEmit": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "isolatedModules": true
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts", "src/**/*.vue"],
   "exclude": ["node_modules"]
 }
