@@ -77,7 +77,6 @@
     margin-inline-start: 0.25rem;
     inline-size: 3rem;
     block-size: 3rem;
-    border-radius: 50%;
     object-fit: cover;
   }
 
