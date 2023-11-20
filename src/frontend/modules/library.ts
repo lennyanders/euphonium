@@ -20,9 +20,9 @@ export const albumsSortedByTitle = computed(() =>
   albums.value.sort((a, b) => a.title.localeCompare(b.title)),
 );
 
-export const artists$ = computed(() => Object.values(state.artistData));
-export const artistsSortedByName$ = computed(() =>
-  artists$.value.sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
+export const artists = computed(() => Object.values(state.artistData));
+export const artistsSortedByName = computed(() =>
+  artists.value.sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
 );
 
 export const cleanQueue$ = computed(() => {
