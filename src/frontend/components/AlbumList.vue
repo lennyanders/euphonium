@@ -1,18 +1,11 @@
 <script setup lang="ts">
-  import {
-    VirtualItem,
-    Virtualizer,
-    observeWindowOffset,
-    observeWindowRect,
-    windowScroll,
-  } from '@tanstack/virtual-core';
-  import { watchEffect } from '@vue-reactivity/watch';
-  import { computed, ref } from 'vue';
+  import { computed } from 'vue';
   import { RouterLink } from 'vue-router';
 
   import { mainElWidth } from '../modules/layout';
   import { remToPx } from '../utils/rem-to-px';
   import CoverImage from './CoverImage.vue';
+  import { useVirtual } from './Virtual';
 
   const props = defineProps<{ albums: FeAlbum[] }>();
 
@@ -20,37 +13,27 @@
   const itemsPerRow = computed(() => Math.floor(ulWidth.value / remToPx(8.5)));
   const itemWidth = computed(() => ulWidth.value / itemsPerRow.value);
 
-  const rowVirtualizer = ref<Virtualizer<Window, any>>();
-  const getVirualRows = () => {
-    return rowVirtualizer.value?.getVirtualItems().map((value) => {
-      const start = value.index * itemsPerRow.value;
-      return { ...value, albums: props.albums.slice(start, start + itemsPerRow.value) };
+  const albums = computed(() => {
+    if (!props.albums.length) return [];
+    const emptyAlbumsSplitted = Array.from({
+      length: Math.ceil(props.albums.length / itemsPerRow.value),
     });
-  };
-
-  const virtualRows = ref<(VirtualItem & { albums: FeAlbum[] })[]>();
-  watchEffect((cleanup) => {
-    rowVirtualizer.value = new Virtualizer<Window, any>({
-      getScrollElement: () => window,
-      observeElementRect: observeWindowRect,
-      observeElementOffset: observeWindowOffset,
-      scrollToFn: windowScroll,
-      count: Math.ceil(props.albums.length / itemsPerRow.value),
-      estimateSize: () => itemWidth.value,
-      overscan: 5,
-      onChange: () => (virtualRows.value = getVirualRows()),
+    return emptyAlbumsSplitted.map((_, index) => {
+      const start = index * itemsPerRow.value;
+      return props.albums.slice(start, start + itemsPerRow.value);
     });
-    rowVirtualizer.value._willUpdate();
-    virtualRows.value = getVirualRows();
-    cleanup(rowVirtualizer.value._didMount());
   });
+
+  const { totalSize, virtualRows } = useVirtual(
+    computed(() => ({ items: albums.value, estimateSize: () => itemWidth.value })),
+  );
 </script>
 
 <template>
-  <ul :style="{ height: `${rowVirtualizer?.getTotalSize()}px` }">
+  <ul :style="{ height: totalSize }">
     <template v-for="virtualRow in virtualRows" :key="virtualRow.index">
       <li
-        v-for="(album, index) of virtualRow.albums"
+        v-for="(album, index) of virtualRow.item"
         :style="{
           inlineSize: `${itemWidth}px`,
           blockSize: `${virtualRow.size}px`,
