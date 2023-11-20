@@ -1,32 +1,21 @@
 <script setup lang="ts">
-  import { useWindowVirtualizer } from '@tanstack/vue-virtual';
   import { computed } from 'vue';
 
   import { state } from '../modules/library';
   import { remToPx } from '../utils/rem-to-px';
   import CoverImage from './CoverImage.vue';
+  import { useVirtual } from './Virtual';
 
   const props = defineProps<{ tracks: FeTrack[] }>();
 
   const size = remToPx(3.5);
-  const rowVirtualizer = useWindowVirtualizer(
-    computed(() => ({
-      count: props.tracks.length,
-      estimateSize: () => size,
-      overscan: 25,
-      onchange: console.log,
-    })),
+  const { totalSize, virtualRows } = useVirtual(
+    computed(() => ({ items: props.tracks, estimateSize: () => size })),
   );
-
-  const virtualRows = computed(() => {
-    return rowVirtualizer.value
-      .getVirtualItems()
-      .map((value) => ({ ...value, track: props.tracks[value.index] }));
-  });
 </script>
 
 <template>
-  <ul :style="{ height: `${rowVirtualizer.getTotalSize()}px` }">
+  <ul :style="{ height: totalSize }">
     <li
       v-for="virtualRow in virtualRows"
       :key="virtualRow.index"
@@ -34,15 +23,15 @@
         blockSize: `${virtualRow.size}px`,
         transform: `translateY(${virtualRow.start}px)`,
       }"
-      :class="{ activeTrack: state.activeTrackId === virtualRow.track.id }"
+      :class="{ activeTrack: state.activeTrackId === virtualRow.item.id }"
     >
       <button>
-        <CoverImage class="image" :src="virtualRow.track.images?.small" />
+        <CoverImage class="image" :src="virtualRow.item.images?.small" />
         <div>
-          {{ virtualRow.track.title }}
-          <small>{{ virtualRow.track.artist }}</small>
+          {{ virtualRow.item.title }}
+          <small>{{ virtualRow.item.artist }}</small>
         </div>
-        <span class="duration">{{ virtualRow.track.durationFormatted }}</span>
+        <span class="duration">{{ virtualRow.item.durationFormatted }}</span>
       </button>
     </li>
   </ul>
