@@ -8,6 +8,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import App from './App.vue';
 import AlbumArtists from './pages/AlbumArtists.vue';
 import Albums from './pages/Albums.vue';
+import Artist from './pages/Artist.vue';
 import Artists from './pages/Artists.vue';
 import Settings from './pages/Settings.vue';
 import Tracks from './pages/Tracks.vue';
@@ -38,6 +39,11 @@ const router = createRouter({
       meta: { title: getTitle('Album artists') },
     },
     {
+      path: '/artist/:artistName',
+      component: Artist,
+      meta: { title: () => getTitle(router.currentRoute.value.params['artistName'] as string) },
+    },
+    {
       path: '/settings',
       component: Settings,
       meta: { title: getTitle('Settings') },
@@ -51,6 +57,7 @@ const router = createRouter({
 
 router.afterEach((route) => {
   if (typeof route.meta.title === 'string') document.title = route.meta.title;
+  if (typeof route.meta.title === 'function') document.title = route.meta.title();
 });
 
 createApp(App).use(router).mount(document.body);

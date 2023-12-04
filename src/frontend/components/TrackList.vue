@@ -1,16 +1,16 @@
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { MaybeRef, computed, unref } from 'vue';
 
   import { state } from '../modules/library';
   import { remToPx } from '../utils/rem-to-px';
   import CoverImage from './CoverImage.vue';
   import { useVirtual } from './Virtual';
 
-  const props = defineProps<{ tracks: FeTrack[] }>();
+  const props = defineProps<{ tracks: MaybeRef<FeTrack[]> }>();
 
   const size = remToPx(3.5);
   const { totalSize, virtualRows } = useVirtual(
-    computed(() => ({ items: props.tracks, estimateSize: () => size })),
+    computed(() => ({ items: unref(props.tracks), estimateSize: () => size })),
   );
 </script>
 

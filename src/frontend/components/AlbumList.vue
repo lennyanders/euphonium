@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { MaybeRef, computed, unref } from 'vue';
   import { RouterLink } from 'vue-router';
 
   import { mainElWidth } from '../modules/layout';
@@ -7,20 +7,20 @@
   import CoverImage from './CoverImage.vue';
   import { useVirtual } from './Virtual';
 
-  const props = defineProps<{ albums: FeAlbum[] }>();
+  const props = defineProps<{ albums: MaybeRef<FeAlbum[]> }>();
 
   const ulWidth = computed(() => mainElWidth.value + remToPx(0.5));
   const itemsPerRow = computed(() => Math.floor(ulWidth.value / remToPx(8.5)));
   const itemWidth = computed(() => ulWidth.value / itemsPerRow.value);
 
   const albums = computed(() => {
-    if (!props.albums.length) return [];
+    if (!unref(props.albums).length) return [];
     const emptyAlbumsSplitted = Array.from({
-      length: Math.ceil(props.albums.length / itemsPerRow.value),
+      length: Math.ceil(unref(props.albums).length / itemsPerRow.value),
     });
     return emptyAlbumsSplitted.map((_, index) => {
       const start = index * itemsPerRow.value;
-      return props.albums.slice(start, start + itemsPerRow.value);
+      return unref(props.albums).slice(start, start + itemsPerRow.value);
     });
   });
 
