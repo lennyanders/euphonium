@@ -39,6 +39,12 @@
     animation: rotate 0.5s linear infinite;
   }
 
+  main {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+  }
+
   @keyframes rotate {
     to {
       transform: rotate(360deg);

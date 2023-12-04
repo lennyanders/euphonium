@@ -9,6 +9,7 @@ import App from './App.vue';
 import AlbumArtists from './pages/AlbumArtists.vue';
 import Albums from './pages/Albums.vue';
 import Artists from './pages/Artists.vue';
+import Settings from './pages/Settings.vue';
 import Tracks from './pages/Tracks.vue';
 
 const getTitle = (title: string) => `${title} | ${document.title}`;
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/album-artists',
       component: AlbumArtists,
       meta: { title: getTitle('Album artists') },
+    },
+    {
+      path: '/settings',
+      component: Settings,
+      meta: { title: getTitle('Settings') },
     },
     {
       path: '/:pathMatch(.*)*',
