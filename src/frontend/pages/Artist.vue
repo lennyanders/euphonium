@@ -7,7 +7,9 @@
   import TrackList from '../components/TrackList.vue';
   import { state } from '../modules/library';
 
-  const artist = computed(() => state.artistData[useRoute().params['artistName'] as string]);
+  const { params } = useRoute();
+
+  const artist = computed(() => state.artistData[params['artistName'] as string]);
 </script>
 
 <template>
