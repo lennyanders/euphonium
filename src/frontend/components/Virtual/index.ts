@@ -5,18 +5,27 @@ import {
   observeWindowOffset,
   windowScroll,
 } from '@tanstack/virtual-core';
-import { MaybeRef, computed, ref, unref, watchEffect } from 'vue';
+import { MaybeRef, Ref, computed, ref, unref, watchEffect } from 'vue';
 
 type Ret<T> = VirtualItem & { item: T };
 
 export const useVirtual = <T>(
-  config: MaybeRef<{ items: T[]; estimateSize: (item: T) => number }>,
+  config: MaybeRef<{
+    items: T[];
+    estimateSize: (item: T) => number;
+    listRef: Ref<HTMLElement | undefined>;
+  }>,
 ) => {
   const rowVirtualizer = ref<Virtualizer<Window, any>>();
+
+  const scrollMargin = computed(() => unref(config).listRef?.value?.offsetTop ?? 0);
+
   const getVirualRows = () => {
-    return rowVirtualizer.value?.getVirtualItems().map<Ret<T>>((value) => {
-      return { ...value, item: unref(config).items[value.index] };
-    });
+    return rowVirtualizer.value?.getVirtualItems().map<Ret<T>>((value) => ({
+      ...value,
+      start: value.start - scrollMargin.value,
+      item: unref(config).items[value.index],
+    }));
   };
 
   const virtualRows = ref<Ret<T>[]>();
@@ -30,6 +39,8 @@ export const useVirtual = <T>(
       estimateSize: (index) => unref(config).estimateSize(unref(config).items[index]),
       overscan: 5,
       onChange: () => (virtualRows.value = getVirualRows()),
+      initialOffset: window.scrollY,
+      scrollMargin: scrollMargin.value,
     });
     rowVirtualizer.value._willUpdate();
     virtualRows.value = getVirualRows();

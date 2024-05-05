@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MaybeRef, computed, unref } from 'vue';
+  import { MaybeRef, computed, ref, unref } from 'vue';
 
   import { state } from '../modules/library';
   import { remToPx } from '../utils/rem-to-px';
@@ -11,6 +11,8 @@
     showNumber?: boolean;
     showDiskOnTracks?: MaybeRef<number[]>;
   }>();
+
+  const listRef = ref<HTMLUListElement>();
 
   const diskNumberWith = computed(() => {
     return unref(props.tracks)
@@ -29,12 +31,13 @@
       estimateSize: (track) => {
         return unref(props.showDiskOnTracks)?.includes(track.id) ? sizeWithDiskCount : size;
       },
+      listRef,
     })),
   );
 </script>
 
 <template>
-  <ul :style="{ height: totalSize }">
+  <ul :style="{ height: totalSize }" ref="listRef">
     <li
       v-for="virtualRow in virtualRows"
       :key="virtualRow.index"
