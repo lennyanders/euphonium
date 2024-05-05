@@ -1,4 +1,4 @@
-import { openDB, DBSchema, IDBPDatabase } from 'idb/with-async-ittr';
+import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
 export interface AppDataDb extends DBSchema {
   libraryDirectory: {
