@@ -6,11 +6,30 @@
   import CoverImage from './CoverImage.vue';
   import { useVirtual } from './Virtual';
 
-  const props = defineProps<{ tracks: MaybeRef<FeTrack[]> }>();
+  const props = defineProps<{
+    tracks: MaybeRef<FeTrack[]>;
+    showNumber?: boolean;
+    showDiskOnTracks?: MaybeRef<number[]>;
+  }>();
+
+  const diskNumberWith = computed(() => {
+    return unref(props.tracks)
+      .reduce((res, cur) => {
+        const currentNumber = cur.number ?? 0;
+        return currentNumber > res ? currentNumber : res;
+      }, 0)
+      .toString().length;
+  });
 
   const size = remToPx(3.5);
-  const { totalSize, virtualRows } = useVirtual(
-    computed(() => ({ items: unref(props.tracks), estimateSize: () => size })),
+  const sizeWithDiskCount = remToPx(5.25);
+  const { totalSize, virtualRows } = useVirtual<FeTrack>(
+    computed(() => ({
+      items: unref(props.tracks),
+      estimateSize: (track) => {
+        return unref(props.showDiskOnTracks)?.includes(track.id) ? sizeWithDiskCount : size;
+      },
+    })),
   );
 </script>
 
@@ -25,7 +44,13 @@
       }"
       :class="{ activeTrack: state.activeTrackId === virtualRow.item.id }"
     >
+      <template v-if="unref(props.showDiskOnTracks)?.includes(virtualRow.item.id)">
+        Disk: {{ virtualRow.item.diskNumber }}
+      </template>
       <button>
+        <span v-if="props.showNumber" class="shrink-0" :style="{ width: `${diskNumberWith}ch` }">
+          {{ virtualRow.item.number ?? '-' }}
+        </span>
         <CoverImage class="image" :src="virtualRow.item.images?.small" />
         <div>
           {{ virtualRow.item.title }}
@@ -45,15 +70,17 @@
 
   li {
     position: absolute;
+    display: grid;
+    grid-auto-rows: 1fr auto;
     inset-block-start: 0;
     inset-inline-start: 0;
     inline-size: 100%;
+    padding: 0.25rem;
   }
 
   button {
     inline-size: 100%;
-    block-size: 100%;
-    padding: 0.25rem;
+    block-size: 3rem;
     display: flex;
     gap: 0.5rem;
     align-items: center;

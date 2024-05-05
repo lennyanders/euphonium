@@ -2,10 +2,12 @@
 import './base.css';
 import 'uno.css';
 
+import { title } from 'process';
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import App from './App.vue';
+import Album from './pages/Album.vue';
 import AlbumArtists from './pages/AlbumArtists.vue';
 import Albums from './pages/Albums.vue';
 import Artist from './pages/Artist.vue';
@@ -42,6 +44,16 @@ const router = createRouter({
       path: '/artist/:artistName',
       component: Artist,
       meta: { title: () => getTitle(router.currentRoute.value.params['artistName'] as string) },
+    },
+    {
+      path: '/artist/:artist/:albumTitle',
+      component: Album,
+      meta: {
+        title: () =>
+          getTitle(
+            `${router.currentRoute.value.params['albumTitle']} by ${router.currentRoute.value.params['artist']}`,
+          ),
+      },
     },
     {
       path: '/settings',

@@ -9,7 +9,9 @@ import { MaybeRef, computed, ref, unref, watchEffect } from 'vue';
 
 type Ret<T> = VirtualItem & { item: T };
 
-export const useVirtual = <T>(config: MaybeRef<{ items: T[]; estimateSize: () => number }>) => {
+export const useVirtual = <T>(
+  config: MaybeRef<{ items: T[]; estimateSize: (item: T) => number }>,
+) => {
   const rowVirtualizer = ref<Virtualizer<Window, any>>();
   const getVirualRows = () => {
     return rowVirtualizer.value?.getVirtualItems().map<Ret<T>>((value) => {
@@ -25,7 +27,7 @@ export const useVirtual = <T>(config: MaybeRef<{ items: T[]; estimateSize: () =>
       observeElementOffset: observeWindowOffset,
       scrollToFn: windowScroll,
       count: unref(config).items.length,
-      estimateSize: unref(config).estimateSize,
+      estimateSize: (index) => unref(config).estimateSize(unref(config).items[index]),
       overscan: 5,
       onChange: () => (virtualRows.value = getVirualRows()),
     });

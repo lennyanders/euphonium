@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { computed } from '@vue/reactivity';
-  import { RouterLink, useRoute } from 'vue-router';
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
 
   import AlbumList from '../components/AlbumList.vue';
   import CoverImage from '../components/CoverImage.vue';
