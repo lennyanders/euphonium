@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   import { RouterLink } from 'vue-router';
 
   import { mainElWidth } from '../modules/layout';
@@ -8,6 +8,8 @@
   import { useVirtual } from './Virtual';
 
   const props = defineProps<{ artists: FeArtist[] }>();
+
+  const listRef = ref<HTMLUListElement>();
 
   const ulWidth = computed(() => mainElWidth.value + remToPx(0.5));
   const itemsPerRow = computed(() => Math.floor(ulWidth.value / remToPx(15)));
@@ -25,12 +27,12 @@
   });
 
   const { totalSize, virtualRows } = useVirtual(
-    computed(() => ({ items: albums.value, estimateSize: () => remToPx(6) })),
+    computed(() => ({ items: albums.value, estimateSize: () => remToPx(6), listRef })),
   );
 </script>
 
 <template>
-  <ul :style="{ height: totalSize }">
+  <ul :style="{ height: totalSize }" ref="listRef">
     <template v-for="virtualRow in virtualRows" :key="virtualRow.index">
       <li
         v-for="(artist, index) of virtualRow.item"

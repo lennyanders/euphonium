@@ -13,9 +13,11 @@ const audioEl = new Audio();
 
 export const currentTrack$ = useMemo(() => state.trackData[state.activeTrackId || -1]);
 
-const currentTrackIndex$ = useMemo(() => $$(cleanQueue$)?.indexOf(state.activeTrackId || -1));
+const currentTrackIndex$ = useMemo(() => $$(cleanQueue$).value?.indexOf(state.activeTrackId || -1));
 export const isFirst$ = useMemo(() => $$(currentTrackIndex$) === 0);
-export const isLast$ = useMemo(() => $$(currentTrackIndex$) === ($$(cleanQueue$)?.length || 0) - 1);
+export const isLast$ = useMemo(
+  () => $$(currentTrackIndex$) === ($$(cleanQueue$).value?.length || 0) - 1,
+);
 
 onMessage(({ data }) => {
   if (data.message === 'play') {
