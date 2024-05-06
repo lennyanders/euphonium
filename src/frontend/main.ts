@@ -7,6 +7,7 @@ import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import App from './App.vue';
+import About from './pages/About.vue';
 import Album from './pages/Album.vue';
 import AlbumArtists from './pages/AlbumArtists.vue';
 import Albums from './pages/Albums.vue';
@@ -65,6 +66,11 @@ const router = createRouter({
       path: '/settings',
       component: Settings,
       meta: { title: getTitle('Settings') },
+    },
+    {
+      path: '/about',
+      component: About,
+      meta: { title: getTitle('About') },
     },
     {
       path: '/:pathMatch(.*)*',
