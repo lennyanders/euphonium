@@ -23,14 +23,16 @@
       .toString().length;
   });
 
-  const size = remToPx(3.5);
-  const sizeWithDiskCount = remToPx(5.25);
+  const size = remToPx(3);
+  const sizeWithDiskCount = remToPx(4.75);
+  const gap = remToPx(0.5);
   const { totalSize, virtualRows } = useVirtual<FeTrack>(
     computed(() => ({
       items: unref(props.tracks),
       estimateSize: (track) => {
         return unref(props.showDiskOnTracks)?.includes(track.id) ? sizeWithDiskCount : size;
       },
+      gap,
       listRef,
     })),
   );
@@ -68,7 +70,6 @@
 <style scoped>
   ul {
     position: relative;
-    margin: -0.25rem;
   }
 
   li {
@@ -78,7 +79,6 @@
     inset-block-start: 0;
     inset-inline-start: 0;
     inline-size: 100%;
-    padding: 0.25rem;
   }
 
   button {
