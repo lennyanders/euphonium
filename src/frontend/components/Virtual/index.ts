@@ -1,53 +1,51 @@
-import {
-  Virtualizer,
-  VirtualItem,
-  observeWindowRect,
-  observeWindowOffset,
-  windowScroll,
-} from '@tanstack/virtual-core';
-import { MaybeRef, Ref, computed, ref, unref, watchEffect } from 'vue';
+import { useWindowVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/vue-virtual';
+import { MaybeRef, Ref, computed, unref } from 'vue';
 
 type Ret<T> = VirtualItem & { item: T };
 
 export const useVirtual = <T>(
-  config: MaybeRef<{
-    items: T[];
-    estimateSize: (item: T) => number;
-    listRef: Ref<HTMLElement | undefined>;
-  }>,
+  config: MaybeRef<
+    Partial<
+      Omit<
+        VirtualizerOptions<Window, Element>,
+        | 'observeElementRect'
+        | 'observeElementOffset'
+        | 'scrollToFn'
+        | 'getScrollElement'
+        | 'count'
+        | 'estimateSize'
+        | 'scrollMargin'
+      >
+    > & {
+      items: T[];
+      estimateSize: (item: T) => number;
+      listRef: Ref<HTMLElement | undefined>;
+    }
+  >,
 ) => {
-  const rowVirtualizer = ref<Virtualizer<Window, any>>();
+  const virtualizer = useWindowVirtualizer(
+    computed(() => {
+      const { items, estimateSize, listRef, ...virtualizerOptions } = unref(config);
+      return {
+        count: items.length,
+        estimateSize: (index) => estimateSize(items[index]),
+        overscan: 5,
+        initialOffset: window.scrollY,
+        scrollMargin: listRef?.value?.offsetTop ?? 0,
+        ...virtualizerOptions,
+      };
+    }),
+  );
 
-  const scrollMargin = computed(() => unref(config).listRef?.value?.offsetTop ?? 0);
+  const totalSize = computed(() => `${virtualizer.value?.getTotalSize()}px`);
 
-  const getVirualRows = () => {
-    return rowVirtualizer.value?.getVirtualItems().map<Ret<T>>((value) => ({
+  const virtualRows = computed(() => {
+    return virtualizer.value?.getVirtualItems().map<Ret<T>>((value) => ({
       ...value,
-      start: value.start - scrollMargin.value,
+      start: value.start - virtualizer.value.options.scrollMargin,
       item: unref(config).items[value.index],
     }));
-  };
-
-  const virtualRows = ref<Ret<T>[]>();
-  watchEffect((cleanup) => {
-    rowVirtualizer.value = new Virtualizer<Window, any>({
-      getScrollElement: () => window,
-      observeElementRect: observeWindowRect,
-      observeElementOffset: observeWindowOffset,
-      scrollToFn: windowScroll,
-      count: unref(config).items.length,
-      estimateSize: (index) => unref(config).estimateSize(unref(config).items[index]),
-      overscan: 5,
-      onChange: () => (virtualRows.value = getVirualRows()),
-      initialOffset: window.scrollY,
-      scrollMargin: scrollMargin.value,
-    });
-    rowVirtualizer.value._willUpdate();
-    virtualRows.value = getVirualRows();
-    cleanup(rowVirtualizer.value._didMount());
   });
-
-  const totalSize = computed(() => `${rowVirtualizer.value?.getTotalSize()}px`);
 
   return { totalSize, virtualRows };
 };
