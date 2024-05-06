@@ -44,22 +44,22 @@ const router = createRouter({
     {
       path: '/artist/:artist',
       component: Artist,
-      meta: { title: () => getTitle(router.currentRoute.value.params['artist'] as string) },
+      meta: { title: () => getTitle(router.currentRoute.value.params.artist as string) },
     },
     {
-      path: '/artist/:artist/:albumTitle',
+      path: '/artist/:artist/:album',
       component: Album,
       meta: {
         title: () =>
           getTitle(
-            `${router.currentRoute.value.params['albumTitle']} by ${router.currentRoute.value.params['artist']}`,
+            `${router.currentRoute.value.params.album} by ${router.currentRoute.value.params.artist}`,
           ),
       },
     },
     {
       path: '/artist/:artist/tracks',
       component: ArtistTracks,
-      meta: { title: () => getTitle(`${router.currentRoute.value.params['artist']}'s tracks`) },
+      meta: { title: () => getTitle(`${router.currentRoute.value.params.artist}'s tracks`) },
     },
     {
       path: '/settings',

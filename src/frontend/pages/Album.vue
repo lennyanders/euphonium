@@ -8,7 +8,7 @@
 
   const { params } = useRoute();
 
-  const album = computed(() => state.albumData[`${params.artist}${params.albumTitle}`]);
+  const album = computed(() => state.albumData[`${params.artist}${params.album}`]);
 </script>
 
 <template>

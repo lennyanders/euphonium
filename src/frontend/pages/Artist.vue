@@ -9,7 +9,7 @@
 
   const { params } = useRoute();
 
-  const artist = computed(() => state.artistData[params['artist'] as string]);
+  const artist = computed(() => state.artistData[params.artist as string]);
 </script>
 
 <template>
