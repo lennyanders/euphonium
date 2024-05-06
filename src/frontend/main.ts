@@ -11,6 +11,7 @@ import Album from './pages/Album.vue';
 import AlbumArtists from './pages/AlbumArtists.vue';
 import Albums from './pages/Albums.vue';
 import Artist from './pages/Artist.vue';
+import ArtistTracks from './pages/ArtistTracks.vue';
 import Artists from './pages/Artists.vue';
 import Settings from './pages/Settings.vue';
 import Tracks from './pages/Tracks.vue';
@@ -41,9 +42,9 @@ const router = createRouter({
       meta: { title: getTitle('Album artists') },
     },
     {
-      path: '/artist/:artistName',
+      path: '/artist/:artist',
       component: Artist,
-      meta: { title: () => getTitle(router.currentRoute.value.params['artistName'] as string) },
+      meta: { title: () => getTitle(router.currentRoute.value.params['artist'] as string) },
     },
     {
       path: '/artist/:artist/:albumTitle',
@@ -54,6 +55,11 @@ const router = createRouter({
             `${router.currentRoute.value.params['albumTitle']} by ${router.currentRoute.value.params['artist']}`,
           ),
       },
+    },
+    {
+      path: '/artist/:artist/tracks',
+      component: ArtistTracks,
+      meta: { title: () => getTitle(`${router.currentRoute.value.params['artist']}'s tracks`) },
     },
     {
       path: '/settings',

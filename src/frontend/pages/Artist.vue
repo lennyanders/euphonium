@@ -9,7 +9,7 @@
 
   const { params } = useRoute();
 
-  const artist = computed(() => state.artistData[params['artistName'] as string]);
+  const artist = computed(() => state.artistData[params['artist'] as string]);
 </script>
 
 <template>
@@ -29,11 +29,11 @@
       </div>
     </div>
     <template v-if="artist.albums.length">
-      <!-- <RouterLink :to="`${artist.name}/tracks`">
+      <RouterLink :to="`/artist/${artist.name}/tracks`" class="all-songs-link">
         <div class="i-mdi-music-circle" />
-        All artist songs
+        <span>All tracks</span>
         <small>{{ artist.tracks.length }}</small>
-      </RouterLink> -->
+      </RouterLink>
       <h2>Albums ({{ artist.albums.length }})</h2>
       <AlbumList :albums="computed(() => artist.albums.map((album) => state.albumData[album]))" />
     </template>
@@ -45,6 +45,22 @@
 </template>
 
 <style scoped>
+  .all-songs-link {
+    display: grid;
+    align-items: center;
+    column-gap: 0.5rem;
+    grid-template: 'image title' auto 'image subtitle' auto / auto 1fr;
+
+    small {
+      grid-area: subtitle;
+    }
+
+    .i-mdi-music-circle {
+      grid-area: image;
+      width: 2rem;
+    }
+  }
+
   .hero {
     display: grid;
     align-items: end;
