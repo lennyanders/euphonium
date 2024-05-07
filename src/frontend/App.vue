@@ -3,12 +3,12 @@
   import { RouterView } from 'vue-router';
 
   import Navigation from './components/Navigation.vue';
-  import { w1024, mainEl } from './modules/layout';
+  import { mainEl } from './modules/layout';
   import { state } from './modules/library';
 </script>
 ″
 <template>
-  <Navigation v-if="w1024" />
+  <Navigation />
   <main ref="mainEl">
     <RouterView />
   </main>

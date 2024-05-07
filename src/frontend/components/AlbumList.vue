@@ -27,7 +27,10 @@
   });
 
   const { totalSize, virtualRows } = useVirtual(
-    computed(() => ({ items: albums.value, estimateSize: () => itemWidth.value, listRef })),
+    computed(() => {
+      const size = itemWidth.value;
+      return { items: albums.value, estimateSize: () => size, listRef };
+    }),
   );
 </script>
 
