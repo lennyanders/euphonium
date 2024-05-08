@@ -3,8 +3,8 @@
 
   import { state } from '../modules/library';
   import { remToPx } from '../utils/rem-to-px';
+  import { useVirtual } from '../utils/virtual';
   import CoverImage from './CoverImage.vue';
-  import { useVirtual } from './Virtual';
 
   const props = defineProps<{
     tracks: MaybeRef<FeTrack[]>;

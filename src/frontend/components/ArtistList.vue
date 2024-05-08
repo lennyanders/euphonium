@@ -4,8 +4,8 @@
 
   import { mainElWidth } from '../modules/layout';
   import { remToPx } from '../utils/rem-to-px';
+  import { useVirtual } from '../utils/virtual';
   import CoverImage from './CoverImage.vue';
-  import { useVirtual } from './Virtual';
 
   const props = defineProps<{ artists: FeArtist[] }>();
 
