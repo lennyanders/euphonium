@@ -2,7 +2,7 @@
   import { computed } from '@vue/reactivity';
   import { useRoute } from 'vue-router';
 
-  import CoverImage from '../components/CoverImage.vue';
+  import Hero from '../components/Hero.vue';
   import TrackList from '../components/TrackList.vue';
   import { state } from '../modules/library';
 
@@ -11,49 +11,19 @@
   const artist = computed(() => state.artistData[params.artist as string]);
 </script>
 
-<template v-if="artist">
-  <div class="hero">
-    <CoverImage class="image" :src="artist.images?.large" />
-    <div class="info">
+<template>
+  <template v-if="artist">
+    <Hero
+      :image="artist.images?.large"
+      :infos="[
+        { text: artist.tracks.length, icon: 'i-mdi-music-note' },
+        { text: artist.durationFormatted, icon: 'i-mdi-timer-sand' },
+      ]"
+    >
       <h1>
         All track from <RouterLink :to="`/artist/${artist.name}`">{{ artist.name }}</RouterLink>
       </h1>
-      <span>
-        {{ artist.tracks.length }}
-        <div class="i-mdi-music-note" />
-        {{ artist.durationFormatted }}
-        <div class="i-mdi-timer-sand" />
-      </span>
-    </div>
-  </div>
-  <TrackList :tracks="computed(() => artist.tracks.map((track) => state.trackData[track]))" />
+    </Hero>
+    <TrackList :tracks="computed(() => artist.tracks.map((track) => state.trackData[track]))" />
+  </template>
 </template>
-
-<style scoped>
-  .hero {
-    display: grid;
-    align-items: end;
-    grid-template-columns: 25% 1fr;
-    margin-block-end: 2rem;
-  }
-
-  .image {
-    inline-size: 100%;
-  }
-
-  .info {
-    padding: 1rem;
-    display: grid;
-    gap: 0.5rem;
-    background-color: black;
-  }
-
-  .info span {
-    display: flex;
-    align-items: center;
-  }
-
-  .info span div:not(:last-child) {
-    margin-inline-end: 0.5rem;
-  }
-</style>

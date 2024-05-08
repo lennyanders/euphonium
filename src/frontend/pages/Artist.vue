@@ -3,7 +3,7 @@
   import { useRoute } from 'vue-router';
 
   import AlbumList from '../components/AlbumList.vue';
-  import CoverImage from '../components/CoverImage.vue';
+  import Hero from '../components/Hero.vue';
   import TrackList from '../components/TrackList.vue';
   import { state } from '../modules/library';
 
@@ -14,20 +14,16 @@
 
 <template>
   <template v-if="artist">
-    <div class="hero">
-      <CoverImage class="image" :src="artist.images?.large" />
-      <div class="info">
-        <h1>{{ artist.name }}</h1>
-        <span>
-          {{ artist.tracks.length }}
-          <div class="i-mdi-music-note" />
-          {{ artist.albums.length }}
-          <div class="i-mdi-disk" />
-          {{ artist.durationFormatted }}
-          <div class="i-mdi-timer-sand" />
-        </span>
-      </div>
-    </div>
+    <Hero
+      :image="artist.images?.large"
+      :infos="[
+        { text: artist.tracks.length, icon: 'i-mdi-music-note' },
+        { text: artist.albums.length, icon: 'i-mdi-disk' },
+        { text: artist.durationFormatted, icon: 'i-mdi-timer-sand' },
+      ]"
+    >
+      <h1>{{ artist.name }}</h1>
+    </Hero>
     <template v-if="artist.albums.length">
       <RouterLink :to="`/artist/${artist.name}/tracks`" class="all-songs-link">
         <div class="i-mdi-music-circle" />
@@ -59,32 +55,5 @@
       grid-area: image;
       width: 2rem;
     }
-  }
-
-  .hero {
-    display: grid;
-    align-items: end;
-    grid-template-columns: 25% 1fr;
-    margin-block-end: 2rem;
-  }
-
-  .image {
-    inline-size: 100%;
-  }
-
-  .info {
-    padding: 1rem;
-    display: grid;
-    gap: 0.5rem;
-    background-color: black;
-  }
-
-  .info span {
-    display: flex;
-    align-items: center;
-  }
-
-  .info span div:not(:last-child) {
-    margin-inline-end: 0.5rem;
   }
 </style>
