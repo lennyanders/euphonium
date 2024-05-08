@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MaybeRef, computed, ref, unref } from 'vue';
+  import { MaybeRef, computed, ref, unref, watch } from 'vue';
   import { RouterLink } from 'vue-router';
 
   import { mainElWidth } from '../modules/layout';
@@ -26,12 +26,11 @@
     });
   });
 
-  const { totalSize, virtualRows } = useVirtual(
-    computed(() => {
-      const size = itemWidth.value;
-      return { items: albums.value, estimateSize: () => size, listRef };
-    }),
+  const { virtualizer, totalSize, virtualRows } = useVirtual(
+    computed(() => ({ items: albums.value, estimateSize: () => itemWidth.value, listRef })),
   );
+
+  watch(itemWidth, () => virtualizer.value.measure());
 </script>
 
 <template>

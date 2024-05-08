@@ -1,5 +1,5 @@
 import { useWindowVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/vue-virtual';
-import { MaybeRef, Ref, computed, unref, watch } from 'vue';
+import { MaybeRef, Ref, computed, unref } from 'vue';
 
 type Ret<T> = VirtualItem & { item: T };
 
@@ -37,11 +37,6 @@ export const useVirtual = <T>(
     }),
   );
 
-  watch(
-    () => unref(config).estimateSize,
-    () => virtualizer.value.measure(),
-  );
-
   const totalSize = computed(() => `${virtualizer.value?.getTotalSize()}px`);
 
   const virtualRows = computed(() => {
@@ -52,5 +47,5 @@ export const useVirtual = <T>(
     }));
   });
 
-  return { totalSize, virtualRows };
+  return { virtualizer, totalSize, virtualRows };
 };
