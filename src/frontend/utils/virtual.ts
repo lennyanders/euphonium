@@ -1,5 +1,5 @@
-import { useWindowVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/vue-virtual';
-import { MaybeRef, Ref, computed, unref } from 'vue';
+import { useVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/vue-virtual';
+import { computed, MaybeRef, Ref, unref } from 'vue';
 
 type Ret<T> = VirtualItem & { item: T };
 
@@ -7,7 +7,7 @@ export const useVirtual = <T>(
   config: MaybeRef<
     Partial<
       Omit<
-        VirtualizerOptions<Window, Element>,
+        VirtualizerOptions<HTMLElement, Element>,
         | 'observeElementRect'
         | 'observeElementOffset'
         | 'scrollToFn'
@@ -19,18 +19,20 @@ export const useVirtual = <T>(
     > & {
       items: T[];
       estimateSize: (item: T) => number;
+      scrollRef: Ref<HTMLElement | undefined>;
       listRef: Ref<HTMLElement | undefined>;
     }
   >,
 ) => {
-  const virtualizer = useWindowVirtualizer(
+  const virtualizer = useVirtualizer(
     computed(() => {
-      const { items, estimateSize, listRef, ...virtualizerOptions } = unref(config);
+      const { items, estimateSize, scrollRef, listRef, ...virtualizerOptions } = unref(config);
       return {
+        getScrollElement: () => scrollRef.value ?? null,
         count: items.length,
         estimateSize: (index) => estimateSize(items[index]),
         overscan: 5,
-        initialOffset: window.scrollY,
+        initialOffset: scrollRef.value?.scrollTop ?? 0,
         scrollMargin: listRef?.value?.offsetTop ?? 0,
         ...virtualizerOptions,
       };

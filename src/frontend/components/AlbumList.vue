@@ -2,7 +2,7 @@
   import { MaybeRef, computed, ref, unref, watch } from 'vue';
   import { RouterLink } from 'vue-router';
 
-  import { mainElWidth } from '../modules/layout';
+  import { mainEl, mainElWidth } from '../modules/layout';
   import { remToPx } from '../utils/rem-to-px';
   import { useVirtual } from '../utils/virtual';
   import CoverImage from './CoverImage.vue';
@@ -27,7 +27,12 @@
   });
 
   const { virtualizer, totalSize, virtualRows } = useVirtual(
-    computed(() => ({ items: albums.value, estimateSize: () => itemWidth.value, listRef })),
+    computed(() => ({
+      items: albums.value,
+      estimateSize: () => itemWidth.value,
+      scrollRef: mainEl,
+      listRef,
+    })),
   );
 
   watch(itemWidth, () => virtualizer.value.measure());

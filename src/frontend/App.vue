@@ -40,6 +40,8 @@
   }
 
   main {
+    padding: 1rem;
+    overflow-y: scroll;
     display: grid;
     align-content: start;
     gap: 0.5rem;
@@ -56,9 +58,7 @@
   body {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: auto 1fr;
-    overflow-y: scroll;
-    padding: 1rem;
-    gap: 1rem;
+    grid-auto-columns: minmax(15rem, auto) 1fr;
+    height: 100vh;
   }
 </style>

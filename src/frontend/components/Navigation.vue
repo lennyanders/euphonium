@@ -22,9 +22,34 @@
       </li>
     </ul>
 
-    <RouterLink to="/about">
+    <RouterLink to="/about" class="about">
       <div class="i-mdi-information-outline" />
       About
     </RouterLink>
   </nav>
 </template>
+
+<style scoped>
+  nav {
+    padding: 1rem;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  a {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  ul {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .about {
+    color: #ccc;
+  }
+</style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { MaybeRef, computed, ref, unref } from 'vue';
 
+  import { mainEl } from '../modules/layout';
   import { state } from '../modules/library';
   import { remToPx } from '../utils/rem-to-px';
   import { useVirtual } from '../utils/virtual';
@@ -32,8 +33,9 @@
       estimateSize: (track) => {
         return unref(props.showDiskOnTracks)?.includes(track.id) ? sizeWithDiskCount : size;
       },
-      gap,
+      scrollRef: mainEl,
       listRef,
+      gap,
     })),
   );
 </script>
@@ -57,7 +59,7 @@
           {{ virtualRow.item.number ?? '-' }}
         </span>
         <CoverImage class="image" :src="virtualRow.item.images?.small" />
-        <div>
+        <div class="info">
           {{ virtualRow.item.title }}
           <small>{{ virtualRow.item.artist }}</small>
         </div>
@@ -76,6 +78,7 @@
     position: absolute;
     display: grid;
     grid-auto-rows: 1fr auto;
+    grid-auto-columns: 100%;
     inset-block-start: 0;
     inset-inline-start: 0;
     inline-size: 100%;
@@ -89,13 +92,18 @@
     align-items: center;
   }
 
+  .info,
   small {
     display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .image {
-    block-size: 100%;
+    flex: 0 0 auto;
     inline-size: auto;
+    block-size: 100%;
   }
 
   .duration {
