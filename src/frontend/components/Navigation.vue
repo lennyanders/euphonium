@@ -32,7 +32,7 @@
 <style scoped>
   nav {
     padding: 1rem;
-    background-color: #000;
+    background-color: #111;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

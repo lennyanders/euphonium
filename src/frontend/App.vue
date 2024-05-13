@@ -42,9 +42,22 @@
   main {
     padding: 1rem;
     overflow-y: scroll;
+    background-color: #111;
     display: grid;
     align-content: start;
     gap: 0.5rem;
+  }
+
+  main::-webkit-scrollbar {
+    width: 0.375rem;
+  }
+
+  main::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  main::-webkit-scrollbar-thumb {
+    background-color: #444;
   }
 
   @keyframes rotate {
@@ -56,9 +69,12 @@
 
 <style>
   body {
+    height: 100vh;
+    padding: 0.5rem;
+    background-color: black;
     display: grid;
+    gap: 0.5rem;
     grid-auto-flow: column;
     grid-auto-columns: minmax(15rem, auto) 1fr;
-    height: 100vh;
   }
 </style>
