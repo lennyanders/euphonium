@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useEventListener, store, $$, $ } from 'voby';
+import { computed, effect, ref, toRaw } from 'vue';
 
 import {
   appendToArrayUnique,
@@ -7,16 +7,18 @@ import {
   requestFileAccess,
 } from '../utils';
 import { onMessage, postMessage } from '../utils/worker';
-import { cleanQueue$, state } from './library';
+import { cleanQueue, state } from './library';
 
 const audioEl = new Audio();
 
-export const currentTrack$ = useMemo(() => state.trackData[state.activeTrackId || -1]);
+export const currentTrack = computed(() =>
+  state.activeTrackId ? state.trackData[state.activeTrackId] : undefined,
+);
 
-const currentTrackIndex$ = useMemo(() => $$(cleanQueue$).value?.indexOf(state.activeTrackId || -1));
-export const isFirst$ = useMemo(() => $$(currentTrackIndex$) === 0);
-export const isLast$ = useMemo(
-  () => $$(currentTrackIndex$) === ($$(cleanQueue$).value?.length || 0) - 1,
+const currentTrackIndex = computed(() => cleanQueue.value?.indexOf(state.activeTrackId || -1));
+export const isFirst = computed(() => currentTrackIndex.value === 0);
+export const isLast = computed(
+  () => currentTrackIndex.value === (cleanQueue.value?.length || 0) - 1,
 );
 
 onMessage(({ data }) => {
@@ -59,12 +61,12 @@ export const realPlay = async (trackId?: number, queue?: number[], time = state.
   }
 };
 
-useEffect(() => {
+effect(() => {
   if (state.mute === undefined) return;
   audioEl.muted = state.mute;
 });
 
-useEffect(() => {
+effect(() => {
   if (typeof state.volume !== 'number') return;
   audioEl.volume = state.volume;
 });
@@ -74,7 +76,7 @@ export const realPause = () => audioEl.pause();
 export const go = (offset: number) => {
   if (state.loop === 'track') offset = 0;
   const queue = state.queue || [];
-  let nextTrackIndex = ($$(currentTrackIndex$) || 0) + offset;
+  let nextTrackIndex = (currentTrackIndex.value || 0) + offset;
   if (state.loop === 'queue') {
     if (nextTrackIndex > queue.length - 1) nextTrackIndex = queue.length % nextTrackIndex;
     else if (nextTrackIndex < 0) nextTrackIndex = queue.length + nextTrackIndex;
@@ -88,10 +90,10 @@ export const shuffle = (shuffle: boolean) => {
   if (!shuffle) {
     postMessage({
       message: 'setGeneralData',
-      state: { shuffle, originalQueue: undefined, queue: store.unwrap(state).originalQueue },
+      state: { shuffle, originalQueue: undefined, queue: toRaw(state).originalQueue },
     });
   } else {
-    const queue = store.unwrap(state).queue;
+    const queue = toRaw(state).queue;
     postMessage({
       message: 'setGeneralData',
       state: { shuffle, originalQueue: queue, queue: getShuffledQueue(queue) },
@@ -127,17 +129,17 @@ export const playNext = (trackId: number) => {
   }
 };
 
-useEventListener(audioEl, 'play', () => {
+audioEl.addEventListener('play', () => {
   postMessage({ message: 'setTemporaryData', state: { playing: true } });
 });
-useEventListener(audioEl, 'pause', () => {
+audioEl.addEventListener('pause', () => {
   postMessage({ message: 'setTemporaryData', state: { playing: false } });
 });
-useEventListener(audioEl, 'ended', () => go(1));
+audioEl.addEventListener('ended', () => go(1));
 
 const getTabVisible = () => document.visibilityState === 'visible';
-const tabVisible$ = $(getTabVisible());
-document.addEventListener('visibilitychange', () => tabVisible$(getTabVisible()));
+const tabVisible = ref(getTabVisible());
+document.addEventListener('visibilitychange', () => (tabVisible.value = getTabVisible()));
 
 const updateTime = () => {
   postMessage({ message: 'setGeneralData', state: { currentTime: audioEl.currentTime } });
@@ -148,16 +150,14 @@ const updateTimeEveryFrame = () => {
   animationFrameId = requestAnimationFrame(() => (updateTime(), updateTimeEveryFrame()));
 };
 
-useEffect(() => {
-  const tabVisible = tabVisible$();
-
+effect(() => {
   if (!state.playing || audioEl.paused) {
-    if (tabVisible) cancelAnimationFrame(animationFrameId);
+    if (tabVisible.value) cancelAnimationFrame(animationFrameId);
     else audioEl.removeEventListener('timeupdate', updateTime);
     return;
   }
 
-  if (tabVisible) {
+  if (tabVisible.value) {
     audioEl.removeEventListener('timeupdate', updateTime);
     updateTimeEveryFrame();
     return;
@@ -181,8 +181,8 @@ if (mediaSession) {
     if (event.seekTime) audioEl.currentTime = event.seekTime;
   });
 
-  useEffect(() => {
-    const track = $$(currentTrack$);
+  effect(() => {
+    const track = currentTrack.value;
     if (!track) {
       mediaSession.metadata = null;
       return;

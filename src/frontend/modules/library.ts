@@ -25,8 +25,9 @@ export const artistsSortedByName = computed(() =>
   artists.value.sort((a, b) => (b.name && a.name?.localeCompare(b.name)) || 0),
 );
 
-export const cleanQueue$ = computed(() => {
-  return (state.queue || [])
+export const cleanQueue = computed(() => {
+  if (!state.queue) return [];
+  return state.queue
     .map((id) => state.trackData[id])
     .filter((track) => track)
     .map((track) => track.id);

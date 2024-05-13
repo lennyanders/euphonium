@@ -3,6 +3,7 @@
 
   import { mainEl } from '../modules/layout';
   import { state } from '../modules/library';
+  import { play } from '../modules/player';
   import { remToPx } from '../utils/rem-to-px';
   import { useVirtual } from '../utils/virtual';
   import CoverImage from './CoverImage.vue';
@@ -54,7 +55,14 @@
       <template v-if="unref(props.showDiskOnTracks)?.includes(virtualRow.item.id)">
         Disk: {{ virtualRow.item.diskNumber }}
       </template>
-      <button>
+      <button
+        @click="
+          play(
+            virtualRow.item.id,
+            unref(props.tracks).map((track) => track.id),
+          )
+        "
+      >
         <span v-if="props.showNumber" class="shrink-0" :style="{ width: `${diskNumberWith}ch` }">
           {{ virtualRow.item.number ?? '-' }}
         </span>

@@ -3,12 +3,14 @@
   import { RouterView } from 'vue-router';
 
   import Navigation from './components/Navigation.vue';
+  import Player from './components/Player.vue';
   import { mainEl } from './modules/layout';
   import { state } from './modules/library';
 </script>
 ″
 <template>
   <Navigation />
+  <Player />
   <main ref="mainEl">
     <RouterView />
   </main>
@@ -40,6 +42,7 @@
   }
 
   main {
+    grid-area: main;
     padding: 1rem;
     overflow-y: scroll;
     background-color: #111;
@@ -74,7 +77,6 @@
     background-color: black;
     display: grid;
     gap: 0.5rem;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(15rem, auto) 1fr;
+    grid-template: 'nav main' 1fr 'player main' auto / 15rem 1fr;
   }
 </style>
